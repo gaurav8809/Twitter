@@ -1,10 +1,12 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import {centertext, swidth} from '../Global/ScreenSetting';
 import {SystemBlue} from '../Global/ColorPalate';
 
 
 export const SystemButton = (props) => {
+
+    // const [myop, ch] = useState(props.opacity);
 
     let {
         styles,
@@ -12,10 +14,21 @@ export const SystemButton = (props) => {
         opacity,
         text
     } = props;
+    // useEffect(()=>{
+    //     ch(props.opacity);
+    //
+    // },[props.opacity])
+    //
+
+    const dis = opacity === 0.5;
 
     return(
-    <View style={styles.view}>
-        <TouchableOpacity style={[styles.button, {opacity: opacity}]} onPress={onPress}>
+    <View style={[styles.view, {opacity: opacity}]}>
+        <TouchableOpacity
+            style={[styles.button, ]}
+            onPress={onPress}
+            disabled={dis}
+        >
             <Text style={styles.text}>
                 {text}
             </Text>

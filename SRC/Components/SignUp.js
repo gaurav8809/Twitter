@@ -16,6 +16,7 @@ import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SystemButton} from './TwitterButton';
+import {emailValidation} from '../Global/validationHelper';
 
 class SignUp extends Component{
 
@@ -32,6 +33,7 @@ class SignUp extends Component{
             dynamiclabel:'Use email instead',
             currentplace:true,
             nextopacity:0.5,
+            pemsg:''
         };
 
         this.a = React.createRef();
@@ -45,17 +47,18 @@ class SignUp extends Component{
 
     namechange = (text) => {
 
-
+        // text.trim();
         this.setState({
             name:text,
             totalnumber:50 - text.length,
             correctsign: false,
         });
+        // this.forceUpdate();
 
 
         setTimeout(() => this.setState({
             correctsign: (this.state.totalnumber >= 0 && (50 - text.length) < 50),
-            nextopacity: 1
+            nextopacity: (this.state.totalnumber >= 0 && (50 - text.length) < 50) ? 1 : 0.5
         }),500);
 
 
@@ -67,14 +70,74 @@ class SignUp extends Component{
 
         if(this.state.currenttextinput === 0)
         {
-
+            this.b.current.focus()
         }
         else
         {
+            if(!this.state.correctsign || this.state.nextopacity === 0.5)
+            {
+                this.a.current.focus()
+            }
+            else
+            {
+                alert("Success");
+                this.props.navigation.navigate('SignUpFinalPage');
+            }
 
         }
 
     };
+
+    setpelabel = (text) => {
+        this.setState({phoneoremail:text},() => {
+
+            if(this.state.currentplace)
+            {
+                if(this.state.phoneoremail !== '' && this.state.phoneoremail.length !== 10 || isNaN(this.state.phoneoremail))
+                {
+                    // console.log("Sorry");
+                    this.setState({
+                        pemsg:'Please enter a valid phone number.',
+                        nextopacity: 0.5
+                    });
+                    // return true;
+                }
+                else
+                {
+                    console.log("Succ");
+                    this.setState({
+                        pemsg:'',
+                        nextopacity: 1
+
+                    });
+                    // return false;
+                }
+            }
+            else
+            {
+                if(this.state.phoneoremail !== '' && !emailValidation(this.state.phoneoremail))
+                {
+                    this.setState({
+                        pemsg:'Please enter a valid email.',
+                        nextopacity: 0.5
+                    });
+                    // return true;
+                }
+                else
+                {
+                    this.setState({
+                        pemsg:'',
+                        nextopacity: 1
+                    });
+                    // return false;
+                }
+            }
+
+        }) ;
+
+    };
+
+
 
     render(){
 
@@ -125,7 +188,7 @@ class SignUp extends Component{
                             </View>
                         </View>
 
-                        <ScrollView scrollEnabled={Platform.OS === 'android'} showsVerticalScrollIndicator={false}>
+                        <ScrollView contentContainerStyle={{paddingBottom: 150}} showsVerticalScrollIndicator={false}>
                             <View style={[Styles.createtextview]}>
                                 <Text style={[Styles.hellotext]}>
                                     {"Create your account"}
@@ -145,7 +208,11 @@ class SignUp extends Component{
                                         onFocus={() => this.setState({currenttextinput:0})}
                                         style={[Styles.nametext]}
                                         value={this.state.name}
-                                        onChangeText={text => this.namechange(text)}
+                                        onChangeText={text => {
+                                            if(text[0]!==' '){
+                                                this.namechange(text)
+                                            }
+                                        }}
                                         placeholder={'Name'}
                                         placeholderTextColor={"gray"}
                                         selectionColor={SystemBlue}
@@ -182,7 +249,7 @@ class SignUp extends Component{
                                     autoCorrect={false}
                                     style={[poetextview,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
                                     value={this.state.phoneoremail}
-                                    onChangeText={text => this.setState({phoneoremail:text})}
+                                    onChangeText={text => {this.setpelabel(text)}}
                                     placeholder={this.state.placeholder}
                                     placeholderTextColor={"gray"}
                                     keyboardType={
@@ -198,7 +265,19 @@ class SignUp extends Component{
                                         placeholder: `Phone number or email address`
                                     })}
                                 />
+
+                                <View style={{...totalnumberview}}>
+
+                                    { this.setpelabel &&
+                                        <Text style={{...namemsg}}>
+                                            {this.state.pemsg}
+                                        </Text>
+                                    }
+
+                                </View>
                             </View>
+
+
                         </ScrollView>
                     </View>
 
@@ -206,12 +285,20 @@ class SignUp extends Component{
                     <View style={[Styles.bottombarview, Platform.OS === 'ios' && {padding: swidth * 0.03 }]}>
                         <View style={[Styles.bottomcontainer, {justifyContent: this.state.currenttextinput === 1 ? 'space-between' : 'flex-end',}]}>
 
-                            { this.state.currenttextinput === 1 && <TouchableOpacity>
-                                <Text style={[Styles.dynamiclabeltext]}>
-                                    {this.state.dynamiclabel}
-                                </Text>
-                            </TouchableOpacity>}
-
+                            { this.state.currenttextinput === 1 &&
+                                <TouchableOpacity
+                                    onPress={() => this.setState(
+                                        {
+                                            // dynamiclabel: ,
+                                            currentplace:!this.state.currentplace,
+                                            placeholder: this.state.currentplace ? 'Email' : 'Phone'
+                                        })}
+                                >
+                                    <Text style={[Styles.dynamiclabeltext]}>
+                                        {this.state.currentplace ? 'Use email instead' : 'Use phone instead'}
+                                    </Text>
+                                </TouchableOpacity>
+                            }
 
                             <SystemButton
                                 opacity={this.state.nextopacity}
@@ -264,7 +351,7 @@ let Styles = StyleSheet.create({
     },
     poetextview:{
         width: swidth * 0.85,
-        marginTop: swidth * 0.11,
+        marginTop: swidth * 0.09,
         borderBottomWidth: 2,
         borderColor: 'lightgray',
         fontSize: swidth * 0.06
@@ -285,7 +372,7 @@ let Styles = StyleSheet.create({
         height: swidth * 0.12,
         width:swidth,
         justifyContent: 'center',
-        // backgroundColor:'red',
+        backgroundColor:'rgb(242,242,242)',
     },
     bottomcontainer:{
         flexDirection:'row',
@@ -314,7 +401,7 @@ let Styles = StyleSheet.create({
         padding: 0
     },
     namemsg:{
-        fontSize: swidth * 0.02,
+        fontSize: swidth * 0.04,
         color:'red'
     },
     dynamiclabeltext:{

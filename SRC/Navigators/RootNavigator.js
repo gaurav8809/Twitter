@@ -3,6 +3,7 @@ import {createAppContainer, createSwitchNavigator} from "react-navigation";
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import HelloScreen from '../Components/HelloScreen';
 import SignUp from '../Components/SignUp';
+import SignUPFinalPage from '../Components/SignUPFinalPage';
 import {
     View,
     Text,
@@ -16,9 +17,11 @@ import {createStackNavigator} from 'react-navigation-stack';
 
 
 
+
 const CoreStackkNavigator = createStackNavigator({
     HelloScreen:HelloScreen,
     SignUp:SignUp,
+    SignUpFinalPage:SignUPFinalPage
 
 },{
     headerMode:'none'
