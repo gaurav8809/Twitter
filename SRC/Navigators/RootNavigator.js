@@ -14,6 +14,7 @@ import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
 // import HomeNavigator from './HomeNavigator';
 // import AppConfig from '../AppConfig/AppConfig'
 import {createStackNavigator} from 'react-navigation-stack';
+import CodeVerification from '../Components/CodeVerification';
 
 
 
@@ -21,7 +22,8 @@ import {createStackNavigator} from 'react-navigation-stack';
 const CoreStackkNavigator = createStackNavigator({
     HelloScreen:HelloScreen,
     SignUp:SignUp,
-    SignUpFinalPage:SignUPFinalPage
+    SignUpFinalPage:SignUPFinalPage,
+    CodeVerification:CodeVerification
 
 },{
     headerMode:'none'

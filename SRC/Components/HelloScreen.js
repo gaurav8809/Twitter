@@ -13,6 +13,8 @@ import {swidth,sheight,centertext} from '../Global/ScreenSetting';
 import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate'
 import {SystemButton} from '../Components/TwitterButton'
+import {safearea,mainview} from '../Global/ScreenSetting';
+
 
 class HelloScreen extends Component{
 
@@ -46,9 +48,9 @@ class HelloScreen extends Component{
         };
 
         return(
-            <SafeAreaView style={[Styles.safearea]}>
+            <SafeAreaView style={{...safearea}}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <View style={[Styles.mainview]}>
+                    <View style={{...mainview}}>
 
                         <View style={[Styles.twittericonview]}>
                             <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.12}/>
@@ -98,15 +100,6 @@ let Styles = StyleSheet.create({
 
     //             Container              //
 
-    safearea: {
-        flex: 1,
-        alignItems:'center'
-    },
-    mainview:{
-        // backgroundColor:'red',
-        flex: 1,
-        width: swidth * 0.75,
-    },
     twittericonview:{
         marginTop: swidth * 0.14,
         height: swidth * 0.15

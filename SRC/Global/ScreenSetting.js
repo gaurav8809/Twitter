@@ -6,9 +6,23 @@ const centertext = {
     alignItems:'center',
     justifyContent:'center'
 };
+const safearea = {
+    flex: 1,
+    alignItems:'center'
+};
+const mainview= {
+    // backgroundColor:'red',
+    flex: 1,
+    alignItems:'center',
+    // width: swidth * 0.85,
+    width: swidth * 0.9,
+    // justifyContent:'center'
+};
 
 module.exports = {
     swidth,
     sheight,
-    centertext
+    centertext,
+    safearea,
+    mainview
 };

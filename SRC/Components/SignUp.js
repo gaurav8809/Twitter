@@ -16,7 +16,10 @@ import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SystemButton} from './TwitterButton';
+import {safearea,mainview} from '../Global/ScreenSetting';
 import {emailValidation} from '../Global/validationHelper';
+import TwitterBottomPanel from '../Components/TwitterBottomPanel'
+import TwitterTopPanel from './TwitterTopPanel';
 
 class SignUp extends Component{
 
@@ -29,6 +32,7 @@ class SignUp extends Component{
             currenttextinput:0,
             totalnumber:50,
             correctsign:false,
+            poecorrectsign:false,
             placeholder:'Phone number or email address',
             dynamiclabel:'Use email instead',
             currentplace:true,
@@ -80,10 +84,29 @@ class SignUp extends Component{
             }
             else
             {
-                alert("Success");
-                this.props.navigation.navigate('SignUpFinalPage');
+                //alert("Success");
+                this.props.navigation.navigate('SignUpFinalPage',{
+                    name: this.state.name,
+                    type: this.state.currentplace ? 'Phone' : 'Email',
+                    poe: this.state.phoneoremail
+                });
             }
 
+        }
+
+    };
+
+    successmark = () => {
+
+        this.setState({
+            pemsg:'',
+            nextopacity: 1
+        });
+        if(this.state.phoneoremail !== '')
+        {
+            this.setState({
+                poecorrectsign:true
+            });
         }
 
     };
@@ -93,23 +116,20 @@ class SignUp extends Component{
 
             if(this.state.currentplace)
             {
-                if(this.state.phoneoremail !== '' && this.state.phoneoremail.length !== 10 || isNaN(this.state.phoneoremail))
+                // alert(this.state.phoneoremail.includes('.'));
+                if((this.state.phoneoremail !== ''  && this.state.phoneoremail.length !== 10 || isNaN(this.state.phoneoremail)) || this.state.phoneoremail.includes('.') === true)
                 {
                     // console.log("Sorry");
                     this.setState({
                         pemsg:'Please enter a valid phone number.',
-                        nextopacity: 0.5
+                        nextopacity: 0.5,
+                        poecorrectsign:false
                     });
                     // return true;
                 }
                 else
                 {
-                    console.log("Succ");
-                    this.setState({
-                        pemsg:'',
-                        nextopacity: 1
-
-                    });
+                    this.successmark();
                     // return false;
                 }
             }
@@ -119,16 +139,14 @@ class SignUp extends Component{
                 {
                     this.setState({
                         pemsg:'Please enter a valid email.',
-                        nextopacity: 0.5
+                        nextopacity: 0.5,
+                        poecorrectsign:false
                     });
                     // return true;
                 }
                 else
                 {
-                    this.setState({
-                        pemsg:'',
-                        nextopacity: 1
-                    });
+                    this.successmark();
                     // return false;
                 }
             }
@@ -174,19 +192,23 @@ class SignUp extends Component{
         };
 
         return(
-            <SafeAreaView style={[Styles.safearea]}>
-                    <View style={[Styles.mainview]}>
+            <SafeAreaView style={{...safearea}}>
+                <View style={{...mainview}}>
 
-                        <View style={[Styles.twittericonview]}>
-                            <View style={{flex:1}}>
-                                <TouchableOpacity onPress={() => this.props.navigation.goBack()} >
-                                    <AntDesign name={'arrowleft'} color={SystemBlue} size={swidth * 0.07}/>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{flex:1.1}}>
-                                <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>
-                            </View>
-                        </View>
+                        {/*<View style={[Styles.twittericonview]}>*/}
+                        {/*    <View style={{flex:1}}>*/}
+                        {/*        <TouchableOpacity onPress={() => this.props.navigation.goBack()} >*/}
+                        {/*            <AntDesign name={'arrowleft'} color={SystemBlue} size={swidth * 0.07}/>*/}
+                        {/*        </TouchableOpacity>*/}
+                        {/*    </View>*/}
+                        {/*    <View style={{flex:1.1}}>*/}
+                        {/*        <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>*/}
+                        {/*    </View>*/}
+                        {/*</View>*/}
+
+                        <TwitterTopPanel
+                            onBackPress={() => this.props.navigation.goBack()}
+                        />
 
                         <ScrollView contentContainerStyle={{paddingBottom: 150}} showsVerticalScrollIndicator={false}>
                             <View style={[Styles.createtextview]}>
@@ -245,35 +267,50 @@ class SignUp extends Component{
                                     </Text>
                                 </View>
 
-                                <TextInput
-                                    autoCorrect={false}
-                                    style={[poetextview,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
-                                    value={this.state.phoneoremail}
-                                    onChangeText={text => {this.setpelabel(text)}}
-                                    placeholder={this.state.placeholder}
-                                    placeholderTextColor={"gray"}
-                                    keyboardType={
-                                        this.state.currentplace ? 'phone-pad' : 'email-address'
+                                <View
+                                    style={[
+                                        poetextview,
+                                        this.state.pemsg !== ''
+                                            ? {borderColor: 'red'}
+                                            : {borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}
+                                ]}>
+                                    <TextInput
+                                        autoCorrect={false}
+                                        style={[Styles.poetext,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
+                                        value={this.state.phoneoremail}
+                                        onChangeText={text => {this.setpelabel(text)}}
+                                        placeholder={this.state.placeholder}
+                                        placeholderTextColor={"gray"}
+                                        keyboardType={
+                                            this.state.currentplace ? 'phone-pad' : 'email-address'
+                                        }
+                                        selectionColor={SystemBlue}
+                                        ref={this.b}
+                                        onFocus={() => this.setState({
+                                            currenttextinput:1,
+                                            placeholder: this.state.currentplace ? 'Phone' : 'Email'
+                                        })}
+                                        onBlur={() => this.setState({
+                                            placeholder: `Phone number or email address`
+                                        })}
+                                    />
+
+                                    {
+                                        this.state.poecorrectsign &&
+                                        <View style={[Styles.correctsigncircle]}>
+                                            <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.07}/>
+                                        </View>
                                     }
-                                    selectionColor={SystemBlue}
-                                    ref={this.b}
-                                    onFocus={() => this.setState({
-                                        currenttextinput:1,
-                                        placeholder: this.state.currentplace ? 'Phone' : 'Email'
-                                    })}
-                                    onBlur={() => this.setState({
-                                        placeholder: `Phone number or email address`
-                                    })}
-                                />
 
-                                <View style={{...totalnumberview}}>
+                                    <View style={[Styles.poemsgview]}>
 
-                                    { this.setpelabel &&
-                                        <Text style={{...namemsg}}>
-                                            {this.state.pemsg}
-                                        </Text>
-                                    }
+                                        { this.setpelabel &&
+                                            <Text style={{...namemsg}}>
+                                                {this.state.pemsg}
+                                            </Text>
+                                        }
 
+                                    </View>
                                 </View>
                             </View>
 
@@ -281,34 +318,52 @@ class SignUp extends Component{
                         </ScrollView>
                     </View>
 
-                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null}  >
-                    <View style={[Styles.bottombarview, Platform.OS === 'ios' && {padding: swidth * 0.03 }]}>
-                        <View style={[Styles.bottomcontainer, {justifyContent: this.state.currenttextinput === 1 ? 'space-between' : 'flex-end',}]}>
+                <TwitterBottomPanel
+                    textenable={this.state.currenttextinput === 1}
+                    textpress={() => this.setState(
+                        {
+                            currentplace:!this.state.currentplace,
+                            placeholder: this.state.currentplace ? 'Email' : 'Phone'
+                        })}
+                    text={this.state.currentplace ? 'Use email instead' : 'Use phone instead'}
+                    textpress={() => this.setState(
+                        {
+                            currentplace:!this.state.currentplace,
+                            placeholder: this.state.currentplace ? 'Email' : 'Phone'
+                        })}
+                    buttonopacity={this.state.nextopacity}
+                    buttontext={"Next"}
+                    buttonpress={() => this.nextbuttonclick()}
+                />
 
-                            { this.state.currenttextinput === 1 &&
-                                <TouchableOpacity
-                                    onPress={() => this.setState(
-                                        {
-                                            // dynamiclabel: ,
-                                            currentplace:!this.state.currentplace,
-                                            placeholder: this.state.currentplace ? 'Email' : 'Phone'
-                                        })}
-                                >
-                                    <Text style={[Styles.dynamiclabeltext]}>
-                                        {this.state.currentplace ? 'Use email instead' : 'Use phone instead'}
-                                    </Text>
-                                </TouchableOpacity>
-                            }
+                {/*<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null}  >*/}
+                {/*    <View style={[Styles.bottombarview, Platform.OS === 'ios' && {padding: swidth * 0.03 }]}>*/}
+                {/*        <View style={[Styles.bottomcontainer, {justifyContent: this.state.currenttextinput === 1 ? 'space-between' : 'flex-end',}]}>*/}
 
-                            <SystemButton
-                                opacity={this.state.nextopacity}
-                                text={"Next"}
-                                styles={btnstyles}
-                                onPress={() => this.nextbuttonclick()}
-                            />
-                        </View>
-                    </View>
-                </KeyboardAvoidingView>
+                {/*            { this.state.currenttextinput === 1 &&*/}
+                {/*                <TouchableOpacity*/}
+                {/*                    onPress={() => this.setState(*/}
+                {/*                        {*/}
+                {/*                            // dynamiclabel: ,*/}
+                {/*                            currentplace:!this.state.currentplace,*/}
+                {/*                            placeholder: this.state.currentplace ? 'Email' : 'Phone'*/}
+                {/*                        })}*/}
+                {/*                >*/}
+                {/*                    <Text style={[Styles.dynamiclabeltext]}>*/}
+                {/*                        {this.state.currentplace ? 'Use email instead' : 'Use phone instead'}*/}
+                {/*                    </Text>*/}
+                {/*                </TouchableOpacity>*/}
+                {/*            }*/}
+
+                {/*            <SystemButton*/}
+                {/*                opacity={this.state.nextopacity}*/}
+                {/*                text={"Next"}*/}
+                {/*                styles={btnstyles}*/}
+                {/*                onPress={() => this.nextbuttonclick()}*/}
+                {/*            />*/}
+                {/*        </View>*/}
+                {/*    </View>*/}
+                {/*</KeyboardAvoidingView>*/}
 
 
 
@@ -330,12 +385,6 @@ let Styles = StyleSheet.create({
         // backgroundColor:'red',
         flex: 1,
     },
-    twittericonview:{
-        flexDirection: 'row',
-        marginTop: swidth * 0.02,
-        // backgroundColor: 'red',
-        justifyContent:'center'
-    },
     createtextview:{
         marginTop: swidth * 0.13,
     },
@@ -354,30 +403,23 @@ let Styles = StyleSheet.create({
         marginTop: swidth * 0.09,
         borderBottomWidth: 2,
         borderColor: 'lightgray',
-        fontSize: swidth * 0.06
+        fontSize: swidth * 0.06,
+        height: swidth * 0.095
     },
     totalnumberview:{
         flexDirection: 'row',
         marginTop: swidth * 0.02,
         justifyContent: 'space-between'
     },
+    poemsgview:{
+        flexDirection: 'row',
+        marginTop: swidth * 0.045,
+        justifyContent: 'space-between'
+    },
     correctsigncircle:{
         alignSelf: 'flex-end',
         position:'absolute',
 
-    },
-    bottombarview:{
-        borderTopWidth:1,
-        borderColor:'lightgray',
-        height: swidth * 0.12,
-        width:swidth,
-        justifyContent: 'center',
-        backgroundColor:'rgb(242,242,242)',
-    },
-    bottomcontainer:{
-        flexDirection:'row',
-        // alignItems: 'center',
-        // backgroundColor: 'pink'
     },
 
     //             Text              //
@@ -394,6 +436,13 @@ let Styles = StyleSheet.create({
         color:'gray',
     },
     nametext:{
+        // height: swidth * 0.05,
+        width: swidth * 0.77,
+        fontSize: swidth * 0.06,
+        // backgroundColor: 'pink',
+        padding: 0
+    },
+    poetext:{
         // height: swidth * 0.05,
         width: swidth * 0.77,
         fontSize: swidth * 0.06,

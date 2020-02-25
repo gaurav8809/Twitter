@@ -9,13 +9,16 @@ import {
     TouchableOpacity,
     Platform,
     TextInput,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Linking,
 } from 'react-native';
 import {swidth,sheight,centertext} from '../Global/ScreenSetting';
 import {AntDesign} from '../Global/VectorIcons';
-import {SystemBlue} from '../Global/ColorPalate'
+import {SystemBlue} from '../Global/ColorPalate';
 import {SystemButton} from './TwitterButton';
+import {safearea,mainview} from '../Global/ScreenSetting';
 import {emailValidation} from '../Global/validationHelper';
+import TwitterTopPanel from './TwitterTopPanel';
 
 class SignUPFinalPage extends Component{
 
@@ -44,43 +47,38 @@ class SignUPFinalPage extends Component{
 
         const btnstyles = {
             view:{
-                // marginTop: swidth * 0.15,
+                marginTop: swidth * 0.04,
                 alignItems: 'center',
-                marginRight: swidth * 0.03,
                 // position: 'relative'
                 // justifySelf: this.state.currenttextinput == 1 && 'flex-end'
             },
             button:{
                 backgroundColor: SystemBlue,
                 borderRadius: 50,
-                width: swidth * 0.14,
-                height: swidth * 0.08,
+                width: swidth * 0.85,
+                height: swidth * 0.1,
                 ...centertext
             },
             text:{
-                fontSize: swidth * 0.04,
+                fontSize: swidth * 0.06,
                 fontFamily: 'Roboto-Bold',
                 color:'white',
                 // fontWeight:"500"
             }
         };
 
+        let signupdata = this.props.navigation.state.params;
+
         return(
-            <SafeAreaView style={[Styles.safearea]}>
-                <View style={[Styles.mainview]}>
+            <SafeAreaView style={{...safearea}}>
+                <View style={{...mainview}}>
 
-                    <View style={[Styles.twittericonview]}>
-                        <View style={{flex:1}}>
-                            <TouchableOpacity onPress={() => this.props.navigation.goBack()} >
-                                <AntDesign name={'arrowleft'} color={SystemBlue} size={swidth * 0.07}/>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{flex:1.1}}>
-                            <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>
-                        </View>
-                    </View>
+                    <TwitterTopPanel
+                        onBackPress={() => this.props.navigation.goBack()}
+                    />
 
-                    <ScrollView contentContainerStyle={{paddingBottom: 150}} showsVerticalScrollIndicator={false}>
+                    <ScrollView contentContainerStyle={{paddingBottom: swidth * 0.08}} showsVerticalScrollIndicator={false}>
+
                         <View style={[Styles.createtextview]}>
                             <Text style={[Styles.hellotext]}>
                                 {"Create your account"}
@@ -88,120 +86,62 @@ class SignUPFinalPage extends Component{
                         </View>
 
                         <View style={{...inputtextview}}>
-                            <View
-                                style={[
-                                    nametextview,
-                                    this.state.totalnumber < 0
-                                        ? {borderColor: 'red'}
-                                        : {borderColor: this.state.currenttextinput === 0 ? SystemBlue : 'lightgray'}
-                                ]}>
+                            <View style={[Styles.nametextview]}>
+
                                 <TextInput
-                                    autoCorrect={false}
-                                    onFocus={() => this.setState({currenttextinput:0})}
                                     style={[Styles.nametext]}
-                                    value={this.state.name}
-                                    onChangeText={text => {
-                                        if(text[0]!==' '){
-                                            this.namechange(text)
-                                        }
-                                    }}
-                                    placeholder={'Name'}
-                                    placeholderTextColor={"gray"}
-                                    selectionColor={SystemBlue}
-                                    autoFocus={true}
-                                    ref={this.a}
-                                    returnKeyType={'next'}
-                                    onSubmitEditing={() => this.b.current.focus()}
+                                    value={signupdata.name}
+                                    // onPress={() => this.props.navigation.navigate('SignUp')}
+                                    onFocus={() => this.props.navigation.navigate('SignUp')}
                                 />
-                                {
-                                    this.state.correctsign &&
-                                    <View style={[Styles.correctsigncircle]}>
-                                        <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.07}/>
-                                    </View>
-                                }
                             </View>
 
-                            <View style={{...totalnumberview}}>
+                            <View style={[Styles.poetextview]}>
 
-                                {this.state.totalnumber < 0 ?
-                                    <Text style={{...namemsg}}>
-                                        {"Must be 50 characters or fewer."}
+                                <TextInput
+                                    style={[Styles.nametext]}
+                                    value={signupdata.poe}
+                                    // onPress={() => this.props.navigation.navigate('SignUp')}
+                                    onFocus={() => this.props.navigation.navigate('SignUp')}
+                                />
+                            </View>
+
+                            <View style={[Styles.questionview]}>
+                                <Text style={[Styles.questiontext]}>
+                                    {"By signing up, you agree to the "}
+                                    <Text style={[Styles.logintext]} onPress={() => Linking.openURL('https://twitter.com/en/tos')}>
+                                        {"Terms \nof Service"}
                                     </Text>
-                                    :
-                                    <Text style={{...namemsg}}>
-                                        {""}
+                                    {" and "}
+                                    <Text style={[Styles.logintext]} onPress={() => Linking.openURL('https://twitter.com/en/privacy')}>
+                                        {"Privacy Policy, "}
                                     </Text>
-                                }
-                                <Text style={[totalnumbertext , { color: this.state.totalnumber < 0 ? 'red' : 'gray'}]}>
-                                    {this.state.totalnumber}
+                                    {"including"}
+                                    <Text style={[Styles.logintext]} onPress={() => Linking.openURL('https://help.twitter.com/en/rules-and-policies/twitter-cookies')}>
+                                        {" Cookie Use"}
+                                    </Text>
+                                    {". Others will be able to find you\n by email or phone number when provided"}
+                                    <Text style={[Styles.logintext]} onPress={() => Linking.openURL('https://twitter.com/en/privacy')}>
+                                        {" Privacy Options"}
+                                    </Text>
                                 </Text>
                             </View>
-
-                            <TextInput
-                                autoCorrect={false}
-                                style={[poetextview,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
-                                value={this.state.phoneoremail}
-                                onChangeText={text => {this.setpelabel(text)}}
-                                placeholder={this.state.placeholder}
-                                placeholderTextColor={"gray"}
-                                keyboardType={
-                                    this.state.currentplace ? 'phone-pad' : 'email-address'
-                                }
-                                selectionColor={SystemBlue}
-                                ref={this.b}
-                                onFocus={() => this.setState({
-                                    currenttextinput:1,
-                                    placeholder: this.state.currentplace ? 'Phone' : 'Email'
-                                })}
-                                onBlur={() => this.setState({
-                                    placeholder: `Phone number or email address`
-                                })}
-                            />
-
-                            <View style={{...totalnumberview}}>
-
-                                { this.setpelabel &&
-                                <Text style={{...namemsg}}>
-                                    {this.state.pemsg}
-                                </Text>
-                                }
-
-                            </View>
-                        </View>
-
-
-                    </ScrollView>
-                </View>
-
-                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null}  >
-                    <View style={[Styles.bottombarview, Platform.OS === 'ios' && {padding: swidth * 0.03 }]}>
-                        <View style={[Styles.bottomcontainer, {justifyContent: this.state.currenttextinput === 1 ? 'space-between' : 'flex-end',}]}>
-
-                            { this.state.currenttextinput === 1 &&
-                            <TouchableOpacity
-                                onPress={() => this.setState(
-                                    {
-                                        // dynamiclabel: ,
-                                        currentplace:!this.state.currentplace,
-                                        placeholder: this.state.currentplace ? 'Email' : 'Phone'
-                                    })}
-                            >
-                                <Text style={[Styles.dynamiclabeltext]}>
-                                    {this.state.currentplace ? 'Use email instead' : 'Use phone instead'}
-                                </Text>
-                            </TouchableOpacity>
-                            }
 
                             <SystemButton
-                                opacity={this.state.nextopacity}
-                                text={"Next"}
+                                text={"Sign Up"}
                                 styles={btnstyles}
-                                onPress={() => this.nextbuttonclick()}
+                                onPress={() =>
+                                    this.props.navigation.navigate('CodeVerification', {
+                                        name: signupdata.name,
+                                        type: signupdata.type,
+                                        poe: signupdata.poe
+                                    })
+                                }
                             />
                         </View>
-                    </View>
-                </KeyboardAvoidingView>
+                    </ScrollView>
 
+                </View>
 
 
             </SafeAreaView>
@@ -214,27 +154,14 @@ let Styles = StyleSheet.create({
 
     //             Container              //
 
-    safearea: {
-        flex: 1,
-        alignItems:'center'
-    },
-    mainview:{
-        // backgroundColor:'red',
-        flex: 1,
-    },
-    twittericonview:{
-        flexDirection: 'row',
-        marginTop: swidth * 0.02,
-        // backgroundColor: 'red',
-        justifyContent:'center'
-    },
     createtextview:{
         marginTop: swidth * 0.13,
     },
     inputtextview:{
-        marginTop: swidth * 0.4,
+        marginTop: sheight * (Platform.OS === 'ios' ? 0.2 : 0.2),
     },
     nametextview:{
+        // backgroundColor:'pink',
         width: swidth * 0.85,
         borderBottomWidth: 2,
         borderColor: 'lightgray',
@@ -243,10 +170,11 @@ let Styles = StyleSheet.create({
     },
     poetextview:{
         width: swidth * 0.85,
-        marginTop: swidth * 0.09,
+        marginTop: swidth * 0.1,
         borderBottomWidth: 2,
         borderColor: 'lightgray',
-        fontSize: swidth * 0.06
+        fontSize: swidth * 0.06,
+        height: swidth * 0.095
     },
     totalnumberview:{
         flexDirection: 'row',
@@ -258,18 +186,9 @@ let Styles = StyleSheet.create({
         position:'absolute',
 
     },
-    bottombarview:{
-        borderTopWidth:1,
-        borderColor:'lightgray',
-        height: swidth * 0.12,
-        width:swidth,
-        justifyContent: 'center',
-        backgroundColor:'rgb(242,242,242)',
-    },
-    bottomcontainer:{
-        flexDirection:'row',
-        // alignItems: 'center',
-        // backgroundColor: 'pink'
+    questionview:{
+        marginTop: swidth * (Platform.OS === 'ios' ? 0.3 : 0.13),
+        // flexDirection:'row'
     },
 
     //             Text              //
@@ -290,7 +209,7 @@ let Styles = StyleSheet.create({
         width: swidth * 0.77,
         fontSize: swidth * 0.06,
         // backgroundColor: 'pink',
-        padding: 0
+        padding: 0,
     },
     namemsg:{
         fontSize: swidth * 0.04,
@@ -300,6 +219,17 @@ let Styles = StyleSheet.create({
         marginLeft: swidth * 0.03,
         color: SystemBlue,
         fontSize: swidth * 0.05
+    },
+    questiontext:{
+        fontSize: swidth * 0.045,
+        fontFamily: 'Roboto',
+        color:'gray',
+        width: swidth * 0.85
+    },
+    logintext:{
+        fontSize: swidth * 0.045,
+        fontFamily: 'Roboto',
+        color:SystemBlue
     },
 
 });

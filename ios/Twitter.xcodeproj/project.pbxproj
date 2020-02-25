@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* TwitterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* TwitterTests.m */; };
+		06360BFF23FD6DCF006FB004 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 06360BFE23FD6DCF006FB004 /* GoogleService-Info.plist */; };
 		063F948C23EC26EF000DBFC7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 063F948B23EC26EF000DBFC7 /* Images.xcassets */; };
 		06AED3B123E0050E0044A634 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 06AED3AF23E0050E0044A634 /* Roboto-Bold.ttf */; };
 		07D2F195EE4E48B0A4A06F79 /* Merriweather-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7AE2A756EFA94FE0B97C0F51 /* Merriweather-BoldItalic.ttf */; };
@@ -73,6 +74,7 @@
 		00E356EE1AD99517003FC87E /* TwitterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwitterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* TwitterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwitterTests.m; sourceTree = "<group>"; };
+		06360BFE23FD6DCF006FB004 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Users/imac177/Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		063F948B23EC26EF000DBFC7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Twitter/Images.xcassets; sourceTree = "<group>"; };
 		06AED3AF23E0050E0044A634 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Bold.ttf"; path = "../SRC/Assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		0966B000A1F147379E550DCA /* Merriweather-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Merriweather-BlackItalic.ttf"; path = "../SRC/Assets/fonts/Merriweather-BlackItalic.ttf"; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 		13B07FAE1A68108700A75B9A /* Twitter */ = {
 			isa = PBXGroup;
 			children = (
+				06360BFE23FD6DCF006FB004 /* GoogleService-Info.plist */,
 				063F948B23EC26EF000DBFC7 /* Images.xcassets */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -442,6 +445,7 @@
 				0C835FD0DF2A488BB0C5E369 /* JosefinSans-Italic.ttf in Resources */,
 				D0C9872C12A8480E9FA384AA /* JosefinSans-Light.ttf in Resources */,
 				3C0632C1D955457B8434DABC /* JosefinSans-LightItalic.ttf in Resources */,
+				06360BFF23FD6DCF006FB004 /* GoogleService-Info.plist in Resources */,
 				3A48DF026D3341039542A297 /* JosefinSans-Regular.ttf in Resources */,
 				CD6BB5377E804814A92CC1E1 /* JosefinSans-SemiBold.ttf in Resources */,
 				F46556112C844643818FD8F3 /* JosefinSans-SemiBoldItalic.ttf in Resources */,
@@ -498,7 +502,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -810,7 +814,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.twitter;
 				PRODUCT_NAME = Twitter;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -829,7 +833,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.twitter;
 				PRODUCT_NAME = Twitter;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
