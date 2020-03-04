@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {MakeRequest} from '../EndPoints/ApiCall';
 import API from '../EndPoints/ApiConstants';
+import firebase from 'react-native-firebase';
+import {Platform} from 'react-native';
 
 export const SendEmail = (dataobj) => {
 
@@ -41,7 +43,8 @@ export const FireBaseSendEmail = (dataobj) => {
     return (dispatch,getState) => {
         return MakeRequest(API.FIREBASE_SENDEMAIL,'post',dataobj)
             .then(response => {
-                if(res.accepted[0] !== '')
+                debugger
+                if(response.accepted !== '')
                 {
                     // dispatch({
                     //     type: VERIFYREGISTER,
@@ -56,6 +59,7 @@ export const FireBaseSendEmail = (dataobj) => {
                 }
             })
             .catch(error => {
+                debugger
                 return Promise.reject({
                     status: 400,
                     message: 'Verification code has not been sent yet.',
@@ -64,5 +68,33 @@ export const FireBaseSendEmail = (dataobj) => {
 
     }
 
+};
 
+export const FireBaseStoreData = (dataobj) => {
+
+    var timestamp = Number(new Date());
+
+    return (dispatch,getState) => {
+        debugger
+        return firebase
+            .storage()
+            .ref(`UserProfiles/${timestamp.toString()}`)
+            // .child('myfile')
+            .put(Platform === 'ios' ? dataobj.uri.replace('file://','') : dataobj.uri)
+            .then(res => {
+                return Promise.resolve({
+                    status: 200,
+                    message: 'Successfully Stored',
+                    data: res.downloadURL
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                return Promise.reject({
+                    status: 400,
+                    message: 'Not Stored',
+                });
+            })
+
+    }
 };

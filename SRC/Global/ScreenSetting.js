@@ -8,7 +8,9 @@ const centertext = {
 };
 const safearea = {
     flex: 1,
-    alignItems:'center'
+    alignItems:'center',
+    backgroundColor:'white',
+    width: swidth,
 };
 const mainview= {
     // backgroundColor:'red',

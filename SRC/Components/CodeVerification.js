@@ -3,20 +3,22 @@ import {
     SafeAreaView,
     StyleSheet,
     View,
-    Platform,
+    Platform, Modal,
 } from 'react-native';
+import GLOBAL from '../Global/Initialization';
 import {swidth, sheight, centertext, safearea, mainview} from '../Global/ScreenSetting';
 import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate';
-import {SystemButton} from './TwitterButton';
+import {SystemButton} from '../Global/TwitterButton';
 import {emailValidation} from '../Global/validationHelper';
-import TwitterTopPanel from './TwitterTopPanel';
-import {BlackBigText, BlueText, GrayText} from './TwitterText';
-import TwitterTextInput from './TwitterTextInput';
-import TwitterBottomPanel from './TwitterBottomPanel';
+import TwitterTopPanel from '../Global/TwitterTopPanel';
+import {BlackBigText, BlueText, GrayText} from '../Global/TwitterText';
+import TwitterTextInput from '../Global/TwitterTextInput';
+import TwitterBottomPanel from '../Global/TwitterBottomPanel';
 import {connect} from 'react-redux';
 import {SendEmail,FireBaseSendEmail} from '../Actions/SystemAction';
 import firebase from 'react-native-firebase';
+import {DefaultIndicator} from '../Global/Indicators';
 
 // let signupdata;
 
@@ -33,104 +35,126 @@ class CodeVerification extends Component {
             rancode: 0,
             confirmResult: null,
             buttonenable: false,
+            loader: false,
         };
         // signupdata = this.props.navigation.state.params;
 
-        global.sample = "a";
 
     }
 
-    componentDidMount(): void {
+    componentDidMount(){
 
-       this.SendCodeToClient();
+        if(!GLOBAL.CodeSendMode)
+            this.props.navigation.navigate('PasswordSetPage',this.state.signupdata);
+        else
+            this.SendCodeToClient();
 
         // alert(rancode);
 
     }
+
+    setLoader = (flag) => {
+        this.setState({loader:flag});
+    };
 
     SendCodeToClient = () => {
         let {
             signupdata,
         } = this.state;
 
-        if (signupdata.type === 'Phone') {
-            firebase.auth().signInWithPhoneNumber(`+91 ${signupdata.poe.toString()}`)
-                .then(confirmResult => {
-                    debugger
-                    this.setState({
-                        confirmResult: confirmResult,
+        if(GLOBAL.CodeSendMode)
+        {
+            if (signupdata.type === 'Phone')
+            {
+                this.setLoader(true);
+                firebase.auth().signInWithPhoneNumber(`+91 ${signupdata.poe.toString()}`)
+                    .then(confirmResult => {
+                        this.setLoader(false);
+                        this.setState({
+                            confirmResult: confirmResult,
+                        });
+                        console.log('Send SMS data =' + JSON.stringify(confirmResult));
+
+                    }) // save confirm result to use with the manual verification code)
+                    .catch(error => {
+                        this.setLoader(false);
+                        console.log('Send SMS data error =' + error);
                     });
-                    console.log('Send SMS data =' + JSON.stringify(confirmResult));
 
-                }) // save confirm result to use with the manual verification code)
-                .catch(error => {
-                    debugger
-                    console.log('Send SMS data error =' + error);
-                });
+            }
+            else {
 
-
-            // confirmResult.confirm('123654')
-            //     .then(confirmResult => {
-            //         debugger
-            //         console.log("Result data =" + JSON.stringify(confirmResult));
-            //     }) // save confirm result to use with the manual verification code)
-            //     .catch(error => {
-            //         console.log("Result Error =" + error);
-            //     });
-        } else {
-
-            var rancode = Math.floor(Math.random() * 999999) + 1;
-            this.setState({
-                rancode: rancode,
-            }, () => {
                 let DataObj = {
                     to: signupdata.poe.toLowerCase(),
                     subject: 'Verification Code',
                     body: this.state.rancode.toString(),
                 };
 
+                this.setLoader(true);
                 this.props.FireBaseSendEmail(DataObj)
                     .then(res => {
-                        debugger
-                        alert('Verification code has been sent to your mail.');
+                        this.setLoader(false);
+                        if(res.status === 200)
+                        {
+                            alert("Verfication code has been successfully sent to your mail");
+                        }
                     })
                     .catch(err => {
-                        debugger
-                        alert(err);
+                        this.setLoader(false);
+                        console.log(err);
+                        alert(err.message);
                     });
-            });
-
-
+            }
         }
+        else
+        {
+            var rancode = Math.floor(Math.random() * 999999) + 1;
+            this.setState({
+                rancode: rancode,
+            },() => alert(`Code is ${this.state.rancode.toString()} `));
+        }
+
+
     };
 
-    checkcodeforemail = () => {
-        // this.state.code === this.state.rancode.toString() ?
-
-        this.setState({
-            buttonenable: this.state.code === this.state.rancode.toString() ? true : false,
-        });
-    };
-
-    checkcodeforphone = () => {
-        // return this.state.code === this.state.rancode.toString()
-        // debugger
-        this.state.confirmResult !== null && this.state.code.toString().length === 6 &&
-        this.state.confirmResult.confirm(this.state.code.toString())
-            .then(confirmResult => {
-                debugger
+    checkCode = () =>
+    {
+        if(GLOBAL.CodeSendMode)
+        {
+            if (signupdata.type === 'Phone') {
+                this.state.confirmResult !== null && this.state.code.toString().length === 6 &&
+                this.state.confirmResult.confirm(this.state.code.toString())
+                    .then(confirmResult => {
+                        this.setState({
+                            buttonenable: true,
+                        });
+                        return true;
+                        // console.log("Result data =" + JSON.stringify(confirmResult));
+                    }) // save confirm result to use with the manual verification code)
+                    .catch(error => {
+                        return false;
+                        // console.log("Result Error =" + error);
+                    });
+            }
+            else
+            {
                 this.setState({
-                    buttonenable: true,
+                    buttonenable: this.state.code === this.state.rancode.toString() ? true : false,
+                },() => {
+                    // this.props.navigation.navigate("");
+                    if(this.state.code === this.state.rancode.toString())
+                        this.props.navigation.navigate('PasswordSetPage',this.state.signupdata);
                 });
-                return true;
-                // console.log("Result data =" + JSON.stringify(confirmResult));
-            }) // save confirm result to use with the manual verification code)
-            .catch(error => {
-                debugger
-                return false;
-                // console.log("Result Error =" + error);
-            });
+            }
+        }
+        else
+        {
+            if(this.state.code === this.state.rancode.toString())
+                this.props.navigation.navigate('PasswordSetPage',this.state.signupdata);
+        }
+
     };
+
 
     render() {
 
@@ -155,13 +179,9 @@ class CodeVerification extends Component {
 
                     <TwitterTextInput
                         placeholder={'Verification code'}
-                        code={this.state.code}
+                        text={this.state.code}
                         keyboardType={'number-pad'}
-                        onChangeText={text => this.setState({code: text},() => {
-                            this.state.signupdata.type === 'Phone' ?
-                                this.checkcodeforphone() :
-                                this.checkcodeforemail()
-                        })}
+                        onChangeText={text => this.setState({code: text},() => this.checkCode())}
                         IconDetails={
                             {
                                 IconEnable: false,
@@ -180,8 +200,15 @@ class CodeVerification extends Component {
                     textenable={false}
                     buttonopacity={this.state.buttonenable ? 1 : 0.5}
                     buttontext={'Next'}
-                    // buttonpress={}
+                    buttonpress={() => {
+                        if(this.state.code === this.state.rancode.toString())
+                            this.props.navigation.navigate('PasswordSetPage',this.state.signupdata);
+                    }}
                 />
+
+                <Modal visible={this.state.loader} transparent={true} onRequestClose={false}>
+                    <DefaultIndicator />
+                </Modal>
             </SafeAreaView>
         );
     }

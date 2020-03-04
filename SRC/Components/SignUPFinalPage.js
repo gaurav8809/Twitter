@@ -15,10 +15,10 @@ import {
 import {swidth,sheight,centertext} from '../Global/ScreenSetting';
 import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate';
-import {SystemButton} from './TwitterButton';
+import {SystemButton} from '../Global/TwitterButton';
 import {safearea,mainview} from '../Global/ScreenSetting';
 import {emailValidation} from '../Global/validationHelper';
-import TwitterTopPanel from './TwitterTopPanel';
+import TwitterTopPanel from '../Global/TwitterTopPanel';
 
 class SignUPFinalPage extends Component{
 

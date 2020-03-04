@@ -8,28 +8,147 @@ import {
     View,
     Text,
     SafeAreaView,
-    TouchableOpacity
+    TouchableOpacity,
+    Image,
+    StyleSheet
 } from 'react-native';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
 // import HomeNavigator from './HomeNavigator';
 // import AppConfig from '../AppConfig/AppConfig'
+import Icon from 'react-native-dynamic-vector-icons';
+import {swidth,sheight} from '../Global/ScreenSetting';
+import {SystemBlue} from '../Global/ColorPalate';
 import {createStackNavigator} from 'react-navigation-stack';
 import CodeVerification from '../Components/CodeVerification';
+import PasswordSetPage from '../Components/PasswordSetPage';
+import ProfilePictureSetPage from '../Components/ProfilePictureSetPage';
+import BioSetPage from '../Components/BioSetPage';
+import LanguageSetPage from '../Components/LanguageSetPage';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
+import HomeScreen from '../Components/TabsPages/HomeScreen';
+import SearchScreen from '../Components/TabsPages/SearchScreen';
+import NotificationScreen from '../Components/TabsPages/NotificationScreen';
+import MessageScreen from '../Components/TabsPages/MessageScreen';
+import DrawerView from '../Components/DrawerView';
+import StartUpLoader from '../Components/StartUpLoader';
+import LoginPage from '../Components/LoginPage';
 
 
+const HomeSwitch = createStackNavigator({
+    HomeScreen:{
+        screen:HomeScreen,
+    }
+},
+    {
+        headerMode:'none'
+    });
 
 
-const CoreStackkNavigator = createStackNavigator({
+const CoreTabNavigator = createBottomTabNavigator({
+    HomeScreen:{
+        screen:HomeSwitch,
+        navigationOptions: {
+            // tabBarIcon:({tintColor}) => (<Image source={require('../Assets/Images/HomeBlack.png')}/>)
+        },
+    },
+    SearchScreen:{
+        screen:SearchScreen,
+        navigationOptions:{
+        },
+    },
+    NotificationScreen:{
+        screen:NotificationScreen,
+        navigationOptions:{
+        },
+    },
+    MessageScreen:{
+        screen:MessageScreen,
+        navigationOptions:{
+        },
+    },
+},{
+    defaultNavigationOptions: ({navigation}) => ({
+        tabBarIcon: ({ focused}) => {
+
+            let {IconStyle} = Styles;
+            if(!focused)
+            {
+                const { routeName } = navigation.state;
+
+                if (routeName === 'HomeScreen') {
+                    return <Image source={require('../Assets/Images/HomeBlack.png')} style={IconStyle}/>
+                } else if (routeName === 'SearchScreen') {
+                    return <Icon name={'search'} type={'FontAwesome'} color={'slategray'} size={swidth * 0.07} />
+                } else if (routeName === 'NotificationScreen') {
+                    return <Image source={require('../Assets/Images/BellBlack.png')} style={IconStyle} />
+                } else if (routeName === 'MessageScreen') {
+                    return <Image source={require('../Assets/Images/MessageBlack.png')} style={IconStyle} />
+                }
+
+            }
+            else
+            {
+                const { routeName } = navigation.state;
+
+                if (routeName === 'HomeScreen') {
+                    return <Image source={require('../Assets/Images/HomeEnable.png')} style={IconStyle}/>
+                } else if (routeName === 'SearchScreen') {
+                    return <Icon name={'search'} type={'FontAwesome'} color={SystemBlue} size={swidth * 0.07}/>
+                } else if (routeName === 'NotificationScreen') {
+                    return <Image source={require('../Assets/Images/BellEnable.png')} style={IconStyle} />
+                } else if (routeName === 'MessageScreen') {
+                    return <Image source={require('../Assets/Images/MessageEnable.png')} style={IconStyle}/>
+                }
+
+            }
+        },
+    }),
+    tabBarOptions: {
+        showLabel: false
+    }});
+
+const coreDrawerNavigator = createDrawerNavigator(
+    {
+        CoreTabNavigator,
+    },
+    {
+        contentComponent:DrawerView,
+        drawerWidth:swidth * 0.8
+    }
+);
+
+const CoreStackNavigator = createStackNavigator({
+    StartUpLoader:StartUpLoader,
     HelloScreen:HelloScreen,
     SignUp:SignUp,
     SignUpFinalPage:SignUPFinalPage,
-    CodeVerification:CodeVerification
+    CodeVerification:CodeVerification,
+    PasswordSetPage:PasswordSetPage,
+    ProfilePictureSetPage:ProfilePictureSetPage,
+    BioSetPage:BioSetPage,
+    LanguageSetPage:LanguageSetPage,
+    coreDrawerNavigator:coreDrawerNavigator,
+
+    //Login
+    LoginPage:LoginPage,
+    // CoreTabNavigator:CoreTabNavigator
 
 },{
     headerMode:'none'
 });
 
 
-export default createAppContainer(CoreStackkNavigator);
+// export default createAppContainer(CoreStackNavigator);
+export default createAppContainer(CoreStackNavigator);
+// export default BioSetPage;
+
+const Styles = StyleSheet.create({
+
+    IconStyle:{
+        height: swidth * 0.07,
+        width: swidth * 0.07
+    },
+
+});
 
 

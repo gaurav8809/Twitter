@@ -6,7 +6,7 @@ const SystemState = {
 
 const ProfileState = {
 
-    profiledata:{}
+    LogedInUserData:{}
 
 };
 

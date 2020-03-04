@@ -12,9 +12,12 @@ import {
 import {swidth,sheight,centertext} from '../Global/ScreenSetting';
 import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate'
-import {SystemButton} from '../Components/TwitterButton'
+import {SystemButton} from '../Global/TwitterButton'
 import {safearea,mainview} from '../Global/ScreenSetting';
-
+import {MaterialIndicator} from 'react-native-indicators';
+import {DefaultIndicator} from '../Global/Indicators';
+import HELPER from '../Global/Helper';
+import {NavigationActions, StackActions} from 'react-navigation';
 
 class HelloScreen extends Component{
 
@@ -36,7 +39,7 @@ class HelloScreen extends Component{
                 backgroundColor: SystemBlue,
                 borderRadius: 50,
                 width: swidth * 0.75,
-                height: swidth * 0.15,
+                height: swidth * 0.13,
                 ...centertext
             },
             text:{
@@ -80,7 +83,7 @@ class HelloScreen extends Component{
                             <Text style={[Styles.questiontext]}>
                                 {"Have an account already? "}
                             </Text>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('LoginPage')}>
                                 <Text style={[Styles.logintext]}>
                                     {"Log in"}
                                 </Text>

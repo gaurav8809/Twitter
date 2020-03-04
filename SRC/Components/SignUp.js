@@ -15,11 +15,12 @@ import {swidth,sheight,centertext} from '../Global/ScreenSetting';
 import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {SystemButton} from './TwitterButton';
+import {SystemButton} from '../Global/TwitterButton';
 import {safearea,mainview} from '../Global/ScreenSetting';
 import {emailValidation} from '../Global/validationHelper';
-import TwitterBottomPanel from '../Components/TwitterBottomPanel'
-import TwitterTopPanel from './TwitterTopPanel';
+import TwitterBottomPanel from '../Global/TwitterBottomPanel'
+import TwitterTopPanel from '../Global/TwitterTopPanel';
+import GLOBAL from '../Global/Initialization';
 
 class SignUp extends Component{
 
@@ -33,7 +34,7 @@ class SignUp extends Component{
             totalnumber:50,
             correctsign:false,
             poecorrectsign:false,
-            placeholder:'Phone number or email address',
+            placeholder:'Phone number or email',
             dynamiclabel:'Use email instead',
             currentplace:true,
             nextopacity:0.5,
@@ -43,10 +44,6 @@ class SignUp extends Component{
         this.a = React.createRef();
         this.b = React.createRef();
 
-    }
-
-    componentDidMount(): void {
-        // this.a.current.focus()
     }
 
     namechange = (text) => {
@@ -117,7 +114,7 @@ class SignUp extends Component{
             if(this.state.currentplace)
             {
                 // alert(this.state.phoneoremail.includes('.'));
-                if((this.state.phoneoremail !== ''  && this.state.phoneoremail.length !== 10 || isNaN(this.state.phoneoremail)) || this.state.phoneoremail.includes('.') === true)
+                if((this.state.phoneoremail !== '' && this.state.phoneoremail.length !== 10 || isNaN(this.state.phoneoremail)) || this.state.phoneoremail.includes('.') === true)
                 {
                     // console.log("Sorry");
                     this.setState({
@@ -278,7 +275,7 @@ class SignUp extends Component{
                                         autoCorrect={false}
                                         style={[Styles.poetext,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
                                         value={this.state.phoneoremail}
-                                        onChangeText={text => {this.setpelabel(text)}}
+                                        onChangeText={text => this.setpelabel(text)}
                                         placeholder={this.state.placeholder}
                                         placeholderTextColor={"gray"}
                                         keyboardType={
@@ -287,11 +284,12 @@ class SignUp extends Component{
                                         selectionColor={SystemBlue}
                                         ref={this.b}
                                         onFocus={() => this.setState({
+                                            nextopacity : this.state.phoneoremail === '' ? 0.5 : 1,
                                             currenttextinput:1,
                                             placeholder: this.state.currentplace ? 'Phone' : 'Email'
                                         })}
                                         onBlur={() => this.setState({
-                                            placeholder: `Phone number or email address`
+                                            placeholder: `Phone number or email`
                                         })}
                                     />
 

@@ -10,7 +10,7 @@ import {
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import SplashScreen from './SRC/Components/SplashScreen';
+import SplashScreen from './SRC/Global/SplashScreen';
 import HelloScreen from './SRC/Components/HelloScreen';
 import {persistStore, persistReducer} from 'redux-persist';
 import RootNavigator from './SRC/Navigators/RootNavigator';
