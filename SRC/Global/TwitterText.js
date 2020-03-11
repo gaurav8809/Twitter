@@ -38,18 +38,24 @@ export const TextWithLink = (props) => {
 };
 
 export const BlueText = (props) => {
+
+    let {
+        text,
+        onPress
+    } = props;
+
     return(
-        <Text style={[Styles.bluetest]}>
-            {props.text}
+        <Text style={[Styles.bluetest]} onPress={onPress && onPress}>
+            {text && text}
         </Text>
     )
 };
 
 export const GrayText = (props) => {
     return(
-        <View style={[Styles.graytextview, props.style && props.style]}>
-            <Text style={[Styles.graytext]}>
-                {props.text}
+        <View style={[Styles.graytextview, props.viewstyle && props.viewstyle]}>
+            <Text style={[Styles.graytext, props.textstyle && props.textstyle]}>
+                {props.text && props.text}
             </Text>
         </View>
     )
@@ -58,8 +64,8 @@ export const GrayText = (props) => {
 export const BlackBigText = (props) => {
     return(
         <View style={[Styles.createtextview, props.style && props.style]}>
-            <Text style={[Styles.blackbigtext]}>
-                {props.text}
+            <Text style={[Styles.blackbigtext, props.textstyle && props.textstyle]}>
+                {props.text && props.text}
             </Text>
         </View>
     )

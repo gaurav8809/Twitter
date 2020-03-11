@@ -135,8 +135,10 @@ class ProfilePictureSetPage extends Component {
                 .then(response => {
                     // alert("Success");
                     // this.setLoader(false);
+                    debugger
                     this.props.UpdateWhere(`users`,this.state.signupdata.id,{'profileImage':response.data})
                         .then(response => {
+                            debugger
                             this.setLoader(false);
                             // alert("Success");
                             const resetAction = StackActions.reset({

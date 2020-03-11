@@ -30,7 +30,7 @@ class StartUpLoader extends Component{
     LoginCheck = () => {
         HELPER.AsyncFetch('AsyncLogedInUserData')
             .then(response => {
-                debugger
+
                 if(response !== null)
                 {
                     const resetAction = StackActions.reset({
@@ -93,7 +93,7 @@ let Styles = StyleSheet.create({
         ...centertext
     },
     questionview:{
-        marginTop: swidth * (Platform.OS == 'ios' ? 0.5 : 0.3),
+        marginTop: swidth * (Platform.OS === 'ios' ? 0.5 : 0.3),
         flexDirection:'row'
     },
 

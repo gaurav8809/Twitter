@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component,useEffect} from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -24,6 +24,8 @@ import styles from 'react-native-webview/lib/WebView.styles';
 import {SystemButton} from '../Global/TwitterButton';
 import HELPER from '../Global/Helper';
 import {NavigationActions, StackActions} from 'react-navigation';
+import {GetUserInfo,GetLoginUserData} from '../Actions/UserAction';
+import {UIActivityIndicator} from 'react-native-indicators';
 
 const MENULIST = [
     {
@@ -78,10 +80,68 @@ class DrawerView extends Component{
         super(props);
 
         this.state = {
-
+            LogedInUserData:{},
         };
 
     }
+
+    componentDidMount(){
+
+        this.InitializeView();
+
+    }
+
+   static getDerivedStateFromProps(nextProps, prevState){
+        if(nextProps.LogedInUserData !== prevState.LogedInUserData)
+        {
+            return{
+                LogedInUserData : nextProps.LogedInUserData
+            }
+        }
+        return null;
+   }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.LogedInUserData !== this.state.LogedInUserData){
+            //Perform some operation here
+            this.setState({LogedInUserData:prevState.LogedInUserData});
+        }
+    }
+
+    InitializeView = () => {
+
+        HELPER.AsyncFetch('AsyncLogedInUserData')
+            .then(response => {
+                if(response !== null)
+                {
+                    this.props.GetLoginUserData('users',response.id)
+                        .then(response => {
+                            this.setState({
+                                LogedInUserData: response.data
+                            });
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            alert(error);
+                        });
+                }
+                else
+                {
+                    const resetAction = StackActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({routeName:'HelloScreen'})
+                        ],
+                    });
+
+                    setTimeout(() => this.props.navigation.dispatch(resetAction),1500);
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            });
+
+    };
 
     renderMenuItem = (item,index) => {
 
@@ -149,6 +209,10 @@ class DrawerView extends Component{
             usernametext,
         } = Styles;
 
+        let {
+            LogedInUserData
+        } = this.state;
+
         return(
             <SafeAreaView style={{flex:1}}>
                 {/*<AppHeader text={'Home'}/>*/}
@@ -156,25 +220,64 @@ class DrawerView extends Component{
 
                     <View style={[Styles.profileview]}>
                         <View style={{ width: swidth * 0.7}}>
-                            <Image source={require('../Assets/Images/user.png')} style={profileimage}/>
+
+                            <View style={{ justifyContent:'center'}}>
+                                <Image
+                                    // source={
+                                    //     LogedInUserData.profileImage ?
+                                    //         {uri:LogedInUserData.profilImage} :
+                                    //     require('../Assets/Images/user.png')
+                                    // }
+                                    source={
+                                        LogedInUserData && LogedInUserData.profileImage && LogedInUserData.profileImage
+                                            ? {uri: LogedInUserData.profileImage}
+                                            : require('../Assets/Images/usergray.png')
+                                    }
+                                    style={profileimage}
+                                    onLoadStart={() => this.setState({imageloader:true})}
+                                    onLoadEnd={() => this.setState({imageloader:false})}
+                                />
+
+                                {
+                                    this.state.imageloader &&
+                                        <UIActivityIndicator
+                                            color={SystemBlue}
+                                            size={swidth * 0.06}
+                                            style={{position: 'absolute', justifySelf:'center',height: swidth * 0.15, width : swidth * 0.15,}}
+                                        />
+                                }
+                            </View>
+
+
                             <View style={profilenameview}>
                                 <Text style={profilenametext}>
-                                    {"Gaurav Rana"}
+                                    {
+                                        LogedInUserData &&
+                                        LogedInUserData.profilename
+                                    }
+
+                                    {/*{"Gaurav Rana"}*/}
                                 </Text>
                                 <Icon name={'chevron-small-down'} type={'Entypo'} size={swidth * 0.06} color={SystemBlue}/>
                             </View>
                             <View style={usernameview}>
                                 <Text style={usernametext}>
-                                    {"@gaurav199827"}
+                                    {
+                                        LogedInUserData &&
+                                        LogedInUserData.username
+                                    }
                                 </Text>
                             </View>
                             <View style={{marginTop: swidth * 0.04}}>
                                 <Text style={{fontSize: swidth * 0.045, fontWeight: "500"}}>
-                                    {"61 "}
+                                    {/*{"61 "}*/}
+                                    {LogedInUserData.following &&
+                                    `${LogedInUserData.following.length} `}
                                     <Text style={{fontSize: swidth * 0.045, color:'gray'}}>
                                         {"Following   "}
                                     </Text>
-                                    {"5 "}
+                                    {LogedInUserData.followers &&
+                                    `${LogedInUserData.followers.length} `}
                                     <Text style={{fontSize: swidth * 0.045, color:'gray'}}>
                                         {"Followers"}
                                     </Text>
@@ -230,7 +333,7 @@ let Styles = StyleSheet.create({
     profileimage:{
         height: swidth * 0.15,
         width : swidth * 0.15,
-        borderRadius: 100
+        borderRadius: 100,
     },
     profilenameview:{
         flexDirection:'row',
@@ -289,15 +392,22 @@ let Styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
+    const {
+        UserInfo,
+        LogedInUserData
+    } = state.UserReducer;
+
     return {
-        SystemData: state.SystemState.SystemData,
+        UserInfo,
+        LogedInUserData
     };
 };
 
 const mapDispatchToProps = {
-
+    GetUserInfo : GetUserInfo,
+    GetLoginUserData : GetLoginUserData,
 };
 
 // export default CodeVerification;
-export default connect(null, null)(DrawerView);
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerView);
 

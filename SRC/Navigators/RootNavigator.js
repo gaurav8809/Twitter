@@ -10,7 +10,7 @@ import {
     SafeAreaView,
     TouchableOpacity,
     Image,
-    StyleSheet
+    StyleSheet, Platform,
 } from 'react-native';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
 // import HomeNavigator from './HomeNavigator';
@@ -32,84 +32,35 @@ import MessageScreen from '../Components/TabsPages/MessageScreen';
 import DrawerView from '../Components/DrawerView';
 import StartUpLoader from '../Components/StartUpLoader';
 import LoginPage from '../Components/LoginPage';
+import {SystemButton} from '../Global/TwitterButton';
+import {AppHeader} from '../Global/AppHeader';
+import StackNav from '../Navigators/StackNavigator'
 
-
-const HomeSwitch = createStackNavigator({
-    HomeScreen:{
-        screen:HomeScreen,
-    }
-},
-    {
-        headerMode:'none'
-    });
-
-
-const CoreTabNavigator = createBottomTabNavigator({
-    HomeScreen:{
-        screen:HomeSwitch,
-        navigationOptions: {
-            // tabBarIcon:({tintColor}) => (<Image source={require('../Assets/Images/HomeBlack.png')}/>)
-        },
-    },
-    SearchScreen:{
-        screen:SearchScreen,
-        navigationOptions:{
-        },
-    },
-    NotificationScreen:{
-        screen:NotificationScreen,
-        navigationOptions:{
-        },
-    },
-    MessageScreen:{
-        screen:MessageScreen,
-        navigationOptions:{
-        },
-    },
-},{
-    defaultNavigationOptions: ({navigation}) => ({
-        tabBarIcon: ({ focused}) => {
-
-            let {IconStyle} = Styles;
-            if(!focused)
-            {
-                const { routeName } = navigation.state;
-
-                if (routeName === 'HomeScreen') {
-                    return <Image source={require('../Assets/Images/HomeBlack.png')} style={IconStyle}/>
-                } else if (routeName === 'SearchScreen') {
-                    return <Icon name={'search'} type={'FontAwesome'} color={'slategray'} size={swidth * 0.07} />
-                } else if (routeName === 'NotificationScreen') {
-                    return <Image source={require('../Assets/Images/BellBlack.png')} style={IconStyle} />
-                } else if (routeName === 'MessageScreen') {
-                    return <Image source={require('../Assets/Images/MessageBlack.png')} style={IconStyle} />
-                }
-
-            }
-            else
-            {
-                const { routeName } = navigation.state;
-
-                if (routeName === 'HomeScreen') {
-                    return <Image source={require('../Assets/Images/HomeEnable.png')} style={IconStyle}/>
-                } else if (routeName === 'SearchScreen') {
-                    return <Icon name={'search'} type={'FontAwesome'} color={SystemBlue} size={swidth * 0.07}/>
-                } else if (routeName === 'NotificationScreen') {
-                    return <Image source={require('../Assets/Images/BellEnable.png')} style={IconStyle} />
-                } else if (routeName === 'MessageScreen') {
-                    return <Image source={require('../Assets/Images/MessageEnable.png')} style={IconStyle}/>
-                }
-
-            }
-        },
-    }),
-    tabBarOptions: {
-        showLabel: false
-    }});
+const header = (text) => {
+    return (
+        <SafeAreaView >
+            <View style={{flexDirection:'row' ,  justifyContent:'center', alignItems:'center'}}>
+                <View>
+                    <Image source={require('../Assets/Images/user.png')} style={{height: swidth * 0.08, width : swidth * 0.08 }}/>
+                </View>
+                <View style={{alignItems:'flex-start', width: swidth * 0.75}}>
+                    <Text style={{fontSize: swidth * 0.05, marginLeft : swidth * 0.05}}>
+                        {text}
+                    </Text>
+                </View>
+                <View>
+                    <Icon name={'star-four-points-outline'} type={'MaterialCommunityIcons'} color={SystemBlue} size={swidth * 0.08} />
+                </View>
+            </View>
+        </SafeAreaView>
+    )
+};
 
 const coreDrawerNavigator = createDrawerNavigator(
     {
-        CoreTabNavigator,
+        StackNav,
+        // coreTabNavigator,
+        // CoreTabNavigator,
     },
     {
         contentComponent:DrawerView,
@@ -140,15 +91,4 @@ const CoreStackNavigator = createStackNavigator({
 
 // export default createAppContainer(CoreStackNavigator);
 export default createAppContainer(CoreStackNavigator);
-// export default BioSetPage;
-
-const Styles = StyleSheet.create({
-
-    IconStyle:{
-        height: swidth * 0.07,
-        width: swidth * 0.07
-    },
-
-});
-
 

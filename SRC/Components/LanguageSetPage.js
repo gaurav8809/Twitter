@@ -58,14 +58,11 @@ class LanguageSetPage extends Component {
 
     componentDidMount(){
 
-
-
         if(GLOBAL.LangListFetch)
         {
             this.setLoader(true);
             this.props.SelectAll('languages')
                 .then(response => {
-                    debugger
                     // console.log("Response",response.data);
                     this.setLoader(false);
                     // alert("Success");
@@ -87,7 +84,7 @@ class LanguageSetPage extends Component {
 
     languages = (item,index) => {
         return(
-            <View style={{ width: swidth * 0.8}}>
+            <View style={{ width: swidth * 0.85, alignSelf: 'center'}}>
                 <View style={{paddingTop: 15,paddingBottom: 15}}>
                     <CheckBox
                         checkBoxColor={SystemBlue}
@@ -120,7 +117,7 @@ class LanguageSetPage extends Component {
 
     exlanguages = (item,index) => {
         return(
-            <View style={{ width: swidth * 0.8}}>
+            <View style={{ width: swidth * 0.85, alignSelf:'center'}}>
                 <View style={{paddingTop: 15,paddingBottom: 15}}>
                     <CheckBox
                         checkBoxColor={SystemBlue}
@@ -142,7 +139,7 @@ class LanguageSetPage extends Component {
                             }
                         }}
                         isChecked={this.state.lans.includes(item.id)}
-                        leftText={`${item.id} ${item._data.native ? '-' : ''} ${item._data.native}`}
+                        leftText={`${item.id} ${item.native ? '-' : ''} ${item.native}`}
                         leftTextStyle={{color:'dimgray', fontSize: swidth * 0.05}}
                         checkboxStyle={{width: swidth * 0.07, height: swidth * 0.07}}
                     />
@@ -155,12 +152,12 @@ class LanguageSetPage extends Component {
 
         if(GLOBAL.LangsSet)
         {
-            let FinalLangs = this.state.lans.sort().join();
+            let FinalLangs = this.state.lans.sort();
             this.setLoader(true);
             this.props.UpdateWhere(`users`,this.state.signupdata.id,{'languages':FinalLangs})
                 .then(response => {
-                    this.setLoader(false);
 
+                    this.setLoader(false);
                     this.props.SelectUserById('users',this.state.signupdata.id)
                         .then(response => {
 
@@ -206,17 +203,17 @@ class LanguageSetPage extends Component {
                         ListHeaderComponent={
                             <View>
                                 <BlackBigText
-                                    style={{alignSelf:'center', width: swidth * 0.8}}
+                                    style={{alignSelf:'center'}}
                                     text={'Which languages do you speak?'}
                                 />
 
                                 <GrayText
-                                    style={{alignSelf:'center', width: swidth * 0.8}}
+                                    viewstyle={{alignSelf:'center', }}
                                     text={'You\'ll be able to see Tweets,people and trends in any languages you choose.'}
                                 />
                             </View>
                         }
-                        style={{marginTop: swidth * 0.04}}
+                        style={{marginTop: swidth * 0.03}}
                         // keyExtractor={item => item.title}
                         keyExtractor={item => GLOBAL.LangListFetch ? item.id : item.title}
                         data={ GLOBAL.LangListFetch ? (this.state.languages.length > 0 && this.state.languages) : ITEM}
@@ -228,9 +225,6 @@ class LanguageSetPage extends Component {
                 </View>
 
                 <TwitterBottomPanel
-                    text={'Skip for now'}
-                    textenable={true}
-                    textpress={() => this.props.navigation.navigate('')}
                     buttonopacity={1}
                     buttontext={'Next'}
                     buttonpress={() => this.setLanguages()}

@@ -44,7 +44,6 @@ export const FireBaseSendEmail = (dataobj) => {
     return (dispatch,getState) => {
         return MakeRequest(API.FIREBASE_SENDEMAIL,'post',dataobj)
             .then(response => {
-                debugger
                 if(response.accepted !== '')
                 {
                     // dispatch({
@@ -60,7 +59,6 @@ export const FireBaseSendEmail = (dataobj) => {
                 }
             })
             .catch(error => {
-                debugger
                 return Promise.reject({
                     status: 400,
                     message: 'Verification code has not been sent yet.',
@@ -76,7 +74,6 @@ export const FireBaseStoreData = (dataobj) => {
     var timestamp = Number(new Date());
 
     return (dispatch,getState) => {
-        debugger
         return firebase
             .storage()
             .ref(`UserProfiles/${timestamp.toString()}`)
@@ -108,30 +105,31 @@ export const CreateUser = (collection,dataObj) => {
         return DBRef.add(dataObj)
             .then(response => {
 
-                let userInfo = {
-                    followers:[],
-                    following:[]
-                };
-                return firebase.firestore().collection('userinfo').doc(response.id).set(userInfo)
-                    .then(res => {
-                        debugger
-                        return Promise.resolve({
-                            status: 200,
-                            message: 'Successfully created new record',
-                            data: response.id
-                        });
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        return Promise.reject({
-                            status: 400,
-                            message: 'Not Stored inner',
-                            data: error
-                        });
-                    });
+                return Promise.resolve({
+                    status: 200,
+                    message: 'Successfully created new record',
+                    data: response.id
+                });
+
+                // return firebase.firestore().collection('userinfo').doc(response.id).set(userInfo)
+                //     .then(res => {
+                //         debugger
+                //         return Promise.resolve({
+                //             status: 200,
+                //             message: 'Successfully created new record',
+                //             data: response.id
+                //         });
+                //     })
+                //     .catch(error => {
+                //         console.log(error);
+                //         return Promise.reject({
+                //             status: 400,
+                //             message: 'Not Stored inner',
+                //             data: error
+                //         });
+                //     });
             })
             .catch(error => {
-                debugger
                 console.log(error);
                 return Promise.reject({
                     status: 400,
@@ -217,10 +215,18 @@ export const SelectAll = (collection) => {
                 // response.forEach(doc => {
                 //     console.log(doc);
                 // });
+                let f = [];
+                let val = null;
+                response._docs.forEach(item => {
+                    val = item._data;
+                    val['id'] = item.id;
+                    f.push(val)
+                });
+
                 return Promise.resolve({
                     status: 200,
                     message: 'Successfully Get all data',
-                    data: response._docs
+                    data: f
                 });
 
             })
@@ -246,7 +252,6 @@ export const SelectUserById = (collection,id) => {
 
         return DBRef.get()
             .then(response => {
-                debugger
                 dispatch({
                     type: LOGEDIN_USER,
                     payload: response._data,
@@ -264,7 +269,6 @@ export const SelectUserById = (collection,id) => {
 
             })
             .catch(error => {
-                debugger
                 console.log(error);
                 return Promise.reject({
                     status: 400,
@@ -274,3 +278,44 @@ export const SelectUserById = (collection,id) => {
             })
     };
 };
+
+export const GetField = (collection,dataObj) => {
+
+    // console.log("Doc name = ",doc);
+    const DBRef = firebase.firestore().collection(collection)
+        .where(dataObj[0],dataObj[1],dataObj[2]);
+
+    return (dispatch,getState) => {
+
+        return DBRef.get()
+            .then(response => {
+
+                if (response.empty) {
+                    return Promise.resolve({
+                        status: 400,
+                        message: 'No data found',
+                        data: response._data
+                    });
+                }
+
+                return Promise.resolve({
+                    status: 200,
+                    message: 'Successfully Get data',
+                    data: response._data
+                });
+
+            })
+            .catch(error => {
+                console.log(error);
+                return Promise.reject({
+                    status: 500,
+                    message: 'Not Got data',
+                    data: error
+                });
+            })
+    };
+};
+
+
+
+

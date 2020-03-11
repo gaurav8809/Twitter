@@ -22,10 +22,9 @@ const AsyncStore = async (key,data) => {
 
 const AsyncFetch = async (key) => {
     try {
-        let value = await AsyncStorage.getItem(key);
-        return Promise.resolve(value);
 
-        // return JSON.parse(value);
+        let value = await AsyncStorage.getItem(key);
+        return Promise.resolve(JSON.parse(value));
 
     } catch(e) {
         alert("Error = " + e);

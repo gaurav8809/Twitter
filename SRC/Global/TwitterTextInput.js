@@ -7,6 +7,7 @@ import {AntDesign} from './VectorIcons';
 import Icon from 'react-native-dynamic-vector-icons';
 
 
+let TwitterTextInput;
 export default TwitterTextInput = (props) => {
 
     let {
@@ -19,6 +20,8 @@ export default TwitterTextInput = (props) => {
         IconPress,
         LabelMessage,
         CounterDetails,
+        viewstyle,
+        autoCorrect
     } = props;
 
     return(
@@ -26,12 +29,13 @@ export default TwitterTextInput = (props) => {
             <View
                 style={[
                     Styles.outercontainer,
-                    LabelMessage && LabelMessage !== ''
+                    LabelMessage
                         ? {borderColor: 'red'}
-                        : {borderColor: SystemBlue}
+                        : {borderColor: SystemBlue},
+                    viewstyle && viewstyle
                 ]}>
                 <TextInput
-                    autoCorrect={false}
+                    autoCorrect={autoCorrect && autoCorrect}
                     // onFocus={() => this.setState({currenttextinput:0})}
                     keyboardType={keyboardType && keyboardType}
                     style={[Styles.textinput]}
@@ -45,6 +49,7 @@ export default TwitterTextInput = (props) => {
                     // ref={this.a}
                     // returnKeyType={'next'}
                     // onSubmitEditing={() => this.b.current.focus()}
+                    onFocus={props.onFocus && props.onFocus}
                 />
                 {
                     IconDetails && IconDetails.IconEnable &&
@@ -53,22 +58,26 @@ export default TwitterTextInput = (props) => {
                     </TouchableOpacity>
                 }
             </View>
-            <View style={[Styles.lowerpanel, {justifyContent: LabelMessage !== '' ? 'space-between' : 'flex-end'}]}>
+            <View style={[{marginTop: swidth * 0.02,flexDirection: 'row', justifyContent: CounterDetails ? 'space-between' : 'flex-end'}]}>
                 {
-                    LabelMessage !== '' &&
-                    <View>
-                        <Text style={[Styles.labeltext]}>
-                            {LabelMessage}
-                        </Text>
-                    </View>
+                    LabelMessage ?
+                        <View style={[ ]}>
+                            <View>
+                                <Text style={[Styles.labeltext]}>
+                                    {LabelMessage}
+                                </Text>
+                            </View>
+                        </View>
+                        : <View/>
                 }
                 {
-                    CounterDetails &&
-                    <View>
-                        <Text style={[Styles.countertext]}>
-                            {CounterDetails.CounterText}
-                        </Text>
-                    </View>
+                    CounterDetails ?
+                        <View style={{justifyContent: 'flex-end'}}>
+                            <Text style={[Styles.countertext]}>
+                                {CounterDetails.CounterText}
+                            </Text>
+                        </View>
+                        : null
                 }
             </View>
         </View>
@@ -87,7 +96,7 @@ let Styles = StyleSheet.create({
    },
     textinput:{
         // height: swidth * 0.05,
-        width: swidth * 0.77,
+        width: swidth * 0.87,
         fontSize: swidth * 0.06,
         // backgroundColor: 'pink',
         padding: 0

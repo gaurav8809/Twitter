@@ -61,7 +61,6 @@ class InterestSetPage extends Component {
             this.setLoader(true);
             this.props.SelectAll('languages')
                 .then(response => {
-                    debugger
                     // console.log("Response",response.data);
                     this.setLoader(false);
                     // alert("Success");

@@ -1,8 +1,32 @@
 import SystemReducer from './SystemReducer';
-import UserRsducer from './UserRsducer';
+import UserReducer from './UserReducer';
 import {combineReducers} from 'redux';
 
 export default combineReducers({
     SystemReducer:SystemReducer,
-    UserRsducer:UserRsducer,
+    UserReducer:UserReducer,
 });
+
+
+
+// const appReducer = combineReducers({
+//     user: UserReducer,
+//     club: ClubReducer,
+//     common: CommonReducer,
+//     roster: RosterReducer,
+//     chat: ChatReducer,
+//     event: EventReducer,
+// });
+//
+// export default function rootReducer(state, action) {
+//     let finalState = appReducer(state, action);
+//     if (action.type === RESET_STORE) {
+//         finalState = appDefaultReducer; //resetReducer(finalState, action);
+//         UserReducer(finalState, action);
+//         ClubReducer(finalState, action);
+//         RosterReducer(finalState, action);
+//         ChatReducer(finalState, action);
+//         EventReducer(finalState, action);
+//     }
+//     return finalState;
+// }

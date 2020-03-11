@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, TouchableHighlight} from 'react-native';
 import React, {useState,useEffect} from 'react';
 import {centertext, swidth} from './ScreenSetting';
 import {SystemBlue} from './ColorPalate';
@@ -6,19 +6,12 @@ import {SystemBlue} from './ColorPalate';
 
 export const SystemButton = (props) => {
 
-    // const [myop, ch] = useState(props.opacity);
-
     let {
         styles,
         onPress,
         opacity,
         text
     } = props;
-    // useEffect(()=>{
-    //     ch(props.opacity);
-    //
-    // },[props.opacity])
-    //
 
     const dis = opacity === 0.5;
 
@@ -37,31 +30,65 @@ export const SystemButton = (props) => {
     )
 };
 
+export const BlueWhiteButton = (props) => {
+
+    debugger;
+
+    let {
+        onPress,
+        text,
+        activeText,
+    } = props;
+
+
+    const [textcolor,settextcolor] = useState(SystemBlue);
+    const [backcolor,setbackcolor] = useState('white');
+    const [textstate,setText] = useState(text);
+
+    return(
+        <TouchableOpacity
+            // onShowUnderlay={() =>
+            //     [
+            //         settextcolor(textcolor === 'white' ? SystemBlue : 'white'),
+            //         setbackcolor(backcolor ===SystemBlue ? 'white' : SystemBlue),
+            //         setText(textstate === text ? activeText : text)
+            //     ]
+            // }
+            underlayColor={SystemBlue}
+            style={[Styles.button,{backgroundColor: backcolor}]}
+            onPress={[onPress,() => {
+                settextcolor(textcolor === 'white' ? SystemBlue : 'white');
+                setbackcolor(backcolor === SystemBlue ? 'white' : SystemBlue);
+                setText(textstate === text ? activeText : text);
+            }]}
+        >
+            <Text style={[Styles.btntext,{color: textcolor}]}>
+                {textstate}
+            </Text>
+        </TouchableOpacity>
+    )
+};
+
 module.extends = {
-    SystemButton
+    SystemButton,
+    BlueWhiteButton
 };
 
 let Styles = StyleSheet.create({
-    createbtnview:{
-        marginTop: swidth * 0.15,
-        alignItems: 'center'
+
+    button:{
+        width: swidth * 0.27,
+        padding:6,
+        backgroundColor:'white',
+        borderColor: SystemBlue,
+        borderWidth:1.5,
+        borderRadius: 100,
+        alignItems:'center'
     },
-    createbtn:{
-        backgroundColor: SystemBlue,
-        borderRadius: 50,
-        width: swidth * 0.75,
-        height: swidth * 0.15,
-        ...centertext
-    },
-
-//////       Text        /////////
-
-
-    craetebtntext:{
-        fontSize: swidth * 0.065,
-        fontFamily: 'Roboto-Bold',
-        color:'white',
-        // fontWeight:"500"
+    btntext:{
+        fontSize: swidth * 0.04,
+        fontWeight: "700",
+        color: SystemBlue,
     },
 
 });

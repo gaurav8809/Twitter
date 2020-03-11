@@ -79,7 +79,6 @@ class BioSetPage extends Component {
 
         if(GLOBAL.BioSetMode)
         {
-            debugger
             console.log(this.state.signupdata.id)
             this.setLoader(true);
             this.props.UpdateWhere(`users`,this.state.signupdata.id,{'bioDetails':this.state.bio})

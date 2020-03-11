@@ -31,8 +31,8 @@ class SearchScreen extends Component{
 
         return(
             <SafeAreaView style={[safearea]}>
-                <AppHeader text={'Search'} navigation={this.props.navigation}/>
-                <View >
+                {/*<AppHeader text={'Search'} navigation={this.props.navigation}/>*/}
+                <View>
                     <Text>{'Search'}</Text>
                 </View>
             </SafeAreaView>

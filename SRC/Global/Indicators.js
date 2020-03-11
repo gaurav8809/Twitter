@@ -29,13 +29,27 @@ export const TwitterCircleIndicator = () => {
             {/*<Image source={require('../Assets/Images/TwitterBlueLogo.png')} style={{height: swidth * 0.2, width: swidth * 0.2}}/>*/}
 
             <View style={{ position:'absolute', alignItems:'center'}}>
-                <MaterialIndicator color={SystemBlue} size={swidth * 0.25} trackWidth={3}/>
-                <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.15} style={{position:'absolute',marginTop: swidth * 0.05}}/>
+                <MaterialIndicator color={SystemBlue} size={swidth * 0.23} trackWidth={3}/>
+                <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.12} style={{position:'absolute',marginTop: swidth * 0.06}}/>
             </View>
             <Text style={{color: SystemBlue, fontSize : swidth * 0.05, fontWeight: "bold", marginLeft: swidth * 0.04, marginTop: swidth * 0.37}}>
                 {"Loading ..."}
             </Text>
         </View>
+    );
+};
+
+
+export const ImageLoaderIndicator = (props) => {
+    return(
+        <UIActivityIndicator
+            color={SystemBlue}
+            size={swidth * 0.04}
+            style={[{
+                position: 'absolute',
+                justifySelf: 'center',
+            },props.style]}
+        />
     );
 };
 
