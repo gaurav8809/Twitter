@@ -32,8 +32,6 @@ export const SystemButton = (props) => {
 
 export const BlueWhiteButton = (props) => {
 
-    debugger;
-
     let {
         onPress,
         text,
@@ -56,11 +54,12 @@ export const BlueWhiteButton = (props) => {
             // }
             underlayColor={SystemBlue}
             style={[Styles.button,{backgroundColor: backcolor}]}
-            onPress={[onPress,() => {
+            onPress={() => {
                 settextcolor(textcolor === 'white' ? SystemBlue : 'white');
                 setbackcolor(backcolor === SystemBlue ? 'white' : SystemBlue);
                 setText(textstate === text ? activeText : text);
-            }]}
+                onPress();
+            }}
         >
             <Text style={[Styles.btntext,{color: textcolor}]}>
                 {textstate}

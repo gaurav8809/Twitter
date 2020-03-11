@@ -69,8 +69,8 @@ export const AppHeader = (props) => {
                             {
                                 imageLoader &&
                                 <ImageLoaderIndicator
-                                    style={{height: swidth * 0.14,
-                                        width : swidth * 0.14,}}
+                                    style={{height: swidth * 0.09,
+                                        width : swidth * 0.09,}}
                                 />
                             }
                         </View>

@@ -22,7 +22,7 @@ import {BlackBigText, BlueText} from '../../Global/TwitterText';
 import {ProfileInfoBadge} from '../../Global/TwitterBadges';
 import HELPER from '../../Global/Helper';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {GetWhoToFollowList} from '../../Actions/UserAction';
+import {FollowUser} from '../../Actions/UserAction';
 import {SelectAll} from '../../Actions/FireBaseDBAction';
 
 const MENULIST = [
@@ -103,6 +103,31 @@ class HomeScreen extends Component{
 
     };
 
+    followButtonPress = (item) => {
+
+        // alert(item.id + " / " + item.username);
+
+        let Obj = {
+            UserId: this.state.currentUser.id,
+            Username: this.state.currentUser.username,
+            OpUserId: item.id,
+            OpUsername: item.username,
+        };
+
+        // let final = this.state.currentUser;
+        // debugger
+        // final['following'].push(item.username);
+
+        this.props.FollowUser('users', Obj, this.state.currentUser)
+            .then(response => {
+
+            })
+            .catch(error => {
+                console.log(error)
+            });
+
+    };
+
     renderWhoToFollowList = (item,index) => {
 
         let {
@@ -123,12 +148,11 @@ class HomeScreen extends Component{
                             bio:item.bioDetails,
                         }
                     }
-                    BtnPress={() => alert(index)}
+                    BtnPress={() => this.followButtonPress(item)}
                 />
             </View>
         );
     };
-
 
     render(){
 
@@ -159,7 +183,7 @@ class HomeScreen extends Component{
                             <View style={seemorecontainer}>
                                 <BlueText
                                     text={'See more'}
-                                    onPress={() => alert()}
+                                    onPress={() => alert("See more")}
                                 />
                             </View>
                         }
@@ -208,7 +232,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    GetWhoToFollowList,
+    FollowUser,
     SelectAll
 };
 

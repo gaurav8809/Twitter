@@ -67,7 +67,7 @@ class LoginPage extends Component {
 
     gotoLogin = () => {
 
-        let username = this.state.txtemail;
+        let username = this.state.txtemail.toLowerCase();
         let password = this.state.txtpassword;
         this.setLoader(true);
         this.props.SelectAll('users')
