@@ -23,9 +23,11 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
 import styles from 'react-native-webview/lib/WebView.styles';
 import {SystemButton} from '../Global/TwitterButton';
 import HELPER from '../Global/Helper';
-import {NavigationActions, StackActions} from 'react-navigation';
+import {NavigationActions, StackActions,withNavigation} from 'react-navigation';
 import {GetUserInfo,GetLoginUserData} from '../Actions/UserAction';
 import {UIActivityIndicator} from 'react-native-indicators';
+import { EventRegister } from 'react-native-event-listeners'
+
 
 const MENULIST = [
     {
@@ -82,16 +84,20 @@ class DrawerView extends Component{
         this.state = {
             LogedInUserData:{},
         };
-
     }
 
     componentDidMount(){
 
-        this.InitializeView();
+        this.listener = EventRegister.addEventListener('UpdateUserListener',
+            () => this.InitializeView());
 
     }
 
-   static getDerivedStateFromProps(nextProps, prevState){
+    componentWillUnmount(){
+        EventRegister.removeEventListener(this.listener)
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState){
         if(nextProps.LogedInUserData !== prevState.LogedInUserData)
         {
             return{
@@ -405,9 +411,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     GetUserInfo : GetUserInfo,
-    GetLoginUserData : GetLoginUserData,
+    GetLoginUserData,
 };
 
 // export default CodeVerification;
-export default connect(mapStateToProps, mapDispatchToProps)(DrawerView);
+export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(DrawerView));
 

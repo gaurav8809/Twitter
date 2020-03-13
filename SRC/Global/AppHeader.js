@@ -9,6 +9,8 @@ import {connect, useSelector, useDispatch} from 'react-redux';
 import {AntDesign} from './VectorIcons';
 import {withNavigation} from 'react-navigation';
 import {ImageLoaderIndicator} from './Indicators';
+import { EventRegister } from 'react-native-event-listeners'
+
 
 export const AppHeader = (props) => {
 
@@ -50,7 +52,10 @@ export const AppHeader = (props) => {
                 alignItems: 'center',
             }}>
                 <View style={{ flex:1,marginLeft: swidth * 0.03}}>
-                    <TouchableOpacity onPress={() => navigation.openDrawer()} >
+                    <TouchableOpacity onPress={() => {
+                        EventRegister.emit('UpdateUserListener');
+                        navigation.openDrawer();
+                    }} >
 
                         {/*<Image source={require('../Assets/Images/user.png')} style={{height: swidth * 0.08, width : swidth * 0.08 }}/>*/}
 

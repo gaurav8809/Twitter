@@ -51,15 +51,20 @@ export const GetLoginUserData = (collection, id) => {
 
         return DBRef.get()
             .then(response => {
+
+                let FinalData = response._data;
+                FinalData['id'] = id;
+
+                debugger
                 dispatch({
-                    type: LOGEDIN_USER,
-                    payload: response._data,
+                    type: TYPE.LOGEDIN_USER,
+                    payload: FinalData,
                 });
 
                 return Promise.resolve({
                     status: 200,
                     message: 'Successfully Get data',
-                    data: response._data
+                    data: FinalData
                 });
 
             })
@@ -92,25 +97,57 @@ export const FollowUser = (collection, dataObj, currentUser) => {
 
         return batch.commit()
             .then(response => {
-                debugger
-                currentUser['following'].push(dataObj.OpUsername);
-                debugger
-                dispatch({
-                    type: LOGEDIN_USER,
-                    payload: currentUser,
-                });
+
+                dispatch(GetLoginUserData('users',currentUser.id));
 
                 return Promise.resolve({
                     status: 200,
                     message: 'Successfully follow',
-                    data: currentUser
+                    // data: response.data
                 });
+
             })
             .catch(error => {
                 console.log(error);
                 return Promise.reject({
                     status: 400,
                     message: 'Not followed',
+                    data: error
+                });
+            })
+    };
+
+};
+
+export const UnFollowUser = (collection, dataObj, currentUser) => {
+
+    let batch = firebase.firestore().batch();
+
+    let followingRef = firebase.firestore().collection(collection).doc(dataObj.UserId);
+    batch.update(followingRef,{following: firebase.firestore.FieldValue.arrayRemove(dataObj.OpUsername)});
+
+    let followersRef = firebase.firestore().collection(collection).doc(dataObj.OpUserId);
+    batch.update(followersRef, {followers: firebase.firestore.FieldValue.arrayRemove(dataObj.Username)});
+
+    return (dispatch, getState) => {
+
+        return batch.commit()
+            .then(response => {
+
+                dispatch(GetLoginUserData('users',currentUser.id));
+
+                return Promise.resolve({
+                    status: 200,
+                    message: 'Successfully Unfollow',
+                    // data: response.data
+                });
+
+            })
+            .catch(error => {
+                console.log(error);
+                return Promise.reject({
+                    status: 400,
+                    message: 'Not Unfollowed',
                     data: error
                 });
             })

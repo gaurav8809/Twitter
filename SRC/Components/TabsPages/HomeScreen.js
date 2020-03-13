@@ -16,14 +16,18 @@ import GLOBAL from '../../Global/Initialization';
 import {safearea, mainview, swidth} from '../../Global/ScreenSetting';
 import {connect} from 'react-redux';
 import AppHeader from '../../Global/AppHeader';
-import COLOR from '../../Global/ColorPalate';
+import COLOR, {SystemBlue} from '../../Global/ColorPalate';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {BlackBigText, BlueText} from '../../Global/TwitterText';
 import {ProfileInfoBadge} from '../../Global/TwitterBadges';
 import HELPER from '../../Global/Helper';
 import {NavigationActions, StackActions} from 'react-navigation';
-import {FollowUser} from '../../Actions/UserAction';
+import {
+    FollowUser,
+    UnFollowUser
+} from '../../Actions/UserAction';
 import {SelectAll} from '../../Actions/FireBaseDBAction';
+import {BubbleButton} from '../../Global/TwitterButton';
 
 const MENULIST = [
     {
@@ -128,6 +132,31 @@ class HomeScreen extends Component{
 
     };
 
+    unfollowButtonPress = (item) => {
+
+        // alert(item.id + " / " + item.username);
+
+        let Obj = {
+            UserId: this.state.currentUser.id,
+            Username: this.state.currentUser.username,
+            OpUserId: item.id,
+            OpUsername: item.username,
+        };
+
+        // let final = this.state.currentUser;
+        // debugger
+        // final['following'].push(item.username);
+
+        this.props.UnFollowUser('users', Obj, this.state.currentUser)
+            .then(response => {
+
+            })
+            .catch(error => {
+                console.log(error)
+            });
+
+    };
+
     renderWhoToFollowList = (item,index) => {
 
         let {
@@ -148,7 +177,11 @@ class HomeScreen extends Component{
                             bio:item.bioDetails,
                         }
                     }
-                    BtnPress={() => this.followButtonPress(item)}
+                    BtnPress={(flag) => flag
+                        ? this.followButtonPress(item)
+                        : this.unfollowButtonPress(item)
+                    }
+                    // BtnPress={(flag) => this.followButtonPress(item)}
                 />
             </View>
         );
@@ -162,7 +195,6 @@ class HomeScreen extends Component{
             seemorecontainer
         } = Styles;
 
-
         return(
             <SafeAreaView style={[safearea]}>
                 {/*<AppHeader navigation={this.props.navigation}/>*/}
@@ -170,7 +202,7 @@ class HomeScreen extends Component{
 
                     <FlatList
                         data={this.state.wtfList !== [] && this.state.wtfList}
-                        keyExtractor={item => item.title}
+                        keyExtractor={item => item.username}
                         ListHeaderComponent={
                             <View style={wholabelcontainer}>
                                 <Text style={wholabeltext}>
@@ -189,6 +221,18 @@ class HomeScreen extends Component{
                         }
                     />
 
+
+                    <BubbleButton
+                        IconDetails={
+                            {
+                                type: 'Ionicons',
+                                name: 'ios-eye',
+                                color: 'white',
+                                size: swidth * 0.08,
+                            }
+                        }
+                        uri={require('../../Assets/Images/FeatherWhite.png')}
+                    />
 
                 </View>
             </SafeAreaView>
@@ -233,7 +277,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     FollowUser,
-    SelectAll
+    SelectAll,
+    UnFollowUser
 };
 
 // export default CodeVerification;
