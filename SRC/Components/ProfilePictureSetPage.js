@@ -131,7 +131,7 @@ class ProfilePictureSetPage extends Component {
         this.setLoader(true);
         if(GLOBAL.ProfileSetMode)
         {
-            this.props.FireBaseStoreData(this.state.photo)
+            this.props.FireBaseStoreData("UserProfiles",this.state.photo)
                 .then(response => {
                     // alert("Success");
                     // this.setLoader(false);

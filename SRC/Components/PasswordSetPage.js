@@ -168,10 +168,12 @@ class PasswordSetPage extends Component {
                     />
 
                     <BlackBigText
+                        textstyle={{fontSize: swidth * 0.08}}
                         text={'You\'ll need a password'}
                     />
 
                     <GrayText
+                        textstyle={{fontSize: swidth * 0.04}}
                         text={'Make sure it\'s 6 characters or more.'}
                     />
 

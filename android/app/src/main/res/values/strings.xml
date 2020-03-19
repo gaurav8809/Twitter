@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Twitter</string>
+    <string name="app_name">Twitter by Gaurav</string>
+    <string name="SystemBlue">#00acee</string>
 </resources>

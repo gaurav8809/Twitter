@@ -192,143 +192,142 @@ class SignUp extends Component{
             <SafeAreaView style={{...safearea}}>
                 <View style={{...mainview}}>
 
-                        {/*<View style={[Styles.twittericonview]}>*/}
-                        {/*    <View style={{flex:1}}>*/}
-                        {/*        <TouchableOpacity onPress={() => this.props.navigation.goBack()} >*/}
-                        {/*            <AntDesign name={'arrowleft'} color={SystemBlue} size={swidth * 0.07}/>*/}
-                        {/*        </TouchableOpacity>*/}
-                        {/*    </View>*/}
-                        {/*    <View style={{flex:1.1}}>*/}
-                        {/*        <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>*/}
-                        {/*    </View>*/}
-                        {/*</View>*/}
+                    {/*<View style={[Styles.twittericonview]}>*/}
+                    {/*    <View style={{flex:1}}>*/}
+                    {/*        <TouchableOpacity onPress={() => this.props.navigation.goBack()} >*/}
+                    {/*            <AntDesign name={'arrowleft'} color={SystemBlue} size={swidth * 0.07}/>*/}
+                    {/*        </TouchableOpacity>*/}
+                    {/*    </View>*/}
+                    {/*    <View style={{flex:1.1}}>*/}
+                    {/*        <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>*/}
+                    {/*    </View>*/}
+                    {/*</View>*/}
 
-                        <TwitterTopPanel
-                            onBackPress={() => this.props.navigation.goBack()}
-                        />
+                    <TwitterTopPanel
+                        onBackPress={() => this.props.navigation.goBack()}
+                    />
 
-                        <ScrollView contentContainerStyle={{paddingBottom: 150}} showsVerticalScrollIndicator={false}>
-                            <View style={[Styles.createtextview]}>
-                                <Text style={[Styles.hellotext]}>
-                                    {"Create your account"}
+                    <ScrollView contentContainerStyle={{paddingBottom: 150}} showsVerticalScrollIndicator={false}>
+                        <View style={[Styles.createtextview]}>
+                            <Text style={[Styles.hellotext]}>
+                                {"Create your account"}
+                            </Text>
+                        </View>
+
+                        <View style={{...inputtextview}}>
+                            <View
+                                style={[
+                                    nametextview,
+                                    this.state.totalnumber < 0
+                                        ? {borderColor: 'red'}
+                                        : {borderColor: this.state.currenttextinput === 0 ? SystemBlue : 'lightgray'}
+                                ]}>
+                                <TextInput
+                                    autoCorrect={false}
+                                    onFocus={() => this.setState({currenttextinput:0})}
+                                    style={[Styles.nametext]}
+                                    value={this.state.name}
+                                    onChangeText={text => {
+                                        if(text[0]!==' '){
+                                            this.namechange(text)
+                                        }
+                                    }}
+                                    placeholder={'Name'}
+                                    placeholderTextColor={"gray"}
+                                    selectionColor={SystemBlue}
+                                    autoFocus={true}
+                                    ref={this.a}
+                                    returnKeyType={'next'}
+                                    onSubmitEditing={() => this.b.current.focus()}
+                                />
+                                {
+                                    this.state.correctsign &&
+                                    <View style={[Styles.correctsigncircle]}>
+                                        <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.07}/>
+                                    </View>
+                                }
+                            </View>
+
+                            <View style={{...totalnumberview}}>
+
+                                {this.state.totalnumber < 0 ?
+                                    <Text style={{...namemsg}}>
+                                        {"Must be 50 characters or fewer."}
+                                    </Text>
+                                    :
+                                    <Text style={{...namemsg}}>
+                                        {""}
+                                    </Text>
+                                }
+                                <Text style={[totalnumbertext , { color: this.state.totalnumber < 0 ? 'red' : 'gray'}]}>
+                                    {this.state.totalnumber}
                                 </Text>
                             </View>
 
-                            <View style={{...inputtextview}}>
-                                <View
-                                    style={[
-                                        nametextview,
-                                        this.state.totalnumber < 0
-                                            ? {borderColor: 'red'}
-                                            : {borderColor: this.state.currenttextinput === 0 ? SystemBlue : 'lightgray'}
-                                    ]}>
-                                    <TextInput
-                                        autoCorrect={false}
-                                        onFocus={() => this.setState({currenttextinput:0})}
-                                        style={[Styles.nametext]}
-                                        value={this.state.name}
-                                        onChangeText={text => {
-                                            if(text[0]!==' '){
-                                                this.namechange(text)
-                                            }
-                                        }}
-                                        placeholder={'Name'}
-                                        placeholderTextColor={"gray"}
-                                        selectionColor={SystemBlue}
-                                        autoFocus={true}
-                                        ref={this.a}
-                                        returnKeyType={'next'}
-                                        onSubmitEditing={() => this.b.current.focus()}
-                                    />
-                                    {
-                                        this.state.correctsign &&
-                                        <View style={[Styles.correctsigncircle]}>
-                                            <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.07}/>
-                                        </View>
+                            <View
+                                style={[
+                                    poetextview,
+                                    this.state.pemsg !== ''
+                                        ? {borderColor: 'red'}
+                                        : {borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}
+                            ]}>
+                                <TextInput
+                                    autoCorrect={false}
+                                    style={[Styles.poetext,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
+                                    value={this.state.phoneoremail}
+                                    onChangeText={text => this.setpelabel(text)}
+                                    placeholder={this.state.placeholder}
+                                    placeholderTextColor={"gray"}
+                                    keyboardType={
+                                        this.state.currentplace ? 'phone-pad' : 'email-address'
                                     }
-                                </View>
+                                    selectionColor={SystemBlue}
+                                    ref={this.b}
+                                    onFocus={() => this.setState({
+                                        nextopacity : this.state.phoneoremail === '' ? 0.5 : 1,
+                                        currenttextinput:1,
+                                        placeholder: this.state.currentplace ? 'Phone' : 'Email'
+                                    })}
+                                    onBlur={() => this.setState({
+                                        placeholder: `Phone number or email`
+                                    })}
+                                />
 
-                                <View style={{...totalnumberview}}>
-
-                                    {this.state.totalnumber < 0 ?
-                                        <Text style={{...namemsg}}>
-                                            {"Must be 50 characters or fewer."}
-                                        </Text>
-                                        :
-                                        <Text style={{...namemsg}}>
-                                            {""}
-                                        </Text>
-                                    }
-                                    <Text style={[totalnumbertext , { color: this.state.totalnumber < 0 ? 'red' : 'gray'}]}>
-                                        {this.state.totalnumber}
-                                    </Text>
-                                </View>
-
-                                <View
-                                    style={[
-                                        poetextview,
-                                        this.state.pemsg !== ''
-                                            ? {borderColor: 'red'}
-                                            : {borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}
-                                ]}>
-                                    <TextInput
-                                        autoCorrect={false}
-                                        style={[Styles.poetext,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
-                                        value={this.state.phoneoremail}
-                                        onChangeText={text => this.setpelabel(text)}
-                                        placeholder={this.state.placeholder}
-                                        placeholderTextColor={"gray"}
-                                        keyboardType={
-                                            this.state.currentplace ? 'phone-pad' : 'email-address'
-                                        }
-                                        selectionColor={SystemBlue}
-                                        ref={this.b}
-                                        onFocus={() => this.setState({
-                                            nextopacity : this.state.phoneoremail === '' ? 0.5 : 1,
-                                            currenttextinput:1,
-                                            placeholder: this.state.currentplace ? 'Phone' : 'Email'
-                                        })}
-                                        onBlur={() => this.setState({
-                                            placeholder: `Phone number or email`
-                                        })}
-                                    />
-
-                                    {
-                                        this.state.poecorrectsign &&
-                                        <View style={[Styles.correctsigncircle]}>
-                                            <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.07}/>
-                                        </View>
-                                    }
-
-                                    <View style={[Styles.poemsgview]}>
-
-                                        { this.setpelabel &&
-                                            <Text style={{...namemsg}}>
-                                                {this.state.pemsg}
-                                            </Text>
-                                        }
-
+                                {
+                                    this.state.poecorrectsign &&
+                                    <View style={[Styles.correctsigncircle]}>
+                                        <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.07}/>
                                     </View>
+                                }
+
+                                <View style={[Styles.poemsgview]}>
+
+                                    { this.setpelabel &&
+                                        <Text style={{...namemsg}}>
+                                            {this.state.pemsg}
+                                        </Text>
+                                    }
+
                                 </View>
                             </View>
-
-
-                        </ScrollView>
-                    </View>
+                        </View>
+                    </ScrollView>
+                </View>
 
                 <TwitterBottomPanel
                     textenable={this.state.currenttextinput === 1}
                     textpress={() => this.setState(
                         {
                             currentplace:!this.state.currentplace,
-                            placeholder: this.state.currentplace ? 'Email' : 'Phone'
+                            placeholder: this.state.currentplace ? 'Email' : 'Phone',
+                            phoneoremail: '',
                         })}
                     text={this.state.currentplace ? 'Use email instead' : 'Use phone instead'}
-                    textpress={() => this.setState(
-                        {
-                            currentplace:!this.state.currentplace,
-                            placeholder: this.state.currentplace ? 'Email' : 'Phone'
-                        })}
+                    // textpress={() => this.setState(
+                    //     {
+                    //         currentplace:!this.state.currentplace,
+                    //         placeholder: this.state.currentplace ? 'Email' : 'Phone'
+                    //     })}
                     buttonopacity={this.state.nextopacity}
                     buttontext={"Next"}
                     buttonpress={() => this.nextbuttonclick()}
@@ -385,9 +384,10 @@ let Styles = StyleSheet.create({
     },
     createtextview:{
         marginTop: swidth * 0.13,
+        alignItems:'center'
     },
     inputtextview:{
-        marginTop: swidth * 0.4,
+        marginTop: swidth * 0.3,
     },
     nametextview:{
         width: swidth * 0.85,
@@ -424,7 +424,7 @@ let Styles = StyleSheet.create({
 
 
     hellotext:{
-        fontSize: swidth * 0.095,
+        fontSize: swidth * 0.08,
         fontFamily: 'Roboto-Bold',
         // flexWrap:'wrap-reverse'
     },

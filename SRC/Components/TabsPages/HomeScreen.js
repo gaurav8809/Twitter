@@ -2,15 +2,10 @@ import React, {Component} from 'react';
 import {
     SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Text,
-    StatusBar,
-    TouchableOpacity,
-    Platform,
-    TextInput,
-    KeyboardAvoidingView,
-    FlatList
+    FlatList,
+    Modal
 } from 'react-native';
 import GLOBAL from '../../Global/Initialization';
 import {safearea, mainview, swidth} from '../../Global/ScreenSetting';
@@ -26,8 +21,10 @@ import {
     FollowUser,
     UnFollowUser
 } from '../../Actions/UserAction';
+import {GetTweets} from '../../Actions/GeneralAction';
 import {SelectAll} from '../../Actions/FireBaseDBAction';
 import {BubbleButton} from '../../Global/TwitterButton';
+import {IOSIndicator} from "../../Global/Indicators";
 
 const MENULIST = [
     {
@@ -61,11 +58,14 @@ class HomeScreen extends Component{
         this.state = {
             currentUser:{},
             wtfList:[],
+            refreshLoader:false,
+            loader:false
         };
 
     }
 
     componentDidMount(){
+
         this.getCurrentLogedInData();
     }
 
@@ -78,7 +78,6 @@ class HomeScreen extends Component{
             .catch(error => {
                 console.log(error)
             });
-
     };
 
     getWhoToFollowList = () => {
@@ -88,23 +87,35 @@ class HomeScreen extends Component{
                 let wtfList = [];
                 for(let item of response.data)
                 {
-                    if(!item.followers.includes(this.state.currentUser.username))
+                    debugger
+                    if(!item.followers.includes(this.state.currentUser.id))
                     {
-                        if(item.username === this.state.currentUser.username)
-                            continue;
-                        if(wtfList.length === 3)
-                            break;
-                        else
+                        if(item.id !== this.state.currentUser.id)
                             wtfList.push(item);
                     }
                 }
-                this.setState({wtfList});
+                this.setState({wtfList,refreshLoader:false},() =>  this.getTweetList());
 
             })
             .catch(error => {
                 console.log(error)
             });
 
+    };
+
+    getTweetList = () => {
+
+        let STD = this.state;
+
+        this.props.GetTweets('tweets',  STD.currentUser.following, STD.currentUser)
+            .then(response => {
+
+                debugger
+
+            })
+            .catch(error => {
+                console.log(error)
+            });
     };
 
     followButtonPress = (item) => {
@@ -123,9 +134,6 @@ class HomeScreen extends Component{
         // final['following'].push(item.username);
 
         this.props.FollowUser('users', Obj, this.state.currentUser)
-            .then(response => {
-
-            })
             .catch(error => {
                 console.log(error)
             });
@@ -201,6 +209,8 @@ class HomeScreen extends Component{
                 <View style={{...Styles.mainview}}>
 
                     <FlatList
+                        refreshing={this.state.refreshLoader}
+                        onRefresh={() => this.setState({refreshLoader:true},() => this.getWhoToFollowList())}
                         data={this.state.wtfList !== [] && this.state.wtfList}
                         keyExtractor={item => item.username}
                         ListHeaderComponent={
@@ -215,7 +225,7 @@ class HomeScreen extends Component{
                             <View style={seemorecontainer}>
                                 <BlueText
                                     text={'See more'}
-                                    onPress={() => alert("See more")}
+                                    onPress={() => alert("Work in progress")}
                                 />
                             </View>
                         }
@@ -225,16 +235,22 @@ class HomeScreen extends Component{
                     <BubbleButton
                         IconDetails={
                             {
-                                type: 'Ionicons',
-                                name: 'ios-eye',
+                                type: 'MaterialCommunityIcons',
+                                name: 'feather',
                                 color: 'white',
-                                size: swidth * 0.08,
+                                size: swidth * 0.065,
                             }
                         }
                         uri={require('../../Assets/Images/FeatherWhite.png')}
+                        onPress={() => this.props.navigation.navigate("CreateTweetPage")}
                     />
 
                 </View>
+
+
+                <Modal visible={this.state.loader} transparent={true} onRequestClose={false}>
+                    <IOSIndicator />
+                </Modal>
             </SafeAreaView>
         )
     }
@@ -251,18 +267,18 @@ let Styles = StyleSheet.create({
     wholabelcontainer:{
         padding: swidth * 0.027,
         backgroundColor: 'white',
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.8,
         borderColor: 'lightgray',
     },
     wholabeltext:{
-        fontSize: swidth * 0.055,
+        fontSize: swidth * 0.05,
         fontWeight: "bold",
     },
     seemorecontainer:{
         height: swidth * 0.13,
         padding: swidth * 0.030,
         backgroundColor: 'white',
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.8,
         borderColor: 'lightgray',
         justifyContent:'center'
     },
@@ -278,7 +294,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
     FollowUser,
     SelectAll,
-    UnFollowUser
+    UnFollowUser,
+    GetTweets
 };
 
 // export default CodeVerification;

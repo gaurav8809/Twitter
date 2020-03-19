@@ -7,9 +7,10 @@ import {UIActivityIndicator} from 'react-native-indicators';
 import {GetLoginUserData, GetUserInfo} from '../Actions/UserAction';
 import {connect, useSelector, useDispatch} from 'react-redux';
 import {AntDesign} from './VectorIcons';
-import {withNavigation} from 'react-navigation';
+import {NavigationActions, StackActions, withNavigation} from 'react-navigation';
 import {ImageLoaderIndicator} from './Indicators';
 import { EventRegister } from 'react-native-event-listeners'
+import HELPER from "./Helper";
 
 
 export const AppHeader = (props) => {
@@ -26,9 +27,31 @@ export const AppHeader = (props) => {
 
 
     useEffect(() => {
+        HELPER.AsyncFetch('AsyncLogedInUserData')
+            .then(response => {
+                if(response !== null)
+                {
+                    dispatch(
+                        GetLoginUserData('users',response.id)
+                    )
+                }
+                else
+                {
+                    const resetAction = StackActions.reset({
+                        index: 0,
+                        actions: [
+                            NavigationActions.navigate({routeName:'HelloScreen'})
+                        ],
+                    });
+
+                    setTimeout(() => this.props.navigation.dispatch(resetAction),1500);
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            });
         setLogedInUserData(LogedInUserData);
-        // dispatch(GetUserInfo('users', LogedInUserData.id));
-    }, [LogedInUserData]);
+    },[LogedInUserData.profileImage]);
 
 
     /*  useEffect(() => {
@@ -52,7 +75,9 @@ export const AppHeader = (props) => {
                 alignItems: 'center',
             }}>
                 <View style={{ flex:1,marginLeft: swidth * 0.03}}>
-                    <TouchableOpacity onPress={() => {
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
                         EventRegister.emit('UpdateUserListener');
                         navigation.openDrawer();
                     }} >
@@ -85,8 +110,15 @@ export const AppHeader = (props) => {
                     <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>
                 </View>
                 <View style={{flex:1, marginRight:swidth * 0.03}}>
-                    <Image source={require('../Assets/Images/MagicBlue.png')}
-                           style={{height: swidth * 0.06, width: swidth * 0.06, alignSelf:'flex-end'}}/>
+                    {/*<Image source={require('../Assets/Images/MagicBlue.png')}*/}
+                    {/*       style={{height: swidth * 0.06, width: swidth * 0.06, alignSelf:'flex-end'}}/>*/}
+                           <Icon name={'react'}
+                                 type={'MaterialCommunityIcons'}
+                                 color={SystemBlue}
+                                 size={swidth * 0.06}
+                                 style={{alignSelf:'flex-end'}}
+                                 onPress={() => alert("Work in progress")}
+                           />
                 </View>
             </View>
         </SafeAreaView>

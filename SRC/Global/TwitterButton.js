@@ -13,7 +13,8 @@ export const SystemButton = (props) => {
         styles,
         onPress,
         opacity,
-        text
+        text,
+        aOpacity
     } = props;
 
     const dis = opacity === 0.5;
@@ -21,6 +22,7 @@ export const SystemButton = (props) => {
     return(
     <View style={[styles.view, {opacity: opacity}]}>
         <TouchableOpacity
+            activeOpacity={aOpacity && aOpacity}
             style={[styles.button, ]}
             onPress={onPress}
             disabled={dis}
@@ -58,7 +60,7 @@ export const BlueWhiteButton = (props) => {
             // }
             activeOpacity={1}
             underlayColor={SystemBlue}
-            style={[Styles.button,{backgroundColor: backcolor}]}
+            style={[Styles.button,{backgroundColor: backcolor , padding: flag ? 5 : 6.5, borderWidth: flag ? 1.5 : 0}]}
             onPress={() => {
                     setFlag(!flag);
                     onPress(flag);
@@ -86,11 +88,26 @@ export const BubbleButton = (props) => {
     return(
         <TouchableOpacity
             activeOpacity={1}
-            onPress={() => alert()}
+            onPress={onPress && onPress}
             style={Styles.bubblecontainer}
         >
-            {/*<Icon name={IconDetails.name} type={IconDetails.type} color={IconDetails.color} size={IconDetails.size} />*/}
-            <Image style={Styles.bubbleimage} source={uri} resizeMode="cover"  />
+            <View style={{marginTop: swidth * 0.04, marginLeft: swidth * 0.04}}>
+                <Icon name={'plus'}
+                      type={'MaterialCommunityIcons'}
+                      color={'white'}
+                      size={swidth * 0.04}
+                      style={{ position:'absolute'}}
+                />
+                <Icon
+                    name={IconDetails.name}
+                    type={IconDetails.type}
+                    color={IconDetails.color}
+                    size={IconDetails.size}
+                    style={{ marginTop: swidth * 0.001, marginLeft: swidth * 0.008}}
+                />
+            </View>
+
+            {/*<Image style={Styles.bubbleimage} source={uri} resizeMode="cover"  />*/}
             {/*<Image style={Styles.bubbleimage} source={{uri:'/SRC//Assets/Images/FeatherWhite.png'}}/>*/}
         </TouchableOpacity>
     )
@@ -106,7 +123,7 @@ let Styles = StyleSheet.create({
 
     button:{
         width: swidth * 0.27,
-        padding:6,
+        padding:5,
         backgroundColor:'white',
         borderColor: SystemBlue,
         borderWidth:1.5,
@@ -119,15 +136,18 @@ let Styles = StyleSheet.create({
         color: SystemBlue,
     },
     bubblecontainer:{
+        flexDirection: 'row',
         height: swidth * 0.14,
         width: swidth * 0.14,
         borderRadius: 100,
         backgroundColor: SystemBlue,
-        alignItems: 'center',
-        justifyContent: 'center',
+        // alignItems: 'center',
+        // justifyContent: 'center',
         position: 'absolute',
-        marginTop: sheight * 0.71,
-        marginLeft: swidth * 0.81,
+        bottom: 20,
+        right: 20,
+        // marginTop: sheight * 0.71,
+        // marginLeft: swidth * 0.81,
 
         shadowColor: "#000",
         shadowOffset: {

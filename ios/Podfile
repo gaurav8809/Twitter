@@ -47,6 +47,8 @@ target 'Twitter' do
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
 
 
+  pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
+
   target 'TwitterTests' do
     inherit! :search_paths
     # Pods for testing

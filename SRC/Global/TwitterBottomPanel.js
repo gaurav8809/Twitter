@@ -5,6 +5,7 @@ import {SystemBlue} from './ColorPalate';
 import {SystemButton} from './TwitterButton';
 
 
+let TwitterBottomPanel;
 export default TwitterBottomPanel = (props) => {
 
     let {

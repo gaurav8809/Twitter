@@ -4,6 +4,8 @@ import {
     StyleSheet,
     View,
     Platform, Modal,
+    TouchableOpacity
+
 } from 'react-native';
 import GLOBAL from '../Global/Initialization';
 import {swidth, sheight, centertext, safearea, mainview} from '../Global/ScreenSetting';
@@ -53,8 +55,8 @@ class CodeVerification extends Component {
 
     }
 
-    setLoader = (flag) => {
-        this.setState({loader:flag});
+    setLoader = (flag,callback) => {
+        this.setState({loader:flag},() => callback);
     };
 
     SendCodeToClient = () => {
@@ -62,57 +64,64 @@ class CodeVerification extends Component {
             signupdata,
         } = this.state;
 
-        if(GLOBAL.CodeSendMode)
-        {
-            if (signupdata.type === 'Phone')
+        var rancode = Math.floor(Math.random() * 999999) + 1;
+        // alert("Code = " + rancode);
+        this.setState({
+            rancode,
+        },() => {
+            if(GLOBAL.CodeSendMode)
             {
-                this.setLoader(true);
-                firebase.auth().signInWithPhoneNumber(`+91 ${signupdata.poe.toString()}`)
-                    .then(confirmResult => {
-                        this.setLoader(false);
-                        this.setState({
-                            confirmResult: confirmResult,
+                if (signupdata.type === 'Phone')
+                {
+                    this.setLoader(true);
+                    firebase.auth().signInWithPhoneNumber(`+91 ${signupdata.poe.toString()}`)
+                        .then(confirmResult => {
+                            this.setLoader(false,() => alert("Verification code has been successfully sent to your mail"));
+                            this.setState({
+                                confirmResult: confirmResult,
+                            });
+                            console.log('Send SMS data =' + JSON.stringify(confirmResult));
+
+
+                        }) // save confirm result to use with the manual verification code)
+                        .catch(error => {
+                            this.setLoader(false,alert("Problem occur"));
+
+                            // console.log('Send SMS data error =' + error);
                         });
-                        console.log('Send SMS data =' + JSON.stringify(confirmResult));
 
-                    }) // save confirm result to use with the manual verification code)
-                    .catch(error => {
-                        this.setLoader(false);
-                        console.log('Send SMS data error =' + error);
-                    });
+                }
+                else {
 
+                    let DataObj = {
+                        to: signupdata.poe.toLowerCase(),
+                        subject: 'Verification Code',
+                        body: this.state.rancode.toString(),
+                    };
+
+                    this.setLoader(true);
+                    this.props.FireBaseSendEmail(DataObj)
+                        .then(res => {
+                            this.setLoader(false);
+                            if(res.status === 200)
+                            {
+                                alert("Verification code has been successfully sent to your mail");
+                            }
+                        })
+                        .catch(err => {
+                            this.setLoader(false);
+                            console.log(err);
+                            alert(err.message);
+                        });
+                }
             }
-            else {
-
-                let DataObj = {
-                    to: signupdata.poe.toLowerCase(),
-                    subject: 'Verification Code',
-                    body: this.state.rancode.toString(),
-                };
-
-                this.setLoader(true);
-                this.props.FireBaseSendEmail(DataObj)
-                    .then(res => {
-                        this.setLoader(false);
-                        if(res.status === 200)
-                        {
-                            alert("Verfication code has been successfully sent to your mail");
-                        }
-                    })
-                    .catch(err => {
-                        this.setLoader(false);
-                        console.log(err);
-                        alert(err.message);
-                    });
+            else
+            {
+                alert(`Code is ${this.state.rancode.toString()} `);
             }
-        }
-        else
-        {
-            var rancode = Math.floor(Math.random() * 999999) + 1;
-            this.setState({
-                rancode: rancode,
-            },() => alert(`Code is ${this.state.rancode.toString()} `));
-        }
+        });
+
+
 
 
     };
@@ -121,7 +130,7 @@ class CodeVerification extends Component {
     {
         if(GLOBAL.CodeSendMode)
         {
-            if (signupdata.type === 'Phone') {
+            if (this.state.signupdata.type === 'Phone') {
                 this.state.confirmResult !== null && this.state.code.toString().length === 6 &&
                 this.state.confirmResult.confirm(this.state.code.toString())
                     .then(confirmResult => {
@@ -170,6 +179,7 @@ class CodeVerification extends Component {
                     />
 
                     <BlackBigText
+                        textstyle={{fontSize: swidth * 0.07}}
                         text={'We sent you a code'}
                     />
 
@@ -190,9 +200,11 @@ class CodeVerification extends Component {
                     />
 
                     <View style={[Styles.linkview]}>
-                        <BlueText
-                            text={'Didn\'t receive email?'}
-                        />
+                        <TouchableOpacity onPress={() => this.SendCodeToClient()}>
+                            <BlueText
+                                text={this.state.type === 'Email' ? 'Didn\'t receive email?' : 'Didn\'t receive SMS?'}
+                            />
+                        </TouchableOpacity>
                     </View>
                 </View>
 

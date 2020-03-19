@@ -60,7 +60,7 @@ class SignUPFinalPage extends Component{
                 ...centertext
             },
             text:{
-                fontSize: swidth * 0.06,
+                fontSize: swidth * 0.05,
                 fontFamily: 'Roboto-Bold',
                 color:'white',
                 // fontWeight:"500"
@@ -110,7 +110,7 @@ class SignUPFinalPage extends Component{
                                 <Text style={[Styles.questiontext]}>
                                     {"By signing up, you agree to the "}
                                     <Text style={[Styles.logintext]} onPress={() => Linking.openURL('https://twitter.com/en/tos')}>
-                                        {"Terms \nof Service"}
+                                        {"Terms of Service"}
                                     </Text>
                                     {" and "}
                                     <Text style={[Styles.logintext]} onPress={() => Linking.openURL('https://twitter.com/en/privacy')}>
@@ -120,7 +120,7 @@ class SignUPFinalPage extends Component{
                                     <Text style={[Styles.logintext]} onPress={() => Linking.openURL('https://help.twitter.com/en/rules-and-policies/twitter-cookies')}>
                                         {" Cookie Use"}
                                     </Text>
-                                    {". Others will be able to find you\n by email or phone number when provided"}
+                                    {". Others will be able to find you by email or phone number when provided"}
                                     <Text style={[Styles.logintext]} onPress={() => Linking.openURL('https://twitter.com/en/privacy')}>
                                         {" Privacy Options"}
                                     </Text>
@@ -156,9 +156,10 @@ let Styles = StyleSheet.create({
 
     createtextview:{
         marginTop: swidth * 0.13,
+        alignItems: 'center'
     },
     inputtextview:{
-        marginTop: sheight * (Platform.OS === 'ios' ? 0.2 : 0.2),
+        marginTop: swidth * 0.3,
     },
     nametextview:{
         // backgroundColor:'pink',
@@ -187,7 +188,7 @@ let Styles = StyleSheet.create({
 
     },
     questionview:{
-        marginTop: swidth * (Platform.OS === 'ios' ? 0.3 : 0.13),
+        marginTop: swidth * (Platform.OS === 'ios' ? 0.13 : 0.13),
         // flexDirection:'row'
     },
 
@@ -195,7 +196,7 @@ let Styles = StyleSheet.create({
 
 
     hellotext:{
-        fontSize: swidth * 0.095,
+        fontSize: swidth * 0.08,
         fontFamily: 'Roboto-Bold',
         // flexWrap:'wrap-reverse'
     },
@@ -221,13 +222,13 @@ let Styles = StyleSheet.create({
         fontSize: swidth * 0.05
     },
     questiontext:{
-        fontSize: swidth * 0.045,
+        fontSize: swidth * 0.04,
         fontFamily: 'Roboto',
         color:'gray',
         width: swidth * 0.85
     },
     logintext:{
-        fontSize: swidth * 0.045,
+        fontSize: swidth * 0.04,
         fontFamily: 'Roboto',
         color:SystemBlue
     },

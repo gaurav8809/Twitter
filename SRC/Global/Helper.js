@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import {
+    Keyboard,
+    TouchableWithoutFeedback,
+    KeyboardAvoidingView
+} from 'react-native';
 
 const setLoader = (flag) => {
     // state.setState({
@@ -41,10 +46,27 @@ const AsyncRemove = async (key) => {
     }
 };
 
+export const DismissKeyboardView = ({ children , actionCallback}) => (
+    <TouchableWithoutFeedback onPress={() => {
+        Keyboard.dismiss();
+        actionCallback && actionCallback
+    }}>
+        {children}
+    </TouchableWithoutFeedback>
+);
+
+export const DynamicBottomBar = ({ children }) => (
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null}  >
+        {children}
+    </KeyboardAvoidingView>
+);
+
 
 module.exports = {
     setLoader,
     AsyncStore,
     AsyncFetch,
-    AsyncRemove
+    AsyncRemove,
+    DismissKeyboardView,
+    DynamicBottomBar
 };

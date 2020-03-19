@@ -44,17 +44,17 @@ const MENULIST = [
         },
         text:'Lists',
     },
+    // {
+    //     IconDetails:{
+    //         Name:'chat-bubble-outline',
+    //         Type:'MaterialIcons',
+    //     },
+    //     text:'Topics',
+    // },
     {
         IconDetails:{
-            Name:'chat-bubble-outline',
+            Name:'bookmark-border',
             Type:'MaterialIcons',
-        },
-        text:'Topics',
-    },
-    {
-        IconDetails:{
-            Name:'bookmark-outline',
-            Type:'MaterialCommunityIcons',
         },
         text:'Bookmarks',
     },
@@ -90,6 +90,12 @@ class DrawerView extends Component{
 
         this.listener = EventRegister.addEventListener('UpdateUserListener',
             () => this.InitializeView());
+
+        // const unsubscribe = this.props.navigation.addListener('focus', () => {
+        //     // The screen is focused
+        //     // Call any action
+        //     alert("Open");
+        // });
 
     }
 
@@ -158,7 +164,7 @@ class DrawerView extends Component{
         return (
             <View style={lisouterview} key={index}>
                 <View>
-                    <Icon name={item.IconDetails.Name} color={'gray'} type={item.IconDetails.Type} size={swidth * 0.07} />
+                    <Icon name={item.IconDetails.Name} color={'slategray'} type={item.IconDetails.Type} size={swidth * 0.07} />
                 </View>
                 <View style={{marginLeft: swidth * 0.04}}>
                     <Text style={listtext} >
@@ -192,11 +198,13 @@ class DrawerView extends Component{
             const resetAction = StackActions.reset({
                 index: 0,
                 actions: [
-                    NavigationActions.navigate({routeName:'HelloScreen'})
+                    NavigationActions.navigate({routeName:'StartUpLoader'})
                 ],
             });
 
+            debugger
             this.props.navigation.dispatch(resetAction);
+            debugger
         }
         else
         {
@@ -279,12 +287,12 @@ class DrawerView extends Component{
                                     {/*{"61 "}*/}
                                     {LogedInUserData.following &&
                                     `${LogedInUserData.following.length} `}
-                                    <Text style={{fontSize: swidth * 0.045, color:'gray'}}>
+                                    <Text style={{fontSize: swidth * 0.04, color:'gray'}}>
                                         {"Following   "}
                                     </Text>
                                     {LogedInUserData.followers &&
                                     `${LogedInUserData.followers.length} `}
-                                    <Text style={{fontSize: swidth * 0.045, color:'gray'}}>
+                                    <Text style={{fontSize: swidth * 0.04, color:'gray'}}>
                                         {"Followers"}
                                     </Text>
                                 </Text>
@@ -332,7 +340,7 @@ let Styles = StyleSheet.create({
         // width: swidth * 0.1,
         // backgroundColor:'pink',
         alignItems:'center',
-        borderBottomWidth:1,
+        borderBottomWidth:0.8,
         borderColor: 'lightgrey',
         paddingBottom: 20
     },
@@ -349,7 +357,7 @@ let Styles = StyleSheet.create({
     },
     profilenametext:{
         fontSize: swidth * 0.05,
-        fontWeight: "600"
+        fontWeight: "bold"
     },
     usernameview:{
         marginTop: swidth * 0.01,
@@ -362,7 +370,7 @@ let Styles = StyleSheet.create({
     menulistview:{
         // marginTop: swidth * 0.04,
         alignItems:'center',
-        borderBottomWidth:1,
+        borderBottomWidth:0.8,
         borderColor: 'lightgrey',
         paddingBottom: 20
     },
@@ -374,7 +382,7 @@ let Styles = StyleSheet.create({
         flexDirection:'row', marginTop: swidth * 0.05,
     },
     listtext:{
-        fontSize: swidth * 0.055, fontWeight: "400"
+        fontSize: swidth * 0.05, fontWeight: "400"
     },
     bottombarview:{
         position: 'absolute',

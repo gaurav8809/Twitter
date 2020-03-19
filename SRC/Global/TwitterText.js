@@ -95,7 +95,7 @@ let Styles = StyleSheet.create({
         ...centertext
     },
     graytextview:{
-        marginTop: swidth * 0.04,
+        marginTop: swidth * 0.03,
         alignSelf:'flex-start',
     },
 
@@ -103,7 +103,7 @@ let Styles = StyleSheet.create({
 
     blackbigtext:{
         // marginLeft: swidth * 0.03,
-        fontSize: swidth * 0.085,
+        fontSize: swidth * 0.08,
         fontFamily: 'Roboto-Bold',
 
     },

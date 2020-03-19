@@ -43,7 +43,7 @@ class HelloScreen extends Component{
                 ...centertext
             },
             text:{
-                fontSize: swidth * 0.065,
+                fontSize: swidth * 0.06,
                 fontFamily: 'Roboto-Bold',
                 color:'white',
                 // fontWeight:"500"
@@ -74,6 +74,7 @@ class HelloScreen extends Component{
                         {/*</View>*/}
 
                         <SystemButton
+                            aOpacity={0.8}
                             text={"Create account"}
                             styles={btnstyles}
                             onPress={() => navigation.navigate('SignUp')}
@@ -109,6 +110,7 @@ let Styles = StyleSheet.create({
     },
     hellotextview:{
         marginTop: swidth * 0.2,
+        alignItems:'center'
     },
     createbtnview:{
         marginTop: swidth * 0.15,
@@ -130,7 +132,7 @@ let Styles = StyleSheet.create({
 
 
     hellotext:{
-        fontSize: swidth * 0.09,
+        fontSize: swidth * 0.07,
         fontFamily: 'Roboto-Bold',
         // flexWrap:'wrap-reverse'
     },

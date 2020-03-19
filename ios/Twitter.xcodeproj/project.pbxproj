@@ -67,6 +67,13 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "Twitter-tvOS";
 		};
+		75A0BC5F2420C4A30091C68A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A0BC5B2420C4A30091C68A /* RNCCameraRoll.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
+			remoteInfo = RNCCameraRoll;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -74,7 +81,7 @@
 		00E356EE1AD99517003FC87E /* TwitterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwitterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* TwitterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwitterTests.m; sourceTree = "<group>"; };
-		06360BFE23FD6DCF006FB004 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Users/imac177/Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		06360BFE23FD6DCF006FB004 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GauravRana/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		063F948B23EC26EF000DBFC7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Twitter/Images.xcassets; sourceTree = "<group>"; };
 		06AED3AF23E0050E0044A634 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Bold.ttf"; path = "../SRC/Assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		0966B000A1F147379E550DCA /* Merriweather-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Merriweather-BlackItalic.ttf"; path = "../SRC/Assets/fonts/Merriweather-BlackItalic.ttf"; sourceTree = "<group>"; };
@@ -101,6 +108,7 @@
 		6F4A049BD59B43D38C09052B /* Merriweather-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Merriweather-Italic.ttf"; path = "../SRC/Assets/fonts/Merriweather-Italic.ttf"; sourceTree = "<group>"; };
 		6F807482DBEC411D9C0E60C0 /* JosefinSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "JosefinSans-Bold.ttf"; path = "../SRC/Assets/fonts/JosefinSans-Bold.ttf"; sourceTree = "<group>"; };
 		71CDE18EFFF44E80969279EA /* Roboto-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Thin.ttf"; path = "../SRC/Assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
+		75A0BC5B2420C4A30091C68A /* RNCCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCCameraRoll.xcodeproj; path = "../node_modules/@react-native-community/cameraroll/ios/RNCCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		77886BA6F47A5F2DCF0F1732 /* libPods-Twitter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Twitter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE2A756EFA94FE0B97C0F51 /* Merriweather-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Merriweather-BoldItalic.ttf"; path = "../SRC/Assets/fonts/Merriweather-BoldItalic.ttf"; sourceTree = "<group>"; };
 		7FD44E8D375437E093AA0E15 /* Pods-Twitter-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Twitter-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Twitter-tvOSTests/Pods-Twitter-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -211,9 +219,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		75A0BC5C2420C4A30091C68A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				75A0BC602420C4A30091C68A /* libRNCCameraRoll.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				75A0BC5B2420C4A30091C68A /* RNCCameraRoll.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -415,6 +432,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 75A0BC5C2420C4A30091C68A /* Products */;
+					ProjectRef = 75A0BC5B2420C4A30091C68A /* RNCCameraRoll.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* Twitter */,
@@ -424,6 +447,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		75A0BC602420C4A30091C68A /* libRNCCameraRoll.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCCameraRoll.a;
+			remoteRef = 75A0BC5F2420C4A30091C68A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {

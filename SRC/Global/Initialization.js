@@ -1,6 +1,6 @@
 
 module.exports = {
-    CodeSendMode: false,
+    CodeSendMode: true,
     PSWSetMode: true,
     CUlivemode: true,
     ProfileSetMode: true,

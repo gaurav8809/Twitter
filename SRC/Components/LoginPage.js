@@ -96,7 +96,7 @@ class LoginPage extends Component {
                         ],
                     });
 
-                    this.props.navigation.dispatch(resetAction);
+                    this.props.navigation && this.props.navigation.dispatch(resetAction);
 
                 } else {
                     this.setLoader(false);

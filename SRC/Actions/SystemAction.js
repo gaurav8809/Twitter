@@ -70,7 +70,7 @@ export const FireBaseSendEmail = (dataobj) => {
 
 };
 
-export const FireBaseStoreData = (dataobj) => {
+export const FireBaseStoreData = (folderPath,dataobj) => {
 
     var timestamp = Number(new Date());
 
@@ -78,7 +78,7 @@ export const FireBaseStoreData = (dataobj) => {
         debugger
         return firebase
             .storage()
-            .ref(`UserProfiles/${timestamp.toString()}`)
+            .ref(`${folderPath}/${timestamp.toString()}`)
             // .child('myfile')
             .put(Platform === 'ios' ? dataobj.uri.replace('file://','') : dataobj.uri)
             .then(res => {

@@ -29,14 +29,14 @@ const ProfileInfoBadge = (props) => {
     const [imageLoader,setimageLoader] = useState(false);
 
     return(
-        <TouchableOpacity style={OuterView}>
+        <TouchableOpacity style={OuterView} activeOpacity={1}>
             <View style={pimageview}>
                 <View style={{justifyContent: 'center'}}>
                     <Image
                         source={ imageurl ? {uri: imageurl} : require('../Assets/Images/usergray.png')}
                         style={profileimage}
-                        onLoadStart={() => setimageLoader(true)}
-                        onLoadEnd={() => setimageLoader(false)}
+                        // onLoadStart={() => setimageLoader(true)}
+                        // onLoadEnd={() => setimageLoader(false)}
                     />
 
                     {
@@ -81,7 +81,7 @@ const ProfileInfoBadge = (props) => {
 };
 
 
-const CreateTweet = (props) => {
+const TweetBadge = (props) => {
 
     let {
         imageurl,
@@ -158,7 +158,8 @@ const CreateTweet = (props) => {
 
 
 module.exports = {
-    ProfileInfoBadge
+    ProfileInfoBadge,
+    TweetBadge
 };
 
 let Styles = StyleSheet.create({
@@ -169,7 +170,7 @@ let Styles = StyleSheet.create({
         alignItems:'center',
         backgroundColor:'white',
         padding: 15,
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.8,
         borderColor: 'lightgray',
     },
     pimageview:{
@@ -189,18 +190,18 @@ let Styles = StyleSheet.create({
         flexDirection: 'row',
     },
     profilenametext:{
-        fontSize: swidth * 0.045,
+        fontSize: swidth * 0.04,
         fontWeight: "bold"
     },
     usernametext:{
-        fontSize: swidth * 0.04,
+        fontSize: swidth * 0.035,
         color:'gray'
     },
     biotextview:{
         marginTop: swidth * 0.02
     },
     biotext:{
-        fontSize: swidth * 0.045,
+        fontSize: swidth * 0.035,
     },
 
 });

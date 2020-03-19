@@ -5,6 +5,7 @@ import {SystemBlue} from './ColorPalate';
 import {AntDesign} from './VectorIcons';
 
 
+let TwitterTopPanel;
 export default TwitterTopPanel = (props) => {
 
     let {
@@ -16,7 +17,7 @@ export default TwitterTopPanel = (props) => {
         <View style={[Styles.twittericonview ]}>
             {
                 !backenable &&
-                <View style={{flex: 1, flexDirection: 'row'}}>
+                <View style={{flex: 0.95, flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                         <AntDesign onPress={onBackPress} name={'arrowleft'} color={SystemBlue} size={swidth * 0.07}/>
                     </View>
