@@ -68,7 +68,7 @@ export const RefreshIndicator = (props) => {
 
 export const IOSIndicator = (props) => {
     return (
-        <View style={{flex:1, backgroundColor:'rgb(0,0,0,0)'}}>
+        <View style={[{flex:1, backgroundColor:'rgb(0,0,0,0)'}, props.viewStyle]} >
             <UIActivityIndicator
                 color={SystemBlue}
                 size={swidth * 0.09}

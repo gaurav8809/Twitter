@@ -2,7 +2,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import SearchScreen from '../Components/TabsPages/SearchScreen';
 import NotificationScreen from '../Components/TabsPages/NotificationScreen';
 import MessageScreen from '../Components/TabsPages/MessageScreen';
-import {Image, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {swidth} from '../Global/ScreenSetting';
 import {SystemBlue} from '../Global/ColorPalate';
@@ -14,8 +14,9 @@ import {GetLoginUserData, GetUserInfo} from '../Actions/UserAction';
 import {connect} from 'react-redux';
 import DrawerView from '../Components/DrawerView'
 import CreateTweetPage from "../Components/CreateTweetPage";
-
-
+import ProfilePage from '../Components/CommonPages/ProfilePage';
+import FollowingListPage from '../Components/CommonPages/FollowingListPage';
+import FollowersListPage from '../Components/CommonPages/FollowersListPage';
 
 
 const HomeSwitch = createStackNavigator({
@@ -135,6 +136,9 @@ const StackNav = createStackNavigator({
             header: () => <AppHeader navigation={navigation} />
         },
         CreateTweetPage,
+        ProfilePage,
+        FollowingListPage,
+        FollowersListPage
     },
     {
         defaultNavigationOptions:({navigation}) => ({

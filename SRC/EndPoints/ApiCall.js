@@ -5,7 +5,7 @@ const BaseUrl = 'http://127.0.0.1:3000';
 // const BaseUrl = 'http://e99e22cd.ngrok.io';
 
 
-export const MakeRequest = (url, type , data = {}, header = {}) =>{
+export const MakeRequest = (url, type = 'get' , data = {}, header = {}) =>{
 
 
     if(type === 'get')

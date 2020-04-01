@@ -18,11 +18,11 @@ import {connect} from 'react-redux';
 import AppHeader from '../Global/AppHeader';
 import {swidth} from '../Global/ScreenSetting';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
-import {SystemBlue} from '../Global/ColorPalate';
+import {SystemBlue, SlateGray} from '../Global/ColorPalate';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
 import styles from 'react-native-webview/lib/WebView.styles';
 import {SystemButton} from '../Global/TwitterButton';
-import HELPER from '../Global/Helper';
+import HELPER, {OfficialSymbol} from '../Global/Helper';
 import {NavigationActions, StackActions,withNavigation} from 'react-navigation';
 import {GetUserInfo,GetLoginUserData} from '../Actions/UserAction';
 import {UIActivityIndicator} from 'react-native-indicators';
@@ -221,11 +221,15 @@ class DrawerView extends Component{
             profilenametext,
             usernameview,
             usernametext,
+            fValueText,
+            fText
         } = Styles;
 
         let {
             LogedInUserData
         } = this.state;
+
+        let nav = this.props.navigation;
 
         return(
             <SafeAreaView style={{flex:1}}>
@@ -235,7 +239,19 @@ class DrawerView extends Component{
                     <View style={[Styles.profileview]}>
                         <View style={{ width: swidth * 0.7}}>
 
-                            <View style={{ justifyContent:'center'}}>
+                            <TouchableOpacity
+                                onPress={() => nav.navigate('ProfilePage',{
+                                    NavUser: LogedInUserData
+                                })}
+                                style={{ justifyContent:'center'}}>
+                                {
+                                    this.state.imageloader &&
+                                    <UIActivityIndicator
+                                        color={SystemBlue}
+                                        size={swidth * 0.06}
+                                        style={{position: 'absolute', justifySelf:'center',height: swidth * 0.15, width : swidth * 0.15,}}
+                                    />
+                                }
                                 <Image
                                     // source={
                                     //     LogedInUserData.profileImage ?
@@ -251,26 +267,15 @@ class DrawerView extends Component{
                                     onLoadStart={() => this.setState({imageloader:true})}
                                     onLoadEnd={() => this.setState({imageloader:false})}
                                 />
-
-                                {
-                                    this.state.imageloader &&
-                                        <UIActivityIndicator
-                                            color={SystemBlue}
-                                            size={swidth * 0.06}
-                                            style={{position: 'absolute', justifySelf:'center',height: swidth * 0.15, width : swidth * 0.15,}}
-                                        />
-                                }
-                            </View>
-
-
+                            </TouchableOpacity>
                             <View style={profilenameview}>
                                 <Text style={profilenametext}>
                                     {
                                         LogedInUserData &&
-                                        LogedInUserData.profilename
+                                        `${LogedInUserData.profilename} `
                                     }
-
-                                    {/*{"Gaurav Rana"}*/}
+                                    {LogedInUserData.official &&
+                                    <OfficialSymbol/>}
                                 </Text>
                                 <Icon name={'chevron-small-down'} type={'Entypo'} size={swidth * 0.06} color={SystemBlue}/>
                             </View>
@@ -282,20 +287,25 @@ class DrawerView extends Component{
                                     }
                                 </Text>
                             </View>
-                            <View style={{marginTop: swidth * 0.04}}>
-                                <Text style={{fontSize: swidth * 0.045, fontWeight: "500"}}>
-                                    {/*{"61 "}*/}
-                                    {LogedInUserData.following &&
-                                    `${LogedInUserData.following.length} `}
-                                    <Text style={{fontSize: swidth * 0.04, color:'gray'}}>
-                                        {"Following   "}
+                            <View style={{marginTop: swidth * 0.04, flexDirection: 'row'}}>
+                                <TouchableOpacity onPress={() => nav.navigate('FollowingListPage')}>
+                                    <Text style={fValueText}>
+                                        {LogedInUserData.following &&
+                                        `${LogedInUserData.following.length} `}
+                                        <Text style={fText}>
+                                            {"Following   "}
+                                        </Text>
                                     </Text>
-                                    {LogedInUserData.followers &&
-                                    `${LogedInUserData.followers.length} `}
-                                    <Text style={{fontSize: swidth * 0.04, color:'gray'}}>
-                                        {"Followers"}
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => nav.navigate('FollowersListPage')}>
+                                    <Text style={fValueText}>
+                                        {LogedInUserData.followers &&
+                                        `${LogedInUserData.followers.length} `}
+                                        <Text style={fText}>
+                                            {"Followers"}
+                                        </Text>
                                     </Text>
-                                </Text>
+                                </TouchableOpacity>
 
                             </View>
                         </View>
@@ -365,7 +375,7 @@ let Styles = StyleSheet.create({
     },
     usernametext:{
         fontSize: swidth * 0.045,
-        color:'gray'
+        color:SlateGray
     },
     menulistview:{
         // marginTop: swidth * 0.04,
@@ -402,7 +412,15 @@ let Styles = StyleSheet.create({
         // alignItems: 'center',
         // backgroundColor: 'pink'
     },
-
+    fValueText:{
+        fontSize: swidth * 0.04,
+        fontWeight: 'bold'
+    },
+    fText:{
+        fontSize: swidth * 0.04,
+        fontWeight:'normal',
+        color:'slategray'
+    },
 });
 
 const mapStateToProps = state => {
@@ -418,7 +436,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    GetUserInfo : GetUserInfo,
+    GetUserInfo,
     GetLoginUserData,
 };
 

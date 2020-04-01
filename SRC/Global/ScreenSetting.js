@@ -3,6 +3,13 @@ import {Dimensions} from 'react-native';
 const swidth = Dimensions.get('window').width;
 const sheight = Dimensions.get('window').height;
 
+const SW = (width) => {
+    return swidth * width;
+};
+
+const SH = (height) => {
+    return sheight * height;
+};
 
 const centertext = {
     alignItems:'center',
@@ -41,10 +48,19 @@ const RHW = (size) => {
     return {
         height: swidth * size,
         width: swidth * size,
+        borderRadius: 100,
+    }
+};
+
+const TransIT = () => {
+    return {
+        backgroundColor: 'rgba(0,0,0,0.3)'
     }
 };
 
 module.exports = {
+    SW,
+    SH,
     swidth,
     sheight,
     centertext,
@@ -52,5 +68,6 @@ module.exports = {
     mainview,
     SHW,
     NHW,
-    RHW
+    RHW,
+    TransIT
 };

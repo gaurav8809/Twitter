@@ -82,8 +82,6 @@ export const GetLoginUserData = (collection, id) => {
 
 export const FollowUser = (collection, dataObj, currentUser) => {
 
-    debugger
-
     let batch = firebase.firestore().batch();
 
     let followingRef = firebase.firestore().collection(collection).doc(dataObj.UserId);

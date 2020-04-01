@@ -5,21 +5,23 @@ import {
     View,
     Text,
     FlatList,
-    Modal
+    Modal,
+    Image
 } from 'react-native';
 import GLOBAL from '../../Global/Initialization';
-import {safearea, mainview, swidth} from '../../Global/ScreenSetting';
+import {safearea, mainview, swidth, sheight} from '../../Global/ScreenSetting';
 import {connect} from 'react-redux';
 import AppHeader from '../../Global/AppHeader';
 import COLOR, {SystemBlue} from '../../Global/ColorPalate';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {BlackBigText, BlueText} from '../../Global/TwitterText';
-import {ProfileInfoBadge} from '../../Global/TwitterBadges';
-import HELPER from '../../Global/Helper';
+import {ProfileInfoBadge,TweetBadge} from '../../Global/TwitterBadges';
+import HELPER, {PreviewImageView} from '../../Global/Helper';
 import {NavigationActions, StackActions} from 'react-navigation';
 import {
+    GetLoginUserData,
     FollowUser,
-    UnFollowUser
+    UnFollowUser,
 } from '../../Actions/UserAction';
 import {GetTweets} from '../../Actions/GeneralAction';
 import {SelectAll} from '../../Actions/FireBaseDBAction';
@@ -52,28 +54,66 @@ const MENULIST = [
 
 class HomeScreen extends Component{
 
+    _isMounted = false;
+
     constructor(props) {
         super(props);
 
         this.state = {
             currentUser:{},
             wtfList:[],
+            tweetList:[],
             refreshLoader:false,
-            loader:false
+            loader:false,
+            preview: false,
+            PreviewImage: null,
         };
 
     }
 
     componentDidMount(){
 
-        this.getCurrentLogedInData();
+        this._isMounted = true;
+        this._isMounted && this.getCurrentLogedInData();
+
+    }
+
+    componentWillUnmount(){
+        this._isMounted = false;
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState){
+        if(nextProps.LogedInUserData !== prevState.currentUser)
+        {
+            return{
+                currentUser : nextProps.LogedInUserData
+            }
+        }
+        return null;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.currentUser !== this.state.currentUser){
+            //Perform some operation here
+            this.setState({currentUser:prevState.currentUser});
+            // this.getWhoToFollowList();
+        }
     }
 
     getCurrentLogedInData = () => {
 
         HELPER.AsyncFetch('AsyncLogedInUserData')
             .then(response => {
-                this.setState({currentUser:response},() => this.getWhoToFollowList())
+                this.props.GetLoginUserData('users',response.id)
+                    .then(response => {
+                        this.setState({
+                            currentUser: response.data
+                        },() => this.getWhoToFollowList());
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        alert(error);
+                    });
             })
             .catch(error => {
                 console.log(error)
@@ -87,7 +127,6 @@ class HomeScreen extends Component{
                 let wtfList = [];
                 for(let item of response.data)
                 {
-                    debugger
                     if(!item.followers.includes(this.state.currentUser.id))
                     {
                         if(item.id !== this.state.currentUser.id)
@@ -107,10 +146,13 @@ class HomeScreen extends Component{
 
         let STD = this.state;
 
-        this.props.GetTweets('tweets',  STD.currentUser.following, STD.currentUser)
+        this.props.GetTweets('tweets', STD.currentUser)
             .then(response => {
 
-                debugger
+                this.setState({
+                    refreshLoader:false,
+                    tweetList: response.data
+                });
 
             })
             .catch(error => {
@@ -183,19 +225,58 @@ class HomeScreen extends Component{
                             username:item.username,
                             profilename:item.profilename,
                             bio:item.bioDetails,
+                            official: item.official && item.official,
                         }
                     }
+                    btnStatus={false}
+                    btnText={"Follow"}
+                    btnActiveText={"Following"}
                     BtnPress={(flag) => flag
-                        ? this.followButtonPress(item)
-                        : this.unfollowButtonPress(item)
+                        ? this.unfollowButtonPress(item)
+                        : this.followButtonPress(item)
                     }
+                    imagePress={() => this.props.navigation.navigate('ProfilePage',{
+                        NavUser: item
+                    })}
+                    // imagePress={(url) => this.openImage(url)}
                     // BtnPress={(flag) => this.followButtonPress(item)}
                 />
             </View>
         );
     };
 
-    render(){
+    openImage = (url) => {
+
+        Image.getSize(url, (width, height) => {
+            this.setState({
+                preview: true,
+                PreviewImage:{
+                    pImageHeight: height,
+                    pImageWidth: width,
+                    pImagePath: url
+                }
+            })
+        });
+
+
+    };
+
+    renderTweetList = (item,index) => {
+
+        return (
+            <View key={index} style={{marginTop: swidth * 0.02}}>
+                <TweetBadge
+                    JSONData={item}
+                    profilePress={() => this.props.navigation.navigate('ProfilePage',{
+                        NavUser: item
+                    })}
+                    imagePress={(url) => this.openImage(url)}
+                />
+            </View>
+        );
+    };
+
+    WTFFlatList = () => {
 
         let {
             wholabelcontainer,
@@ -203,32 +284,60 @@ class HomeScreen extends Component{
             seemorecontainer
         } = Styles;
 
+      return(
+          <FlatList
+              refreshing={this.state.refreshLoader}
+              onRefresh={() => this.setState({refreshLoader:true},() => this.getWhoToFollowList())}
+              data={this.state.wtfList !== [] && this.state.wtfList}
+              keyExtractor={item => item.id}
+              ListHeaderComponent={
+                  <View style={wholabelcontainer}>
+                      <Text style={wholabeltext}>
+                          {"Who to follow"}
+                      </Text>
+                  </View>
+              }
+              renderItem={({item,index}) => this.renderWhoToFollowList(item,index)}
+              ListFooterComponent={
+                  <View style={seemorecontainer}>
+                      <BlueText
+                          text={'See more'}
+                          onPress={() => alert("Work in progress")}
+                      />
+                  </View>
+              }
+          />
+      );
+    };
+
+    closePreviewImage = () => {
+        this.setState({
+            preview: false,
+            PreviewImage: null,
+        })
+    };
+
+    render(){
+
+
+        let {
+            preview,
+            PreviewImage
+        } = this.state;
+
+
         return(
             <SafeAreaView style={[safearea]}>
                 {/*<AppHeader navigation={this.props.navigation}/>*/}
                 <View style={{...Styles.mainview}}>
 
                     <FlatList
+                        ListHeaderComponent={() => this.WTFFlatList()}
                         refreshing={this.state.refreshLoader}
                         onRefresh={() => this.setState({refreshLoader:true},() => this.getWhoToFollowList())}
-                        data={this.state.wtfList !== [] && this.state.wtfList}
-                        keyExtractor={item => item.username}
-                        ListHeaderComponent={
-                            <View style={wholabelcontainer}>
-                                <Text style={wholabeltext}>
-                                    {"Who to follow"}
-                                </Text>
-                            </View>
-                        }
-                        renderItem={({item,index}) => this.renderWhoToFollowList(item,index)}
-                        ListFooterComponent={
-                            <View style={seemorecontainer}>
-                                <BlueText
-                                    text={'See more'}
-                                    onPress={() => alert("Work in progress")}
-                                />
-                            </View>
-                        }
+                        data={this.state.tweetList !== [] && this.state.tweetList}
+                        keyExtractor={item => item.tweetId}
+                        renderItem={({item,index}) => this.renderTweetList(item,index)}
                     />
 
 
@@ -248,14 +357,22 @@ class HomeScreen extends Component{
                 </View>
 
 
-                <Modal visible={this.state.loader} transparent={true} onRequestClose={false}>
+                <PreviewImageView
+                    preview={preview}
+                    PreviewImage={PreviewImage}
+                    backPress={() => this.closePreviewImage()}
+                />
+
+                <Modal
+                    visible={this.state.loader}
+                    transparent={true}
+                >
                     <IOSIndicator />
                 </Modal>
             </SafeAreaView>
         )
     }
 }
-
 
 let Styles = StyleSheet.create({
 
@@ -282,16 +399,29 @@ let Styles = StyleSheet.create({
         borderColor: 'lightgray',
         justifyContent:'center'
     },
+    pImaheView:{
+        flex:1,
+        backgroundColor: 'white',
+        // alignItems: 'center',
+        justifyContent: 'center'
+    },
 
 });
 
 const mapStateToProps = state => {
+    const {
+        UserInfo,
+        LogedInUserData
+    } = state.UserReducer;
+
     return {
-        SystemData: state.SystemState.SystemData,
+        UserInfo,
+        LogedInUserData
     };
 };
 
 const mapDispatchToProps = {
+    GetLoginUserData,
     FollowUser,
     SelectAll,
     UnFollowUser,
@@ -299,5 +429,5 @@ const mapDispatchToProps = {
 };
 
 // export default CodeVerification;
-export default connect(null, mapDispatchToProps)(HomeScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 

@@ -117,105 +117,108 @@ class LoginPage extends Component {
 
         return (
             <SafeAreaView style={{...safearea}}>
-                <MenuProvider>
-                    <View style={{flex: 1, width: swidth * 0.95}}>
+                <ScrollView>
+                    <MenuProvider>
+                        <View style={{flex: 1, width: swidth, padding: 10}}>
 
-                        {/*<TwitterTopPanel*/}
-                        {/*    onBackPress={() => this.props.navigation.goBack()}*/}
-                        {/*    backenable={true}*/}
-                        {/*/>*/}
+                            {/*<TwitterTopPanel*/}
+                            {/*    onBackPress={() => this.props.navigation.goBack()}*/}
+                            {/*    backenable={true}*/}
+                            {/*/>*/}
 
-                        <View style={[Styles.twittericonview]}>
-                            <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                            <View style={[Styles.twittericonview]}>
+                                <View style={{flex: 1, justifyContent: 'flex-end'}}>
 
-                            </View>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between', flex: 1.15}}>
-                                <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>
-                                <View style={{flexDirection: 'row'}}>
-                                    <Text onPress={() => this.props.navigation.navigate('SignUp')}
-                                          style={{color: SystemBlue, fontSize: swidth * 0.045, fontWeight: 'bold'}}>
-                                        {'Sign up  '}
-                                    </Text>
-                                    {/*<Icon type={'Entypo'} size={swidth * 0.06} color={SystemBlue} name={'dots-three-vertical'}/>*/}
-                                    <Menu open={true}>
-                                        <MenuTrigger>
-                                            <Icon type={'Entypo'} size={swidth * 0.06} color={SystemBlue}
-                                                  name={'dots-three-vertical'}/>
-                                        </MenuTrigger>
-                                        <MenuOptions>
-                                            <MenuOption onSelect={() => alert(`Save`)}>
-                                                <View style={{height: swidth * 0.1, padding: 10}}>
-                                                    <Text style={{fontSize: swidth * 0.04}}>
-                                                        {'About'}
-                                                    </Text>
-                                                </View>
-                                            </MenuOption>
-                                            <MenuOption onSelect={() => alert(`Not called`)}>
-                                                <View style={{height: swidth * 0.1, padding: 10}}>
-                                                    <Text style={{fontSize: swidth * 0.04}}>
-                                                        {'Proxy'}
-                                                    </Text>
-                                                </View>
-                                            </MenuOption>
-                                        </MenuOptions>
-                                    </Menu>
+                                </View>
+                                <View style={{flexDirection: 'row', justifyContent: 'space-between', flex: 1.15}}>
+                                    <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <Text onPress={() => this.props.navigation.navigate('SignUp')}
+                                              style={{color: SystemBlue, fontSize: swidth * 0.045, fontWeight: 'bold'}}>
+                                            {'Sign up  '}
+                                        </Text>
+                                        {/*<Icon type={'Entypo'} size={swidth * 0.06} color={SystemBlue} name={'dots-three-vertical'}/>*/}
+                                        <Menu open={true}>
+                                            <MenuTrigger>
+                                                <Icon type={'Entypo'} size={swidth * 0.06} color={SystemBlue}
+                                                      name={'dots-three-vertical'}/>
+                                            </MenuTrigger>
+                                            <MenuOptions>
+                                                <MenuOption onSelect={() => alert(`Save`)}>
+                                                    <View style={{height: swidth * 0.1, padding: 10}}>
+                                                        <Text style={{fontSize: swidth * 0.04}}>
+                                                            {'About'}
+                                                        </Text>
+                                                    </View>
+                                                </MenuOption>
+                                                <MenuOption onSelect={() => alert(`Not called`)}>
+                                                    <View style={{height: swidth * 0.1, padding: 10}}>
+                                                        <Text style={{fontSize: swidth * 0.04}}>
+                                                            {'Proxy'}
+                                                        </Text>
+                                                    </View>
+                                                </MenuOption>
+                                            </MenuOptions>
+                                        </Menu>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
 
-                        <BlackBigText text={'Log in to Twitter.'} textstyle={{fontSize: swidth * 0.07}}/>
+                            <BlackBigText text={'Log in to Twitter.'} textstyle={{fontSize: swidth * 0.07}}/>
 
-                        <GrayText text={'Phone number or email address'}/>
+                            <GrayText text={'Phone number or email address'}/>
 
-                        <TwitterTextInput
-                            // text={this.state.txtemail}
-                            autoCorrect={false}
-                            viewstyle={{
-                                marginTop: swidth * 0.02,
-                                width: swidth * 0.95,
-                                borderColor: this.state.current === 1 ? SystemBlue : 'lightgray',
-                            }}
-                            // ref={this.a}
-                            returnKeyType={'next'}
-                            onChangeText={text => this.setState({txtemail: text.trim().toLowerCase()}, () => this.LoginBtnEnable())}
-                            onFocus={() => this.setState({current: 1})}
-                        />
+                            <TwitterTextInput
+                                // text={this.state.txtemail}
+                                autoCorrect={false}
+                                viewstyle={{
+                                    marginTop: swidth * 0.02,
+                                    width: swidth * 0.95,
+                                    borderColor: this.state.current === 1 ? SystemBlue : 'lightgray',
+                                }}
+                                // ref={this.a}
+                                returnKeyType={'next'}
+                                onChangeText={text => this.setState({txtemail: text.trim().toLowerCase()}, () => this.LoginBtnEnable())}
+                                onFocus={() => this.setState({current: 1})}
+                            />
 
-                        <GrayText text={'Password'} viewstyle={{marginTop: swidth * 0.07}}/>
+                            <GrayText text={'Password'} viewstyle={{marginTop: swidth * 0.07}}/>
 
-                        <TwitterTextInput
-                            // ref={this.b}
-                            returnKeyType={'next'}
-                            // onSubmitEditing={() => this.a.current.focus()}
+                            <TwitterTextInput
+                                // ref={this.b}
+                                returnKeyType={'next'}
+                                // onSubmitEditing={() => this.a.current.focus()}
 
-                            viewstyle={{
-                                marginTop: swidth * 0.02,
-                                width: swidth * 0.95,
-                                borderColor: this.state.current === 2 ? SystemBlue : 'lightgray',
-                            }}
-                            IconDetails={
-                                {
-                                    IconEnable: true,
-                                    IconType: 'Ionicons',
-                                    // IconName: this.state.eye ? 'ios-eye' : 'ios-eye-off',
-                                    IconName: 'ios-eye',
-                                    IconColor: !this.state.eye ? 'gray' : SystemBlue,
-                                    IconSize: swidth * 0.07,
+                                viewstyle={{
+                                    marginTop: swidth * 0.02,
+                                    width: swidth * 0.95,
+                                    borderColor: this.state.current === 2 ? SystemBlue : 'lightgray',
+                                }}
+                                IconDetails={
+                                    {
+                                        IconEnable: true,
+                                        IconType: 'Ionicons',
+                                        // IconName: this.state.eye ? 'ios-eye' : 'ios-eye-off',
+                                        IconName: 'ios-eye',
+                                        IconColor: !this.state.eye ? 'gray' : SystemBlue,
+                                        IconSize: swidth * 0.07,
+                                    }
                                 }
-                            }
-                            IconPress={() => this.setState({eye: !this.state.eye})}
-                            secureTextEntry={this.state.eye}
-                            onChangeText={text => this.setState({txtpassword: text.trim()}, () => this.LoginBtnEnable())}
-                            onFocus={() => this.setState({current: 2})}
-                        />
+                                IconPress={() => this.setState({eye: !this.state.eye})}
+                                secureTextEntry={this.state.eye}
+                                onChangeText={text => this.setState({txtpassword: text.trim()}, () => this.LoginBtnEnable())}
+                                onFocus={() => this.setState({current: 2})}
+                            />
 
-                        <GrayText text={'Forgotten your password?'}
-                                  viewstyle={{marginTop: swidth * 0.06, alignSelf: 'center'}}
-                                  textstyle={{fontSize: swidth * 0.038}}/>
+                            <GrayText text={'Forgotten your password?'}
+                                      viewstyle={{marginTop: swidth * 0.06, alignSelf: 'center'}}
+                                      textstyle={{fontSize: swidth * 0.038}}/>
 
 
-                    </View>
-                </MenuProvider>
+                        </View>
+                    </MenuProvider>
+                </ScrollView>
+
 
 
                 <TwitterBottomPanel

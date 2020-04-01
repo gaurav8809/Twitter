@@ -41,6 +41,7 @@ import {
 import firebase from "react-native-firebase";
 import {FireBaseStoreData} from "../Actions/SystemAction";
 import {UpdateWhere} from '../Actions/FireBaseDBAction';
+import {GifCategoryView} from "./CommonPages/GifPage";
 
 class CreateTweetPage extends Component{
 
@@ -59,7 +60,12 @@ class CreateTweetPage extends Component{
             photos:[],
             photosListEnable: true,
             selectedPhoto: null,
+            selectdGif: null,
+            selHeight:0,
+            selWidth:0,
             tweet:'',
+            gifPreview: false.valueOf(),
+            imageloader: false
         };
 
     }
@@ -137,7 +143,7 @@ class CreateTweetPage extends Component{
 
     renderGalleryPhotos = (item,index) => {
         return(
-            <TouchableOpacity key={index} onPress={() => this.setState({ selectedPhoto: item.node.image })}>
+            <TouchableOpacity key={index} onPress={() => this.setState({ selectedPhoto: item.node.image, selectdGif: null })}>
                 <Image
                     source={{uri:item.node.image.uri}}
                     style={Styles.gallaryimageview}
@@ -203,7 +209,7 @@ class CreateTweetPage extends Component{
                     alert(response.customButton);
                 } else {
                     if (response.uri) {
-                        this.setState({ selectedPhoto: response })
+                        this.setState({ selectedPhoto: response, selectdGif: null })
                     }
                 }
             });
@@ -285,38 +291,70 @@ class CreateTweetPage extends Component{
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             comments: [],
             likes: [],
+            imagePath: STD.selectdGif !== null && STD.selectdGif.gif.url
         };
+
+        // STD.selectdGif !== null && dataObj['imagePath'] = STD.selectdGif.gif.url;
 
         this.setLoader(true);
         this.props.PostTweet('tweets', dataObj)
             .then(tweetResponse => {
 
-                this.props.FireBaseStoreData('TweetResources',STD.selectedPhoto)
-                    .then(firestoreResponse => {
+                if(STD.selectedPhoto !== null)
+                {
+                    debugger
+                    console.log("There is photo");
+                    this.props.FireBaseStoreData('TweetResources',STD.selectedPhoto)
+                        .then(firestoreResponse => {
 
-                        this.props.UpdateWhere(`tweets`,tweetResponse.data.id,{'imagePath':firestoreResponse.data})
-                            .then(updateResponse => {
+                            this.props.UpdateWhere(`tweets`,tweetResponse.data.id,{'imagePath':firestoreResponse.data})
+                                .then(updateResponse => {
 
-                                this.setLoader(false);
-                                this.props.navigation.goBack();
+                                    this.setLoader(false);
+                                    this.props.navigation.goBack();
 
-                            })
-                            .catch(error => {
-                                this.setLoader(false);
-                                console.log("Update Error = ",error)
-                            })
-                    })
-                    .catch(error => {
-                        this.setLoader(false);
-                        console.log("Firestore Error = ",error)
-                    });
+                                })
+                                .catch(error => {
+                                    this.setLoader(false);
+                                    console.log("Update Error = ",error)
+                                })
+                        })
+                        .catch(error => {
+                            this.setLoader(false);
+                            console.log("Firestore Error = ",error)
+                        });
+                }
+                // else
+                // {
+                //     console.log("No photo");
+                //     this.props.UpdateWhere(`tweets`,tweetResponse.data.id,{'imagePath': STD.selectdGif.gif.url})
+                //         .then(updateResponse => {
+                //
+                //             this.setLoader(false);
+                //             this.props.navigation.goBack();
+                //
+                //         })
+                //         .catch(error => {
+                //             this.setLoader(false);
+                //             console.log("Update Error = ",error)
+                //         })
+                // }
+                debugger
+                this.setLoader(false);
+                this.props.navigation.goBack();
+
 
             })
             .catch(error => {
+                debugger
                 this.setLoader(false);
                 console.log("Tweet Error = ",error)
             });
 
+    };
+
+    toggleGifPage = (gifPreview) => {
+        this.setState({gifPreview})
     };
 
     render(){
@@ -351,7 +389,10 @@ class CreateTweetPage extends Component{
             LogedInUser,
             selectedPhoto,
             tweet,
-            photosListEnable
+            photosListEnable,
+            gifPreview,
+            selectdGif,
+            selHeight
         } = this.state;
 
         let {
@@ -366,7 +407,16 @@ class CreateTweetPage extends Component{
             bottomOptionView,
             bottomActionView,
             gifView,
+            imageLoaderStyle
         } = Styles;
+
+        (selectedPhoto !== null || selectdGif !== null) &&
+        Image.getSize(selectdGif !== null ? selectdGif.gif.url : selectedPhoto.uri, (width, height) => {
+            this.setState({
+                selHeight: height,
+                selWidth: width,
+            })
+        });
 
         return(
             <SafeAreaView style={{...safearea}}>
@@ -385,7 +435,7 @@ class CreateTweetPage extends Component{
 
                             <SystemButton
                                 aOpacity={0.8}
-                                opacity={(selectedPhoto || tweet) ? 1 : 0.5 }
+                                opacity={(selectedPhoto || tweet || selectdGif) ? 1 : 0.5 }
                                 text={"Tweet"}
                                 styles={btnstyles}
                                 onPress={() => this.makeTweet()}
@@ -428,20 +478,31 @@ class CreateTweetPage extends Component{
                                     />
 
                                     {
-                                        selectedPhoto !== null &&
+                                        (selectedPhoto !== null || selectdGif !== null) &&
                                         <View style={{alignSelf:'flex-end'}}>
                                             <Image
                                                 style={[
                                                     selectedimageview,
+                                                    // selectdGif !== null && {height: (sheight * (selHeight && selHeight)) / 1000}
                                                 ]}
                                                 resizeMode="cover"
-                                                source={{uri:selectedPhoto.uri}}
+                                                source={{uri: selectdGif !== null ? selectdGif.gif.url : selectedPhoto.uri}}
+                                                onLoadStart={() => this.setState({imageloader:true})}
+                                                onLoadEnd={() => this.setState({imageloader:false})}
                                             />
+                                            {
+                                                this.state.imageloader &&
+                                                <UIActivityIndicator
+                                                    color={'gray'}
+                                                    size={swidth * 0.06}
+                                                    style={[imageLoaderStyle,]}
+                                                />
+                                            }
                                             <View style={closebutton}
                                             >
                                                 <Icon
                                                     // style={{position:'absolute', }}
-                                                    onPress={() => this.setState({selectedPhoto:null})}
+                                                    onPress={() => this.setState({selectedPhoto:null, selectdGif: null})}
                                                     name={"ios-close"}
                                                     type={"Ionicons"}
                                                     size={swidth * 0.08}
@@ -470,7 +531,7 @@ class CreateTweetPage extends Component{
                 </DismissKeyboardView>
 
                 {
-                    photosListEnable && selectedPhoto === null &&
+                    photosListEnable && (selectedPhoto === null && selectdGif === null) &&
                     <FlatList
                         horizontal={true}
                         style={imageliststyle}
@@ -498,7 +559,9 @@ class CreateTweetPage extends Component{
                                     name={"gif"}
                                     type={"MaterialCommunityIcons"}
                                     size={swidth * 0.045}
-                                    color={SystemBlue} />
+                                    color={SystemBlue}
+                                    onPress={() => this.toggleGifPage(!gifPreview)}
+                                />
                             </View>
                             <Icon name={"marker"} type={"Foundation"} size={swidth * 0.065} color={SystemBlue} />
                         </View>
@@ -525,10 +588,16 @@ class CreateTweetPage extends Component{
                     </View>
                 </DynamicBottomBar>
 
+                <GifCategoryView
+                    gifPreview={gifPreview}
+                    backPress={() => this.toggleGifPage(!gifPreview)}
+                    setGifState={(Obj) => this.setState({selectedPhoto:null,selectdGif: Obj})}
+                />
 
                 <Modal visible={this.state.loader} transparent={true} onRequestClose={false}>
                     <IOSIndicator />
                 </Modal>
+
             </SafeAreaView>
         )
     }
@@ -577,6 +646,7 @@ let Styles = StyleSheet.create({
         height: swidth * 0.83,
         width: swidth * 0.85,
         borderRadius: 10,
+        overlayColor: 'white',
     },
     closebutton:{
         height: swidth * 0.08,
@@ -635,6 +705,15 @@ let Styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: SystemBlue
     },
+    imageLoaderStyle:{
+        borderRadius: 10,
+        borderWidth: 1,
+        position: 'absolute',
+        // justifySelf:'center',
+        height: swidth * 0.83,
+        width : swidth * 0.85,
+        borderColor: 'lightgray'
+    }
 
 });
 

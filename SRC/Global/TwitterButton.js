@@ -41,12 +41,15 @@ export const BlueWhiteButton = (props) => {
         onPress,
         text,
         activeText,
+        btnStatus,
+        useColor,
     } = props;
 
 
-    const [textcolor,settextcolor] = useState(SystemBlue);
-    const [backcolor,setbackcolor] = useState('white');
-    const [flag,setFlag] = useState(true);
+    const [textcolor,settextcolor] = useState(btnStatus ? 'white' : useColor);
+    const [backcolor,setbackcolor] = useState(btnStatus ? useColor : 'white');
+    const [borderColor,setbordercolor] = useState(btnStatus ? 'white' : useColor);
+    const [flag,setFlag] = useState(btnStatus);
     const [textstate,setText] = useState(text);
 
     return(
@@ -59,19 +62,29 @@ export const BlueWhiteButton = (props) => {
             //     ]
             // }
             activeOpacity={1}
-            underlayColor={SystemBlue}
-            style={[Styles.button,{backgroundColor: backcolor , padding: flag ? 5 : 6.5, borderWidth: flag ? 1.5 : 0}]}
+            underlayColor={useColor}
+            style={[
+                Styles.button,
+                {
+                    backgroundColor: backcolor ,
+                    padding: flag ? 5.5 : 4.5,
+                    borderWidth: flag ? 0 : 1.5,
+                    borderColor: useColor,
+                },
+                btnStatus && {borderColor: borderColor}
+            ]}
             onPress={() => {
                     setFlag(!flag);
                     onPress(flag);
-                    settextcolor(textcolor === 'white' ? SystemBlue : 'white');
-                    setbackcolor(backcolor === SystemBlue ? 'white' : SystemBlue);
+                    settextcolor(textcolor === 'white' ? useColor : 'white');
+                    setbackcolor(backcolor === useColor ? 'white' : useColor);
+                    setbordercolor(borderColor === useColor ? 'white' : useColor);
                     setText(textstate === text ? activeText : text);
                 }
             }
         >
             <Text style={[Styles.btntext,{color: textcolor}]}>
-                {textstate}
+                {`${textstate}`}
             </Text>
         </TouchableOpacity>
     )
@@ -123,7 +136,7 @@ let Styles = StyleSheet.create({
 
     button:{
         width: swidth * 0.27,
-        padding:5,
+        // padding:5,
         backgroundColor:'white',
         borderColor: SystemBlue,
         borderWidth:1.5,
