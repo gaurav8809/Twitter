@@ -1,8 +1,5 @@
 import firebase from "react-native-firebase";
 import TYPE, {LOGEDIN_USER} from '../Reducers/TypeConstants';
-import HELPER from '../Global/Helper';
-import {FireBaseStoreData} from '../Actions/SystemAction';
-import {NavigationActions, StackActions} from "react-navigation";
 
 export const GetUserInfo = (collection, id) => {
 
@@ -177,6 +174,39 @@ export const PostTweet = (collection,dataObj) => {
             })
     };
 
+
+};
+
+export const UpdateProfileInfo = (collection,userID,dataObj) => {
+
+    // console.log("Doc name = ",doc);
+    const DBRef = firebase.firestore().collection(collection).doc(userID);
+
+    return (dispatch,getState) => {
+
+        return DBRef.update(dataObj)
+            .then(response => {
+
+
+                dispatch(GetLoginUserData('users',userID));
+
+                console.log(response);
+                return Promise.resolve({
+                    status: 200,
+                    message: 'Successfully updated',
+                    data: response
+                });
+
+            })
+            .catch(error => {
+                console.log(error);
+                return Promise.reject({
+                    status: 400,
+                    message: 'Not Updated',
+                    data: error
+                });
+            })
+    };
 
 };
 

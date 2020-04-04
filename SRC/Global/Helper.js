@@ -14,6 +14,7 @@ import COLOR, {SystemBlue} from "./ColorPalate";
 import {SW, SH, sheight, swidth, RHW, SHW, NHW, TransIT, centertext} from "./ScreenSetting";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 
+const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const setLoader = (flag) => {
     // state.setState({
     //     loader: flag
@@ -58,6 +59,18 @@ const IS_IOS = () => {
 
     return Platform.OS === 'ios';
 
+};
+
+const parseDate = (date) => {
+    let f = new Date(date);
+    return {
+        FULL : f,
+        DATE : f.getDate(),
+        M_IN_D : f.getMonth() + 1,
+        M_IN_W : Months[f.getMonth()],
+        YEAR : f.getFullYear(),
+        TIMESTAMP : new Date(date * 1000),
+    }
 };
 
 export const DismissKeyboardView = ({ children , actionCallback}) => (
@@ -224,6 +237,7 @@ module.exports = {
     AsyncFetch,
     AsyncRemove,
     IS_IOS,
+    parseDate,
     DismissKeyboardView,
     DynamicBottomBar,
     OfficialSymbol,

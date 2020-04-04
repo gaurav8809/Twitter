@@ -17,6 +17,7 @@ import CreateTweetPage from "../Components/CreateTweetPage";
 import ProfilePage from '../Components/CommonPages/ProfilePage';
 import FollowingListPage from '../Components/CommonPages/FollowingListPage';
 import FollowersListPage from '../Components/CommonPages/FollowersListPage';
+import EditProfilePage from '../Components/CommonPages/EditProfilePage';
 
 
 const HomeSwitch = createStackNavigator({
@@ -138,7 +139,8 @@ const StackNav = createStackNavigator({
         CreateTweetPage,
         ProfilePage,
         FollowingListPage,
-        FollowersListPage
+        FollowersListPage,
+        EditProfilePage
     },
     {
         defaultNavigationOptions:({navigation}) => ({

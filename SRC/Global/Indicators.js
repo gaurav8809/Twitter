@@ -82,3 +82,29 @@ export const IOSIndicator = (props) => {
     );
 };
 
+export const SideLoader = (props) => {
+    return (
+        <View style={[{flex:1, backgroundColor:'rgb(0,0,0,0)'}, props.viewStyle]} >
+            {/*<View style={{}}>*/}
+                <UIActivityIndicator
+                    color={SystemBlue}
+                    size={swidth * 0.05}
+                />
+            {/*</View>*/}
+        </View>
+    );
+};
+
+export const WaveLoader = (props) => {
+    return (
+        <View style={[{flex:1, backgroundColor:'rgb(0,0,0,0)'}, props.viewStyle]} >
+            {/*<View style={{}}>*/}
+            <DotIndicator
+                color={SystemBlue}
+                size={swidth * 0.01}
+            />
+            {/*</View>*/}
+        </View>
+    );
+};
+

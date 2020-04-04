@@ -69,14 +69,14 @@ export const FireBaseSendEmail = (dataobj) => {
 
 };
 
-export const FireBaseStoreData = (dataobj) => {
+export const FireBaseStoreData = (folderPath,dataobj) => {
 
     var timestamp = Number(new Date());
 
     return (dispatch,getState) => {
         return firebase
             .storage()
-            .ref(`UserProfiles/${timestamp.toString()}`)
+            .ref(`${folderPath}/${timestamp.toString()}`)
             // .child('myfile')
             .put(Platform === 'ios' ? dataobj.uri.replace('file://','') : dataobj.uri)
             .then(res => {
@@ -180,6 +180,8 @@ export const UpdateWhere = (collection,doc,dataObj) => {
         return DBRef.update(dataObj)
             .then(response => {
 
+
+                debugger
                 console.log(response);
                 return Promise.resolve({
                     status: 200,
@@ -197,7 +199,6 @@ export const UpdateWhere = (collection,doc,dataObj) => {
                 });
             })
     };
-
 
 };
 

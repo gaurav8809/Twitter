@@ -268,7 +268,12 @@ class DrawerView extends Component{
                                     onLoadEnd={() => this.setState({imageloader:false})}
                                 />
                             </TouchableOpacity>
-                            <View style={profilenameview}>
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                onPress={() => nav.navigate('ProfilePage',{
+                                    NavUser: LogedInUserData
+                                })}
+                                style={profilenameview}>
                                 <Text style={profilenametext}>
                                     {
                                         LogedInUserData &&
@@ -278,17 +283,26 @@ class DrawerView extends Component{
                                     <OfficialSymbol/>}
                                 </Text>
                                 <Icon name={'chevron-small-down'} type={'Entypo'} size={swidth * 0.06} color={SystemBlue}/>
-                            </View>
-                            <View style={usernameview}>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                onPress={() => nav.navigate('ProfilePage',{
+                                    NavUser: LogedInUserData
+                                })}
+                                style={usernameview}>
                                 <Text style={usernametext}>
                                     {
                                         LogedInUserData &&
                                         LogedInUserData.username
                                     }
                                 </Text>
-                            </View>
+                            </TouchableOpacity>
                             <View style={{marginTop: swidth * 0.04, flexDirection: 'row'}}>
-                                <TouchableOpacity onPress={() => nav.navigate('FollowingListPage')}>
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate('FollowingListPage',{
+                                        NavUser: LogedInUserData
+                                    })}
+                                >
                                     <Text style={fValueText}>
                                         {LogedInUserData.following &&
                                         `${LogedInUserData.following.length} `}
@@ -297,7 +311,11 @@ class DrawerView extends Component{
                                         </Text>
                                     </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => nav.navigate('FollowersListPage')}>
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate('FollowersListPage',{
+                                        NavUser: LogedInUserData
+                                    })}
+                                >
                                     <Text style={fValueText}>
                                         {LogedInUserData.followers &&
                                         `${LogedInUserData.followers.length} `}

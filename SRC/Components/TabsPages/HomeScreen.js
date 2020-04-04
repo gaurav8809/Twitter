@@ -228,6 +228,7 @@ class HomeScreen extends Component{
                             official: item.official && item.official,
                         }
                     }
+                    btnFlag={true}
                     btnStatus={false}
                     btnText={"Follow"}
                     btnActiveText={"Following"}

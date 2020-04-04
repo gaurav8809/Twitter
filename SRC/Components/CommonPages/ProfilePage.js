@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
-import {Platform, TouchableOpacity, Animated,} from 'react-native';
-import HELPER, {LeftButtonCircle, MenuButtonCircle, OfficialSymbol, PreviewImageView, IS_IOS} from "../../Global/Helper";
+import {TouchableOpacity, Animated,} from 'react-native';
+import {OfficialSymbol, PreviewImageView, IS_IOS, parseDate} from "../../Global/Helper";
 import {FlatList, Modal, SafeAreaView, StyleSheet, Text, View, Image} from "react-native";
-import {ProfileInfoBadge, TweetBadge} from "../../Global/TwitterBadges";
+import {TweetBadge} from "../../Global/TwitterBadges";
 import {safearea, swidth} from "../../Global/ScreenSetting";
-import {BlackBigText, BlueText} from "../../Global/TwitterText";
-import {BlueWhiteButton, BubbleButton} from "../../Global/TwitterButton";
-import {IOSIndicator} from "../../Global/Indicators";
+import {LinerButton} from "../../Global/TwitterButton";
 import {GetTweets, GetUserTweets} from "../../Actions/GeneralAction";
 import {connect} from "react-redux";
 import {SystemBlue, SlateGray, BackGrayColor} from "../../Global/ColorPalate";
@@ -14,8 +12,8 @@ import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {SHW, RHW, SH, SW, centertext} from '../../Global/ScreenSetting'
 import {ScrollView} from "react-navigation";
 import {ScrollableTabView} from '@valdio/react-native-scrollable-tabview'
-import {UIActivityIndicator} from "react-native-indicators";
-// import {TabView, SceneMap} from 'react-native-tab-view';
+import {DotIndicator, UIActivityIndicator, WaveIndicator} from "react-native-indicators";
+import {WaveLoader} from "../../Global/Indicators";
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -28,26 +26,64 @@ class ProfilePage extends Component {
     constructor(props) {
         super(props);
 
-        debugger
+        let NavData = props.navigation.state.params.NavUser[0] === undefined ? props.navigation.state.params.NavUser : props.navigation.state.params.NavUser[0];
+        let FinalNavData = NavData.id === props.LogedInUserData.id ? props.LogedInUserData : NavData;
 
         this.state = {
-            loader: false,
+            loader: true,
             tabIndex: 0,
-            NavUser: props.navigation.state.params.NavUser[0] === undefined ? props.navigation.state.params.NavUser : props.navigation.state.params.NavUser[0],
-            tweetList:[],
+            LogedInUserData:{},
+            NavUser: FinalNavData,
+            tweetList:'load',
             tweetLoader:false,
             preview: false,
             PreviewImage: null,
             scrollY: new Animated.Value(0),
         };
 
-        console.log(this.state.NavUser);
+        // console.log(parseDate(this.state.NavUser.timestamp.seconds));
 
     }
 
     componentDidMount(){
+
         this.getTweetList();
+
     }
+
+
+    static getDerivedStateFromProps(nextProps, prevState){
+
+        if(nextProps.LogedInUserData.id === prevState.NavUser.id)
+        {
+            if(nextProps.LogedInUserData !== prevState.NavUser)
+            {
+                return{
+                    NavUser : nextProps.LogedInUserData
+                }
+            }
+            return null;
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+
+        if(prevProps.LogedInUserData.id === prevState.NavUser.id)
+        {
+            if(prevState.NavUser !== this.state.NavUser){
+                //Perform some operation here
+                this.setState({NavUser: prevState.NavUser});
+            }
+        }
+    }
+
+    dateCheck = (date) => {
+        return !isNaN(parseDate(date).DATE)
+    };
+
+    setLoader = (flag) => {
+        this.setState({loader:flag});
+    };
 
     openImage = (url) => {
 
@@ -77,13 +113,20 @@ class ProfilePage extends Component {
         let STD = this.state;
 
         this.setState({tweetLoader:true});
+
         this.props.GetUserTweets('tweets', STD.NavUser)
             .then(response => {
 
-                this.setState({tweetLoader:false});
-                this.setState({
-                    tweetList: response.data
-                });
+                if(response.data.length)
+                {
+                    this.setState({
+                        tweetLoader:false,
+                        tweetList: response.data
+                    });
+                }
+                else
+                    this.setState({tweetList: []});
+
 
             })
             .catch(error => {
@@ -105,26 +148,49 @@ class ProfilePage extends Component {
         );
     };
 
-    _TWEETS_TAB = (tabLabel) => {
+    _LOADER = () => {
         return(
-            this.state.tweetList.length ?
-            <View tabLabel={tabLabel} style={{backgroundColor: BackGrayColor}}>
-                <FlatList
-                    data={this.state.tweetList !== [] && this.state.tweetList}
-                    keyExtractor={item => item.tweetId}
-                    renderItem={({item,index}) => this.renderTweetList(item,index)}
-                    scrollEnabled={false}
-                />
-                {   this.state.tweetLoader &&
+            <UIActivityIndicator
+                color={SystemBlue}
+                size={swidth * 0.05}
+                style={{marginTop: SW(0.1),marginBottom: SW(1), }}
+            />
+        );
+    };
+
+    _TWEETS_TAB = (tabLabel) => {
+
+        if(this.state.tweetList === 'load')
+        {
+            return(
+                <View tabLabel={tabLabel}>
+                    {this._LOADER()}
+                </View>
+            );
+        }
+        else if(this.state.tweetList.length)
+        {
+            return (
+                <View tabLabel={tabLabel} style={{backgroundColor: BackGrayColor}}>
+                    <FlatList
+                        data={this.state.tweetList !== [] && this.state.tweetList}
+                        keyExtractor={item => item.tweetId}
+                        renderItem={({item,index}) => this.renderTweetList(item,index)}
+                        scrollEnabled={false}
+                    />
+                    {   this.state.tweetLoader &&
                     <UIActivityIndicator
                         color={SystemBlue}
                         size={swidth * 0.05}
                         style={{marginTop: SW(0.1),marginBottom: SW(1), }}
                     />
-                }
-            </View>
-                : <View tabLabel={tabLabel} style={{flex:1, backgroundColor: BackGrayColor, alignItems:'center'}}><Text>{"No tweets"}</Text></View>
-        );
+                    }
+                </View>
+            );
+        }
+        else
+            return <View tabLabel={tabLabel} style={{flex:1, backgroundColor: BackGrayColor, alignItems:'center'}}><Text>{"No tweets"}</Text></View>
+
     };
 
     _T_R_TAB = (tabLabel) => {
@@ -157,6 +223,9 @@ class ProfilePage extends Component {
 
         let STD = this.state;
         let {NavUser} = STD;
+
+        // let joined = NavUser.timestamp && parseDate(NavUser.timestamp.seconds);
+        //
 
         const nav = this.props.navigation;
 
@@ -195,15 +264,33 @@ class ProfilePage extends Component {
                         contentContainerStyle={{alignItems: 'center', flexGrow: 1}}
                         scrollEventThrottle={1}
                     >
-                        <View style={STY.coverView}/>
+                        {
+                            NavUser.coverImage ?
+                                <TouchableOpacity onPress={() => this.openImage(NavUser.coverImage)}>
+                                    {
+                                        STD.loader &&
+                                        <View style={{...SHW(0.3, SW(1)),}}>
+                                            <DotIndicator
+                                                color={SystemBlue}
+                                                size={swidth * 0.015}
+                                            />
+                                        </View>
+                                    }
+                                    <Image
+                                        onLoadStart={() => this.setLoader(true)}
+                                        onLoadEnd={() => this.setLoader(false)}
+                                        source={{uri: NavUser.coverImage}}
+                                        style={{height: SW(0.3), width: swidth, position: STD.loader ? 'absolute' : 'relative'}}
+                                    />
+                                </TouchableOpacity>
+                                :
+                                <View style={STY.coverView}/>
+                        }
                         <View style={[STY.InfoView,]}>
                             <View style={STY.prfileImageView}>
                                 <TouchableOpacity
                                     activeOpacity={1}
-                                    onPress={() => this.openImage(NavUser.profileImage
-                                        ? NavUser.profileImage
-                                        : '../../Assets/Images/usergray.png'
-                                    )}
+                                    onPress={() => NavUser.profileImage && this.openImage(NavUser.profileImage)}
                                 >
                                     <Animated.Image
                                         resizeMode={'cover'}
@@ -215,13 +302,16 @@ class ProfilePage extends Component {
                                         style={[STY.profileImageStyle,{overflow: 'hidden'},{transform:[{scale:imageScale},{translateY: viewTop}]}]}
                                     />
                                 </TouchableOpacity>
-                                <BlueWhiteButton
-                                    text={'Edit profile'}
-                                    // activeText={'Edi'}
-                                    btnStatus={false}
-                                    onPress={() => alert('edit')}
-                                    useColor={SlateGray}
-                                />
+                                {
+                                    this.props.LogedInUserData.id === NavUser.id &&
+                                    <LinerButton
+                                        text={'Edit profile'}
+                                        onPress={() => nav.navigate('EditProfilePage')}
+                                        activeOpacity={0.8}
+                                        btnStyle={{padding:5}}
+                                        useColor={SlateGray}
+                                    />
+                                }
                             </View>
 
                             <View style={{width: SW(0.93),alignSelf: 'center'}}>
@@ -250,31 +340,35 @@ class ProfilePage extends Component {
                                         </Text>
                                     </View>
                                 }
-                                <View style={STY.otherInfoView}>
+                                <View style={{marginTop: SW(0.025), flexDirection: NavUser.location !== undefined && NavUser.location !== '' && NavUser.location.length > 30 ? 'column' : 'row'}}>
                                     {
-                                        NavUser.location &&
+                                        NavUser.location !== undefined && NavUser.location !== '' &&
                                         <Text style={STY.otherInfoText}>
-                                            <Icon name={"marker"} type={"Foundation"} size={swidth * 0.045}
-                                                  color={SlateGray}/>
-                                            {"  Surat, Gujarat  "}
+                                            <Icon name={"marker"} type={"Foundation"} size={swidth * 0.04} color={SlateGray}/>
+                                            {` ${NavUser.location} `}
                                         </Text>
                                     }
                                     {
-                                        NavUser.birthDate &&
+                                        NavUser.birthDate && NavUser.birthDate !== '' &&
                                         <Text style={STY.otherInfoText}>
-                                            <Icon name={"birthday-cake"} type={"FontAwesome"} size={swidth * 0.035}
-                                                  color={SlateGray}/>
-                                            {"  Born 27 March 1998\n"}
+                                            <Icon name={"birthday-cake"} type={"FontAwesome"} size={swidth * 0.03} color={SlateGray}/>
+                                            {/*{"  Born 27 March 1998\n"}*/}
+                                            {` Born ${NavUser.birthDate.toDate().getDate()} ${Months[NavUser.birthDate.toDate().getMonth()]} ${NavUser.birthDate.toDate().getFullYear()}`}
                                         </Text>
                                     }
-                                    <Text style={STY.otherInfoText}>
-                                        <Icon name={"calendar"} type={"MaterialCommunityIcons"} size={swidth * 0.045}
-                                              color={SlateGray}/>
-                                        {NavUser.timestamp && ` Joined ${Months[NavUser.timestamp.toDate().getMonth()]} ${NavUser.timestamp.toDate().getFullYear()}`}
-                                    </Text>
+
                                 </View>
+                                <Text style={STY.otherInfoText}>
+                                    <Icon name={"calendar"} type={"MaterialCommunityIcons"} size={swidth * 0.04} color={SlateGray}/>
+                                    {/*{NavUser.timestamp && ` Joined ${joined.M_IN_W} ${joined.YEAR}`}*/}
+                                    {NavUser.timestamp && ` Joined ${Months[NavUser.timestamp.toDate().getMonth()]} ${NavUser.timestamp.toDate().getFullYear()}`}
+                                </Text>
                                 <View style={STY.followView}>
-                                    <TouchableOpacity onPress={() => nav.navigate('FollowingListPage')}>
+                                    <TouchableOpacity onPress={() =>
+                                        this.props.navigation.navigate('FollowingListPage',{
+                                        NavUser: NavUser
+                                    })}
+                                    >
                                         <Text style={STY.fValueText}>
                                             {`${NavUser.following.length} `}
                                             <Text style={STY.fText}>
@@ -282,7 +376,11 @@ class ProfilePage extends Component {
                                             </Text>
                                         </Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => nav.navigate('FollowersListPage')}>
+                                    <TouchableOpacity onPress={() =>
+                                        this.props.navigation.navigate('FollowersListPage',{
+                                            NavUser: NavUser
+                                        })}
+                                    >
                                         <Text style={STY.fValueText}>
                                             {`${NavUser.followers.length} `}
                                             <Text style={STY.fText}>
@@ -431,7 +529,7 @@ let Styles = StyleSheet.create({
         fontWeight: "500",
     },
     otherInfoText: {
-        fontSize: swidth * 0.043,
+        fontSize: swidth * 0.037,
         color: SlateGray
     },
     biotext: {
@@ -477,4 +575,4 @@ const mapDispatchToProps = {
 };
 
 // export default CodeVerification;
-export default connect(null, mapDispatchToProps)(ProfilePage);
+export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);

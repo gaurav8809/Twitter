@@ -2,7 +2,7 @@ import React, {Component, useEffect, useState} from 'react';
 import {Image, SafeAreaView, Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {swidth} from './ScreenSetting';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
-import {SystemBlue} from './ColorPalate';
+import {SystemBlue, SlateGray} from './ColorPalate';
 import {UIActivityIndicator} from 'react-native-indicators';
 import {GetLoginUserData, GetUserInfo} from '../Actions/UserAction';
 import {connect, useSelector, useDispatch} from 'react-redux';
@@ -85,17 +85,6 @@ export const AppHeader = (props) => {
                         {/*<Image source={require('../Assets/Images/user.png')} style={{height: swidth * 0.08, width : swidth * 0.08 }}/>*/}
 
                         <View style={{justifyContent: 'center'}}>
-                            <Image
-                                source={
-                                    LogedInUser && LogedInUser.profileImage && LogedInUser.profileImage
-                                        ? {uri: LogedInUser.profileImage}
-                                        : require('../Assets/Images/usergray.png')
-                                }
-                                style={Styles.profileimage}
-                                onLoadStart={() => setImageLoader(true)}
-                                onLoadEnd={() => setImageLoader(false)}
-                            />
-
                             {
                                 imageLoader &&
                                 <ImageLoaderIndicator
@@ -103,6 +92,16 @@ export const AppHeader = (props) => {
                                         width : swidth * 0.09,}}
                                 />
                             }
+                            {
+                                LogedInUser && LogedInUser.profileImage &&
+                                <Image
+                                source={{uri: LogedInUser.profileImage}}
+                                style={Styles.profileimage}
+                                onLoadStart={() => setImageLoader(true)}
+                                onLoadEnd={() => setImageLoader(false)}
+                                />
+                            }
+
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -131,6 +130,7 @@ const Styles = StyleSheet.create({
         height: swidth * 0.09,
         width: swidth * 0.09,
         borderRadius: 100,
+        // backgroundColor: SlateGray
     },
 });
 

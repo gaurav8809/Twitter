@@ -41,8 +41,6 @@ export const GetTweets = (collection, currentUser) => {
                                 )
                         );
 
-                        debugger
-
                         // udata.map(item =>
                         //     finalTweet.map(fitem =>
                         //         fitem.userID === item.id && sendObj.push(Object.assign(item._data, fitem))
@@ -161,7 +159,6 @@ export const GetFollowingList = (collection, followingArray) => {
                     .filter(item => followingArray.includes(item.id));
                     // .map(item => item._data);
 
-                debugger
                 return Promise.resolve({
                     status: 200,
                     message: 'Successfully Get users list',
@@ -188,6 +185,26 @@ export const GetGifs = (API) => {
         return axios.get(API)
             .then(response => {
                 return Promise.resolve(response.data)
+            })
+            .catch((err) => {
+                console.log("Error - ", err);
+                return Promise.reject(err);
+            });
+    };
+
+};
+
+export const GetLocation = (option,q) => {
+
+    let path = 'https://autosuggest.search.hereapi.com/v1/';
+    let at = 'at=1,1';
+    let key = 'apiKey=hzn97vGsAnNEy1SmuV6gFTe5zjkMHpkmXtxevo-FM5Y';
+    let final = `${path}/${option}?${at}&${key}&q=${q}`;
+    return (dispatch, getState) => {
+
+        return axios.get(final)
+            .then(response => {
+                return Promise.resolve(response.data.items)
             })
             .catch((err) => {
                 console.log("Error - ", err);

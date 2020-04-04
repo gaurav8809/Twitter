@@ -74,14 +74,15 @@ export const FireBaseStoreData = (folderPath,dataobj) => {
 
     var timestamp = Number(new Date());
 
+    debugger
     return (dispatch,getState) => {
-        debugger
         return firebase
             .storage()
             .ref(`${folderPath}/${timestamp.toString()}`)
             // .child('myfile')
             .put(Platform === 'ios' ? dataobj.uri.replace('file://','') : dataobj.uri)
             .then(res => {
+                debugger
                 return Promise.resolve({
                     status: 200,
                     message: 'Successfully Stored',
@@ -89,10 +90,12 @@ export const FireBaseStoreData = (folderPath,dataobj) => {
                 });
             })
             .catch(error => {
+                debugger
                 console.log(error);
                 return Promise.reject({
                     status: 400,
                     message: 'Not Stored',
+                    data: error
                 });
             })
 

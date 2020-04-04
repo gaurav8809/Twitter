@@ -90,6 +90,31 @@ export const BlueWhiteButton = (props) => {
     )
 };
 
+export const LinerButton = (props) => {
+
+    let {
+        onPress,
+        text,
+        useColor,
+        btnStyle,
+        activeOpacity,
+        textStyle,
+    } = props;
+
+
+    return(
+        <TouchableOpacity
+            activeOpacity={activeOpacity ? activeOpacity : 1}
+            style={[Styles.button, {borderColor: useColor} , btnStyle ]}
+            onPress={onPress}
+        >
+            <Text style={[Styles.btntext, {color: useColor} , textStyle]}>
+                {`${text}`}
+            </Text>
+        </TouchableOpacity>
+    )
+};
+
 export const BubbleButton = (props) => {
 
     let {
@@ -129,7 +154,8 @@ export const BubbleButton = (props) => {
 module.extends = {
     SystemButton,
     BlueWhiteButton,
-    BubbleButton
+    BubbleButton,
+    LinerButton
 };
 
 let Styles = StyleSheet.create({

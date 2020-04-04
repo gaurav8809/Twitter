@@ -1,4 +1,4 @@
-import {Dimensions} from 'react-native';
+import {Dimensions,Platform} from 'react-native';
 
 const swidth = Dimensions.get('window').width;
 const sheight = Dimensions.get('window').height;
@@ -58,6 +58,12 @@ const TransIT = () => {
     }
 };
 
+const IS_IOS = () => {
+
+    return Platform.OS === 'ios';
+
+};
+
 module.exports = {
     SW,
     SH,
@@ -69,5 +75,6 @@ module.exports = {
     SHW,
     NHW,
     RHW,
-    TransIT
+    TransIT,
+    IS_IOS
 };

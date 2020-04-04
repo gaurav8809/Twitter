@@ -8,6 +8,8 @@ import {ImageLoaderIndicator} from '../Global/Indicators';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {OfficialSymbol} from '../Global/Helper';
 
+const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
 const ProfileInfoBadge = (props) => {
 
     let {
@@ -17,6 +19,7 @@ const ProfileInfoBadge = (props) => {
         btnActiveText,
         BtnPress,
         btnStatus,
+        btnFlag,
     } = props;
 
     let {
@@ -71,15 +74,18 @@ const ProfileInfoBadge = (props) => {
                             {PROFILE_INFO.username}
                         </Text>
                     </View>
-                    <View style={{flex:2, alignItems: 'flex-end'}}>
-                        <BlueWhiteButton
-                            text={btnText}
-                            activeText={btnActiveText}
-                            btnStatus={btnStatus}
-                            onPress={BtnPress}
-                            useColor={SystemBlue}
-                        />
-                    </View>
+                    {
+                        btnFlag &&
+                        <View style={{flex:2, alignItems: 'flex-end'}}>
+                            <BlueWhiteButton
+                                text={btnText}
+                                activeText={btnActiveText}
+                                btnStatus={btnStatus}
+                                onPress={BtnPress}
+                                useColor={SystemBlue}
+                            />
+                        </View>
+                    }
                 </View>
                 <View style={biotextview}>
                     <Text style={biotext}>
@@ -102,7 +108,9 @@ const TweetBadge = (props) => {
         imagePath,
         comments,
         likes,
+        timestamp
     } = props.JSONData;
+    timestamp = timestamp.toDate();
 
     let {
         profileImage,
@@ -154,7 +162,7 @@ const TweetBadge = (props) => {
         <TouchableOpacity activeOpacity={0.8} style={OuterView}>
             <TouchableOpacity
                 style={{justifyContent: 'flex-start', flex: 1}}
-                onPress={() => props.profilePress(profileImage)}
+                onPress={() => profileImage && props.profilePress(profileImage)}
             >
                 {
                     imageLoader &&

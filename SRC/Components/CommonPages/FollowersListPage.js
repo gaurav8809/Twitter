@@ -24,9 +24,14 @@ class FollowersListPage extends Component{
     constructor(props) {
         super(props);
 
+        let NavData = props.navigation.state.params.NavUser;
+        let FinalNavData = NavData.id === props.LogedInUserData.id ? props.LogedInUserData : NavData;
+
         this.state = {
             loader: false,
             LogedInUser: this.props.LogedInUserData,
+            NavUser: FinalNavData,
+            requestedList: this.props.LogedInUserData.following,
             allFollowers: [],
         };
 
@@ -36,7 +41,7 @@ class FollowersListPage extends Component{
 
         let STD = this.state;
 
-        this.props.GetFollowingList('users', STD.LogedInUser.followers)
+        this.props.GetFollowingList('users', STD.NavUser.followers)
             .then(response => {
 
                 this.setState({
@@ -71,6 +76,7 @@ class FollowersListPage extends Component{
                             official: item.official && item.official,
                         }
                     }
+                    btnFlag={this.state.NavUser.id === this.props.LogedInUserData.id}
                     btnStatus={FST}
                     btnText={FST ? "Following" : "Follow"}
                     btnActiveText={FST ? "Follow" : "Following"}
@@ -88,14 +94,16 @@ class FollowersListPage extends Component{
 
     followButtonPress = (item) => {
 
+        let STD = this.state;
+
         let Obj = {
-            UserId: this.state.LogedInUser.id,
-            Username: this.state.LogedInUser.username,
+            UserId: STD.NavUser.id,
+            Username: STD.NavUser.username,
             OpUserId: item.id,
             OpUsername: item.username,
         };
 
-        this.props.FollowUser('users', Obj, this.state.LogedInUser)
+        this.props.FollowUser('users', Obj, STD.NavUser)
             .catch(error => {
                 console.log(error)
             });
@@ -104,14 +112,16 @@ class FollowersListPage extends Component{
 
     unfollowButtonPress = (item) => {
 
+        let STD = this.state;
+
         let Obj = {
-            UserId: this.state.LogedInUser.id,
-            Username: this.state.LogedInUser.username,
+            UserId: STD.NavUser.id,
+            Username: STD.NavUser.username,
             OpUserId: item.id,
             OpUsername: item.username,
         };
 
-        this.props.UnFollowUser('users', Obj, this.state.LogedInUser)
+        this.props.UnFollowUser('users', Obj, STD.NavUser)
             .then(response => {
 
             })
