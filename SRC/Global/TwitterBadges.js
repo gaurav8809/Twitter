@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View, Animated} from 'react-native';
-import React, {useState,useEffect} from 'react';
+import React, {useState,useEffect,} from 'react';
 import {centertext, swidth, SHW, sheight} from './ScreenSetting';
 import {SystemBlue, LikeRed} from './ColorPalate';
 import {BlueWhiteButton} from './TwitterButton';
@@ -7,10 +7,11 @@ import {UIActivityIndicator} from 'react-native-indicators';
 import {ImageLoaderIndicator} from '../Global/Indicators';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {OfficialSymbol} from '../Global/Helper';
+import {connect, useSelector} from "react-redux";
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-const ProfileInfoBadge = (props) => {
+export const ProfileInfoBadge = (props) => {
 
     let {
         imageurl,
@@ -101,7 +102,7 @@ const ProfileInfoBadge = (props) => {
     )
 };
 
-const TweetBadge = (props) => {
+export const TweetBadge = (props) => {
 
     let {
         tweetValue,
@@ -136,8 +137,10 @@ const TweetBadge = (props) => {
     const [imageHeight,setimageHeight] = useState(0);
     const [imageWidth,setimageWidth] = useState(0);
     const [like,setLike] = useState(false);
-    const [likeAnimation,setAnim] = useState(0);
+    const [likeAnimation,setLikeValue] = useState(new Animated.Value(0));
+    const [LogedInUserData, setLogedInUserData] = useState(useSelector(state => state.UserReducer.LogedInUserData));
 
+    debugger
     imagePath &&
     Image.getSize(imagePath, (width, height) => {
         // this.setState({ width: width, height: height, loading: false });
@@ -148,14 +151,25 @@ const TweetBadge = (props) => {
     const startAnim=()=>{
 
         Animated.timing(likeAnimation, {
-            toValue : 2,
-            timing : 1200
-        }).start(()=>{
-            Animated.timing(likeAnimation,{
-                toValue : 1,
-                duration : 1200
-            }).start();
-        })
+            toValue : 3,
+            timing : 50
+        }).start(() =>  setLikeValue(new Animated.Value(0)));
+
+    };
+
+    const heartScale = likeAnimation.interpolate({
+        inputRange: [0, 1, 2, 3],
+        outputRange: [1, 0.5, 1.2, 1],
+        extrapolate: 'clamp',
+    });
+
+    const LikePress = () => {
+        if(like === false) {startAnim();}
+        setLike(!like)
+    };
+
+    const LULAction = () => {
+
     };
 
     return(
@@ -198,13 +212,11 @@ const TweetBadge = (props) => {
                         {tweetValue && tweetValue}
                     </Text>
                 </View>
-
                 {
                     imagePath &&
                     <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => props.imagePress(imagePath)}
-
                     >
                         {
                             imageLoader &&
@@ -233,7 +245,6 @@ const TweetBadge = (props) => {
 
                     </TouchableOpacity>
                 }
-
                 <View style={{flexDirection: 'row', marginTop: swidth * 0.022}}>
                     <View style={[tweetoptionview, {marginLeft: 0}]}>
                         <Icon name={"comment-o"} type={"FontAwesome"} color={'gray'} size={swidth * 0.04} />
@@ -244,18 +255,18 @@ const TweetBadge = (props) => {
                         <Text style={tweetliketext}> {"512"} </Text>
                     </View>
                     <View style={tweetoptionview}>
-                        {/*<Animated.View style={{transform : [*/}
-                        {/*        {*/}
-                        {/*            scale : likeAnimation*/}
-                        {/*        }*/}
-                        {/*    ]}}>*/}
-                            <Icon onPress={() => {setLike(!like)}}
+                        <Animated.View style={{transform : [
+                                {
+                                    scale : heartScale
+                                }
+                            ]}}>
+                            <Icon onPress={() => LikePress()}
                                   name={like ? "ios-heart" : "ios-heart-empty"}
                                   type={"Ionicons"}
                                   color={like ? LikeRed : 'gray'}
                                   size={swidth * 0.05}
                             />
-                        {/*</Animated.View>*/}
+                        </Animated.View>
                         {/*{ like && <Image style={{height: swidth * 0.1, width: swidth * 0.1}} source={require('../Assets/GIFs/1_hRJF5CNRG6tB-SkwVU5bCw.gif')}/>}*/}
                         <Text style={tweetliketext}> {"18.3k"} </Text>
                     </View>
@@ -268,10 +279,13 @@ const TweetBadge = (props) => {
     )
 };
 
-module.exports = {
-    ProfileInfoBadge,
-    TweetBadge
-};
+// export connect(null,null)(TweetBadge);
+
+
+// module.exports = {
+//     ProfileInfoBadge,
+//     TweetBadge
+// };
 
 let Styles = StyleSheet.create({
 

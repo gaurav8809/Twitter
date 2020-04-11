@@ -210,5 +210,47 @@ export const UpdateProfileInfo = (collection,userID,dataObj) => {
 
 };
 
+export const LikeUnlikeTweet = (status, dataObj, currentUser) => {
 
+    let batch = firebase.firestore().batch();
+
+    if (status) {
+        let tweetRef = firebase.firestore().collection('tweets').doc(dataObj.tweetID);
+        batch.update(tweetRef, {likes: firebase.firestore.FieldValue.arrayUnion(currentUser.id)});
+
+        let userRef = firebase.firestore().collection('users').doc(currentUser.id);
+        batch.update(userRef, {likes: firebase.firestore.FieldValue.arrayUnion(dataObj.tweetID)});
+    }
+    else{
+        let tweetRef = firebase.firestore().collection('tweets').doc(dataObj.tweetID);
+        batch.update(tweetRef,{likes: firebase.firestore.FieldValue.arrayRemove(currentUser.id)});
+
+        let userRef = firebase.firestore().collection('users').doc(currentUser.id);
+        batch.update(userRef, {likes: firebase.firestore.FieldValue.arrayRemove(dataObj.tweetID)});
+    }
+
+    return (dispatch, getState) => {
+
+        return batch.commit()
+            .then(response => {
+
+                dispatch(GetLoginUserData('users',currentUser.id));
+
+                return Promise.resolve({
+                    status: 200,
+                    message: status ? 'Successfully Like' : 'Successfully DisLike',
+                });
+
+            })
+            .catch(error => {
+                console.log(error);
+                return Promise.reject({
+                    status: 400,
+                    message: status ? 'Not Liked' : 'Not DisLike',
+                    data: error
+                });
+            })
+    };
+
+};
 
