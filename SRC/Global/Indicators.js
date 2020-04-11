@@ -17,8 +17,8 @@ import {AntDesign} from './VectorIcons';
 
 export const DefaultIndicator = () => {
     return (
-        <View style={{flex:1, backgroundColor:'rgba(0,0,0,0.1)'}}>
-            <MaterialIndicator color={SystemBlue} size={swidth * 0.15} trackWidth={5}/>
+        <View style={{flex:1, backgroundColor:'rgba(0,0,0,0)'}}>
+            <MaterialIndicator color={SystemBlue} size={swidth * 0.04} trackWidth={2}/>
         </View>
     );
 };

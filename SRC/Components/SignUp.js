@@ -225,7 +225,7 @@ class SignUp extends Component{
                                 <TextInput
                                     autoCorrect={false}
                                     onFocus={() => this.setState({currenttextinput:0})}
-                                    style={[Styles.nametext]}
+                                    style={[Styles.inputText]}
                                     value={this.state.name}
                                     onChangeText={text => {
                                         if(text[0]!==' '){
@@ -243,7 +243,7 @@ class SignUp extends Component{
                                 {
                                     this.state.correctsign &&
                                     <View style={[Styles.correctsigncircle]}>
-                                        <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.07}/>
+                                        <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.05}/>
                                     </View>
                                 }
                             </View>
@@ -273,7 +273,7 @@ class SignUp extends Component{
                             ]}>
                                 <TextInput
                                     autoCorrect={false}
-                                    style={[Styles.poetext,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
+                                    style={[Styles.inputText,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
                                     value={this.state.phoneoremail}
                                     onChangeText={text => this.setpelabel(text)}
                                     placeholder={this.state.placeholder}
@@ -394,7 +394,7 @@ let Styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderColor: 'lightgray',
         fontSize: swidth * 0.06,
-        height: swidth * 0.095
+        height: swidth * 0.09
     },
     poetextview:{
         width: swidth * 0.85,
@@ -402,7 +402,7 @@ let Styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderColor: 'lightgray',
         fontSize: swidth * 0.06,
-        height: swidth * 0.095
+        height: swidth * 0.09
     },
     totalnumberview:{
         flexDirection: 'row',
@@ -424,31 +424,22 @@ let Styles = StyleSheet.create({
 
 
     hellotext:{
-        fontSize: swidth * 0.08,
+        fontSize: swidth * 0.06,
         fontFamily: 'Roboto-Bold',
         // flexWrap:'wrap-reverse'
     },
     totalnumbertext:{
         alignSelf:'flex-end',
-        fontSize: swidth * 0.055,
+        fontSize: swidth * 0.04,
         color:'gray',
     },
-    nametext:{
-        // height: swidth * 0.05,
+    inputText:{
         width: swidth * 0.77,
-        fontSize: swidth * 0.06,
-        // backgroundColor: 'pink',
-        padding: 0
-    },
-    poetext:{
-        // height: swidth * 0.05,
-        width: swidth * 0.77,
-        fontSize: swidth * 0.06,
-        // backgroundColor: 'pink',
+        fontSize: swidth * 0.04,
         padding: 0
     },
     namemsg:{
-        fontSize: swidth * 0.04,
+        fontSize: swidth * 0.03,
         color:'red'
     },
     dynamiclabeltext:{

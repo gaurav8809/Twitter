@@ -3,15 +3,11 @@ import {
     SafeAreaView,
     StyleSheet,
     View,
-    Platform,
     Modal,
-    FlatList,
     Text,
     ScrollView,
-    TouchableHighlight, TextInput,
-    ToastAndroid,
 } from 'react-native';
-import {swidth, sheight, centertext, safearea, mainview} from '../Global/ScreenSetting';
+import {swidth, sheight, centertext, safearea, mainview, SH, SW} from '../Global/ScreenSetting';
 import {AntDesign, MCI} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate';
 import TwitterTopPanel from '../Global/TwitterTopPanel';
@@ -134,13 +130,13 @@ class LoginPage extends Component {
                                     <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>
                                     <View style={{flexDirection: 'row'}}>
                                         <Text onPress={() => this.props.navigation.navigate('SignUp')}
-                                              style={{color: SystemBlue, fontSize: swidth * 0.045, fontWeight: 'bold'}}>
+                                              style={{color: SystemBlue, fontSize: swidth * 0.035, fontWeight: 'bold'}}>
                                             {'Sign up  '}
                                         </Text>
                                         {/*<Icon type={'Entypo'} size={swidth * 0.06} color={SystemBlue} name={'dots-three-vertical'}/>*/}
                                         <Menu open={true}>
                                             <MenuTrigger>
-                                                <Icon type={'Entypo'} size={swidth * 0.06} color={SystemBlue}
+                                                <Icon type={'Entypo'} size={swidth * 0.045} color={SystemBlue}
                                                       name={'dots-three-vertical'}/>
                                             </MenuTrigger>
                                             <MenuOptions>
@@ -164,9 +160,9 @@ class LoginPage extends Component {
                                 </View>
                             </View>
 
-                            <BlackBigText text={'Log in to Twitter.'} textstyle={{fontSize: swidth * 0.07}}/>
+                            <BlackBigText text={'Log in to Twitter.'} textstyle={{fontSize: swidth * 0.06}}/>
 
-                            <GrayText text={'Phone number or email address'}/>
+                            <GrayText textstyle={{fontSize: SW(0.04)}} text={'Phone number or email address'}/>
 
                             <TwitterTextInput
                                 // text={this.state.txtemail}
@@ -182,13 +178,13 @@ class LoginPage extends Component {
                                 onFocus={() => this.setState({current: 1})}
                             />
 
-                            <GrayText text={'Password'} viewstyle={{marginTop: swidth * 0.07}}/>
+                            <GrayText textstyle={{fontSize: SW(0.04)}} text={'Password'} viewstyle={{marginTop: swidth * 0.07}}/>
 
                             <TwitterTextInput
                                 // ref={this.b}
+                                textStyle={{fontSize: SW(0.02)}}
                                 returnKeyType={'next'}
                                 // onSubmitEditing={() => this.a.current.focus()}
-
                                 viewstyle={{
                                     marginTop: swidth * 0.02,
                                     width: swidth * 0.95,
@@ -212,7 +208,7 @@ class LoginPage extends Component {
 
                             <GrayText text={'Forgotten your password?'}
                                       viewstyle={{marginTop: swidth * 0.06, alignSelf: 'center'}}
-                                      textstyle={{fontSize: swidth * 0.038}}/>
+                                      textstyle={{fontSize: swidth * 0.03}}/>
 
 
                         </View>

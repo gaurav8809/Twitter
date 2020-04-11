@@ -1,5 +1,5 @@
 import {FlatList, Modal, StyleSheet, View, Text, TouchableOpacity, TextInput} from "react-native";
-import {sheight, swidth, RHW} from "../../Global/ScreenSetting";
+import {sheight, swidth, RHW, SHW} from "../../Global/ScreenSetting";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import React, {useEffect,useState} from "react";
 import {SystemBlue} from "../../Global/ColorPalate";
@@ -224,7 +224,7 @@ let Styles = StyleSheet.create({
         width: swidth * 0.89
     },
     categoryTextView:{
-        ...RHW(0.495),
+        ...SHW(0.495,0.495),
         backgroundColor: 'rgba(0,0,0,0.1)',
         position: 'absolute'
     },

@@ -143,12 +143,12 @@ let Styles = StyleSheet.create({
         // fontWeight:"500"
     },
     questiontext:{
-        fontSize: swidth * 0.05,
+        fontSize: swidth * 0.04,
         fontFamily: 'Roboto',
         color:'gray',
     },
     logintext:{
-        fontSize: swidth * 0.05,
+        fontSize: swidth * 0.04,
         fontFamily: 'Roboto',
         color:SystemBlue
     },

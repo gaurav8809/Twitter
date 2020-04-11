@@ -41,11 +41,12 @@ export const BlueText = (props) => {
 
     let {
         text,
-        onPress
+        onPress,
+        textstyle
     } = props;
 
     return(
-        <Text style={[Styles.bluetest]} onPress={onPress && onPress}>
+        <Text style={[Styles.bluetest,textstyle ]} onPress={onPress && onPress}>
             {text && text}
         </Text>
     )

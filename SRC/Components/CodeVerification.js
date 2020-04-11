@@ -76,18 +76,18 @@ class CodeVerification extends Component {
                     this.setLoader(true);
                     firebase.auth().signInWithPhoneNumber(`+91 ${signupdata.poe.toString()}`)
                         .then(confirmResult => {
-                            this.setLoader(false,() => alert("Verification code has been successfully sent to your mail"));
+
+                            console.log('Send SMS data =' + JSON.stringify(confirmResult));
                             this.setState({
+                                loader: false,
                                 confirmResult: confirmResult,
                             });
-                            console.log('Send SMS data =' + JSON.stringify(confirmResult));
-
 
                         }) // save confirm result to use with the manual verification code)
                         .catch(error => {
                             this.setLoader(false,alert("Problem occur"));
 
-                            // console.log('Send SMS data error =' + error);
+                            console.log('Send SMS data error =' + error);
                         });
 
                 }
@@ -179,11 +179,12 @@ class CodeVerification extends Component {
                     />
 
                     <BlackBigText
-                        textstyle={{fontSize: swidth * 0.07}}
+                        textstyle={{fontSize: swidth * 0.06}}
                         text={'We sent you a code'}
                     />
 
                     <GrayText
+                        textstyle={{fontSize: swidth * 0.04}}
                         text={`Enter it below to verify \n${this.state.signupdata.poe}`}
                     />
 
@@ -202,6 +203,7 @@ class CodeVerification extends Component {
                     <View style={[Styles.linkview]}>
                         <TouchableOpacity onPress={() => this.SendCodeToClient()}>
                             <BlueText
+                                textstyle={{fontSize: swidth * 0.04}}
                                 text={this.state.type === 'Email' ? 'Didn\'t receive email?' : 'Didn\'t receive SMS?'}
                             />
                         </TouchableOpacity>

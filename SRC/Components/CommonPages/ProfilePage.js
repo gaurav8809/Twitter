@@ -46,9 +46,7 @@ class ProfilePage extends Component {
     }
 
     componentDidMount(){
-
         this.getTweetList();
-
     }
 
 
@@ -142,7 +140,7 @@ class ProfilePage extends Component {
                 <TweetBadge
                     JSONData={item}
                     imagePress={(url) => this.openImage(url)}
-                    profilePress={(url) => this.openImage(url)}
+                    profilePress={(url) => item.profileImage && this.openImage(url)}
                 />
             </View>
         );
@@ -271,8 +269,9 @@ class ProfilePage extends Component {
                                         STD.loader &&
                                         <View style={{...SHW(0.3, SW(1)),}}>
                                             <DotIndicator
+                                                count={5}
                                                 color={SystemBlue}
-                                                size={swidth * 0.015}
+                                                size={swidth * 0.009}
                                             />
                                         </View>
                                     }

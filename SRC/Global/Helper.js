@@ -13,6 +13,7 @@ import {
 import COLOR, {SystemBlue} from "./ColorPalate";
 import {SW, SH, sheight, swidth, RHW, SHW, NHW, TransIT, centertext} from "./ScreenSetting";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
+import ImageZoom from 'react-native-image-pan-zoom';
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const setLoader = (flag) => {
@@ -153,6 +154,33 @@ export const PreviewImageView = (props) => {
             onRequestClose={backPress}
         >
             <View style={Styles.pImaheView}>
+
+                <View style={{justifySelf: 'center', alignSelf: 'center', }}>
+                    {
+                        PreviewImage !== null &&
+                        // <Image
+                        //     source={{uri: PreviewImage.pImagePath}}
+                        //     style={[
+                        //         {
+                        //             height: (sheight * PreviewImage.pImageHeight) / 1000,
+                        //             width: swidth,
+                        //             overlayColor: 'black',
+                        //         }
+                        //     ]}
+                        //     resizeMode={'contain'}
+                        // />
+                        <ImageZoom
+                            cropWidth={swidth}
+                            cropHeight={sheight}
+                            imageWidth={swidth}
+                            imageHeight={sheight}
+                        >
+                            <Image style={{resizeMode:'contain', width: swidth, height:(sheight * PreviewImage.pImageWidth) / PreviewImage.pImageWidth}}
+                                   source={{uri: PreviewImage.pImagePath}}
+                            />
+                        </ImageZoom>
+                    }
+                </View>
                 <View style={{
                     marginLeft: swidth * 0.03,
                     alignSelf: 'flex-start',
@@ -166,22 +194,6 @@ export const PreviewImageView = (props) => {
                         size={swidth * 0.06}
                         onPress={backPress}
                     />
-                </View>
-                <View style={{justifySelf: 'center', alignSelf: 'center'}}>
-                    {
-                        PreviewImage !== null &&
-                        <Image
-                            source={{uri: PreviewImage.pImagePath}}
-                            style={[
-                                {
-                                    height: (sheight * PreviewImage.pImageHeight) / 1000,
-                                    width: swidth,
-                                    overlayColor: 'black',
-                                }
-                            ]}
-                            resizeMode={'contain'}
-                        />
-                    }
                 </View>
             </View>
         </Modal>

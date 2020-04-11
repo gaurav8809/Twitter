@@ -196,7 +196,7 @@ let Styles = StyleSheet.create({
 
 
     hellotext:{
-        fontSize: swidth * 0.08,
+        fontSize: swidth * 0.06,
         fontFamily: 'Roboto-Bold',
         // flexWrap:'wrap-reverse'
     },
@@ -208,7 +208,7 @@ let Styles = StyleSheet.create({
     nametext:{
         // height: swidth * 0.05,
         width: swidth * 0.77,
-        fontSize: swidth * 0.06,
+        fontSize: swidth * 0.04,
         // backgroundColor: 'pink',
         padding: 0,
     },
@@ -222,13 +222,13 @@ let Styles = StyleSheet.create({
         fontSize: swidth * 0.05
     },
     questiontext:{
-        fontSize: swidth * 0.04,
+        fontSize: swidth * 0.03,
         fontFamily: 'Roboto',
         color:'gray',
         width: swidth * 0.85
     },
     logintext:{
-        fontSize: swidth * 0.04,
+        fontSize: swidth * 0.03,
         fontFamily: 'Roboto',
         color:SystemBlue
     },

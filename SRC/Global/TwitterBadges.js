@@ -159,10 +159,10 @@ const TweetBadge = (props) => {
     };
 
     return(
-        <TouchableOpacity activeOpacity={0.8} style={OuterView}>
+        <TouchableOpacity activeOpacity={1} style={OuterView}>
             <TouchableOpacity
                 style={{justifyContent: 'flex-start', flex: 1}}
-                onPress={() => profileImage && props.profilePress(profileImage)}
+                onPress={() => props.profilePress(profileImage)}
             >
                 {
                     imageLoader &&
@@ -223,7 +223,8 @@ const TweetBadge = (props) => {
                             style={[
                                 tweetimageview,
                                 // imageLoader ? {height: swidth * 0.3} :
-                                imagePath.split('.').pop() !== 'gif' && {height: (swidth * imageHeight) / 1000}
+                                // imagePath.split('.').pop() !== 'gif' && {height: (swidth * imageHeight) / 1000}
+                                {height: swidth * 0.45}
                             ]}
                             source={{uri:imagePath}}
                             onLoadStart={() => setimageLoader(true)}

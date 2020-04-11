@@ -21,7 +21,8 @@ export default TwitterTextInput = (props) => {
         LabelMessage,
         CounterDetails,
         viewstyle,
-        autoCorrect
+        autoCorrect,
+        textStyle
     } = props;
 
     return(
@@ -38,7 +39,7 @@ export default TwitterTextInput = (props) => {
                     autoCorrect={autoCorrect && autoCorrect}
                     // onFocus={() => this.setState({currenttextinput:0})}
                     keyboardType={keyboardType && keyboardType}
-                    style={[Styles.textinput]}
+                    style={[textStyle,Styles.textinput]}
                     value={text}
                     onChangeText={onChangeText}
                     placeholder={placeholder}
@@ -97,7 +98,7 @@ let Styles = StyleSheet.create({
     textinput:{
         // height: swidth * 0.05,
         width: swidth * 0.87,
-        fontSize: swidth * 0.06,
+        fontSize: swidth * 0.04,
         // backgroundColor: 'pink',
         padding: 0
     },
