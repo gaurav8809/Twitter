@@ -42,6 +42,9 @@ target 'Twitter' do
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
+  pod 'Firebase/Messaging'
+  pod 'Firebase/InAppMessaging'
+  pod 'Firebase/InAppMessagingDisplay'
 
 
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
@@ -50,6 +53,8 @@ target 'Twitter' do
   pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
 
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
+  pod 'RNFBInAppMessaging', :path => '../node_modules/@react-native-firebase/in-app-messaging'
 
   target 'TwitterTests' do
     inherit! :search_paths

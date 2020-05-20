@@ -25,7 +25,7 @@ export const GetTweets = (collection, currentUser) => {
                     .filter(
                         item => {return (currentUser.following.includes(item._data.userID) ||
                         item._data.userID === currentUser.id)})
-                    .map(item => Object.assign({tweetId:item.id}, item._data));
+                    .map(item => Object.assign({tweetID:item.id}, item._data));
 
                 return UserRef.get()
                     .then(UResponse => {
@@ -91,7 +91,7 @@ export const GetUserTweets = (collection, currentUser) => {
                 let finalTweet = tdata
                     .filter(
                         item => {return (item._data.userID === currentUser.id || item._data.userID === currentUser.userID)})
-                    .map(item => Object.assign({tweetId:item.id}, item._data));
+                    .map(item => Object.assign({tweetID:item.id}, item._data));
 
                 return UserRef.get()
                     .then(UResponse => {

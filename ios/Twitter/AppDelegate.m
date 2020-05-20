@@ -10,7 +10,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-//#import <Firebase.h>
+#import <Firebase.h>
 
 #if RCT_DEV
 #import <React/RCTDevLoadingView.h>
@@ -21,6 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
   [NSThread sleepForTimeInterval:3];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];

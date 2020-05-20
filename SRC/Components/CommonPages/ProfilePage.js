@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {TouchableOpacity, Animated,} from 'react-native';
 import {OfficialSymbol, PreviewImageView, IS_IOS, parseDate} from "../../Global/Helper";
-import {FlatList, Modal, SafeAreaView, StyleSheet, Text, View, Image} from "react-native";
+import {FlatList, Modal, SafeAreaView, StyleSheet, Text, View, Image, YellowBox} from "react-native";
 import {TweetBadge} from "../../Global/TwitterBadges";
 import {safearea, swidth} from "../../Global/ScreenSetting";
 import {LinerButton} from "../../Global/TwitterButton";
@@ -14,6 +14,7 @@ import {ScrollView} from "react-navigation";
 import {ScrollableTabView} from '@valdio/react-native-scrollable-tabview'
 import {DotIndicator, UIActivityIndicator, WaveIndicator} from "react-native-indicators";
 import {WaveLoader} from "../../Global/Indicators";
+import {LikeUnlikeTweet} from "../../Actions/UserAction";
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -47,6 +48,12 @@ class ProfilePage extends Component {
 
     componentDidMount(){
         this.getTweetList();
+
+        YellowBox.ignoreWarnings([
+            'Warning: componentWillMount is deprecated',
+            'Warning: componentWillReceiveProps is deprecated',
+            'Module RCTImageLoader requires',
+        ]);
     }
 
 
@@ -60,8 +67,8 @@ class ProfilePage extends Component {
                     NavUser : nextProps.LogedInUserData
                 }
             }
-            return null;
         }
+        return null;
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -133,6 +140,13 @@ class ProfilePage extends Component {
             });
     };
 
+    LikePress = (flag, item) => {
+        this.props.LikeUnlikeTweet(flag, item, this.state.currentUser)
+            .catch(error => {
+                console.log(error)
+            });
+    };
+
     renderTweetList = (item,index) => {
 
         return (
@@ -141,6 +155,7 @@ class ProfilePage extends Component {
                     JSONData={item}
                     imagePress={(url) => this.openImage(url)}
                     profilePress={(url) => item.profileImage && this.openImage(url)}
+                    LikePress={(flag) => this.LikePress(flag,item)}
                 />
             </View>
         );
@@ -172,7 +187,7 @@ class ProfilePage extends Component {
                 <View tabLabel={tabLabel} style={{backgroundColor: BackGrayColor}}>
                     <FlatList
                         data={this.state.tweetList !== [] && this.state.tweetList}
-                        keyExtractor={item => item.tweetId}
+                        keyExtractor={item => item.tweetID}
                         renderItem={({item,index}) => this.renderTweetList(item,index)}
                         scrollEnabled={false}
                     />
@@ -570,7 +585,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     GetTweets,
-    GetUserTweets
+    GetUserTweets,
+    LikeUnlikeTweet
 };
 
 // export default CodeVerification;

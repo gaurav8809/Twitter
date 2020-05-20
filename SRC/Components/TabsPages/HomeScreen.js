@@ -22,6 +22,7 @@ import {
     GetLoginUserData,
     FollowUser,
     UnFollowUser,
+    LikeUnlikeTweet
 } from '../../Actions/UserAction';
 import {GetTweets} from '../../Actions/GeneralAction';
 import {SelectAll} from '../../Actions/FireBaseDBAction';
@@ -262,16 +263,21 @@ class HomeScreen extends Component{
 
     };
 
-    renderTweetList = (item,index) => {
+    LikePress = (flag, item) => {
+        this.props.LikeUnlikeTweet(flag, item, this.state.currentUser)
+            .catch(error => {
+                console.log(error)
+            });
+    };
 
+    renderTweetList = (item,index) => {
         return (
             <View key={index} style={{marginTop: swidth * 0.02}}>
                 <TweetBadge
                     JSONData={item}
-                    profilePress={() => this.props.navigation.navigate('ProfilePage',{
-                        NavUser: item
-                    })}
+                    profilePress={() => this.props.navigation.navigate('ProfilePage',{NavUser: item})}
                     imagePress={(url) => this.openImage(url)}
+                    LikePress={(flag) => this.LikePress(flag,item,)}
                 />
             </View>
         );
@@ -319,51 +325,39 @@ class HomeScreen extends Component{
     };
 
     render(){
-
-
         let {
             preview,
             PreviewImage
         } = this.state;
-
-
         return(
             <SafeAreaView style={[safearea]}>
                 {/*<AppHeader navigation={this.props.navigation}/>*/}
                 <View style={{...Styles.mainview}}>
-
                     <FlatList
                         ListHeaderComponent={() => this.WTFFlatList()}
                         refreshing={this.state.refreshLoader}
                         onRefresh={() => this.setState({refreshLoader:true},() => this.getWhoToFollowList())}
                         data={this.state.tweetList !== [] && this.state.tweetList}
-                        keyExtractor={item => item.tweetId}
+                        keyExtractor={item => item.tweetID}
                         renderItem={({item,index}) => this.renderTweetList(item,index)}
                     />
 
-
                     <BubbleButton
-                        IconDetails={
-                            {
+                        IconDetails={{
                                 type: 'MaterialCommunityIcons',
                                 name: 'feather',
                                 color: 'white',
                                 size: swidth * 0.065,
-                            }
-                        }
+                            }}
                         uri={require('../../Assets/Images/FeatherWhite.png')}
                         onPress={() => this.props.navigation.navigate("CreateTweetPage")}
                     />
-
                 </View>
-
-
                 <PreviewImageView
                     preview={preview}
                     PreviewImage={PreviewImage}
                     backPress={() => this.closePreviewImage()}
                 />
-
                 <Modal
                     visible={this.state.loader}
                     transparent={true}
@@ -426,7 +420,8 @@ const mapDispatchToProps = {
     FollowUser,
     SelectAll,
     UnFollowUser,
-    GetTweets
+    GetTweets,
+    LikeUnlikeTweet
 };
 
 // export default CodeVerification;

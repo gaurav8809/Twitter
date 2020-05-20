@@ -8,6 +8,10 @@ import {ImageLoaderIndicator} from '../Global/Indicators';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {OfficialSymbol} from '../Global/Helper';
 import {connect, useSelector} from "react-redux";
+import firebase from "react-native-firebase";
+import HELPER from "./Helper";
+import {GetLoginUserData} from "../Actions/UserAction";
+import {NavigationActions, StackActions} from "react-navigation";
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -105,15 +109,6 @@ export const ProfileInfoBadge = (props) => {
 export const TweetBadge = (props) => {
 
     let {
-        tweetValue,
-        imagePath,
-        comments,
-        likes,
-        timestamp
-    } = props.JSONData;
-    timestamp = timestamp.toDate();
-
-    let {
         profileImage,
         profilename,
         username,
@@ -133,27 +128,64 @@ export const TweetBadge = (props) => {
         imageLoaderStyle
     } = TweetStyle;
 
+    const [LogedInUserData, setLogedInUserData] = useState(useSelector(state => state.UserReducer.LogedInUserData));
+    const [tweetProp, setTweetProp] = useState(props.JSONData);
     const [imageLoader,setimageLoader] = useState(false);
     const [imageHeight,setimageHeight] = useState(0);
     const [imageWidth,setimageWidth] = useState(0);
-    const [like,setLike] = useState(false);
+    const [like,setLike] = useState(LogedInUserData.likes && LogedInUserData.likes.includes(tweetProp.tweetID));
     const [likeAnimation,setLikeValue] = useState(new Animated.Value(0));
-    const [LogedInUserData, setLogedInUserData] = useState(useSelector(state => state.UserReducer.LogedInUserData));
+    const [lCount,setLCount] = useState(new Animated.Value(0));
+    const [lOpacity,setLOpacity] = useState(new Animated.Value(1));
+    const [tCount,setTCount] = useState(new Animated.Value(1));
+    const [tOpacity,setTOpacity] = useState(new Animated.Value(0));
 
-    debugger
+    useEffect(() => {
+        const subscriber = firebase.firestore()
+            .collection('tweets')
+            .doc(tweetProp.tweetID)
+            .onSnapshot(documentSnapshot => {
+                let final = documentSnapshot._data;
+                final['tweetID'] = tweetProp.tweetID;
+                changeTotal(final.likes.length > tweetProp.likes.length);
+                setTweetProp(documentSnapshot._data);
+
+            });
+        return () => subscriber();
+    },[LogedInUserData.likes]);
+
     imagePath &&
     Image.getSize(imagePath, (width, height) => {
-        // this.setState({ width: width, height: height, loading: false });
         setimageHeight(height);
         setimageWidth(width);
     });
 
     const startAnim=()=>{
-
         Animated.timing(likeAnimation, {
             toValue : 3,
             timing : 50
         }).start(() =>  setLikeValue(new Animated.Value(0)));
+    };
+
+    const changeTotal = (status) => {
+        Animated.parallel([
+            Animated.timing(lCount, {
+                toValue : status ? 15 : 0,
+                timing : 50
+            }),
+            Animated.timing(lOpacity, {
+                toValue : status ? 0 : 1,
+                timing : 50
+            }),
+            Animated.timing(tCount, {
+                toValue : status ? 0 : 15,
+                timing : 50
+            }),
+            Animated.timing(tOpacity, {
+                toValue : status ? 1 : 0,
+                timing : 50
+            }),
+        ]).start();
 
     };
 
@@ -163,14 +195,28 @@ export const TweetBadge = (props) => {
         extrapolate: 'clamp',
     });
 
+    // const likeCount = lCount.interpolate({
+    //     inputRange: [(new Animated.Value(tweetProp.likes.length)), (new Animated.Value(tweetProp.likes.length))],
+    //     outputRange: [0, 10],
+    //     extrapolate: 'clamp',
+    // });
+
     const LikePress = () => {
-        if(like === false) {startAnim();}
-        setLike(!like)
+        if(like === false) {startAnim()}
+        setLike(!like);
+        props.LikePress(!like);
+        changeTotal(!like);
     };
 
-    const LULAction = () => {
-
-    };
+    let {
+        tweetID,
+        tweetValue,
+        imagePath,
+        comments,
+        likes,
+        timestamp
+    } = tweetProp;
+    timestamp = timestamp.toDate();
 
     return(
         <TouchableOpacity activeOpacity={1} style={OuterView}>
@@ -255,11 +301,7 @@ export const TweetBadge = (props) => {
                         <Text style={tweetliketext}> {"512"} </Text>
                     </View>
                     <View style={tweetoptionview}>
-                        <Animated.View style={{transform : [
-                                {
-                                    scale : heartScale
-                                }
-                            ]}}>
+                        <Animated.View style={{transform : [{scale : heartScale}]}}>
                             <Icon onPress={() => LikePress()}
                                   name={like ? "ios-heart" : "ios-heart-empty"}
                                   type={"Ionicons"}
@@ -267,8 +309,14 @@ export const TweetBadge = (props) => {
                                   size={swidth * 0.05}
                             />
                         </Animated.View>
-                        {/*{ like && <Image style={{height: swidth * 0.1, width: swidth * 0.1}} source={require('../Assets/GIFs/1_hRJF5CNRG6tB-SkwVU5bCw.gif')}/>}*/}
-                        <Text style={tweetliketext}> {"18.3k"} </Text>
+                        <View>
+                            <Animated.View style={{transform: [{translateY: tCount}], opacity: tOpacity, position: 'absolute'}}>
+                                <Text style={[tweetliketext, like && {color: LikeRed}]}> {`${likes.length}`} </Text>
+                            </Animated.View>
+                            <Animated.View style={{transform: [{translateY: lCount}], opacity: lOpacity, }}>
+                                <Text style={[tweetliketext, like && {color: LikeRed}]}> {`${likes.length}`} </Text>
+                            </Animated.View>
+                        </View>
                     </View>
                     <View style={[tweetoptionview, {marginLeft: swidth * 0.02} ]}>
                         <Icon name={"share-google"} type={"EvilIcons"} color={'gray'} size={swidth * 0.06} />
