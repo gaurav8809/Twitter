@@ -84,25 +84,25 @@ export const AppHeader = (props) => {
 
                         {/*<Image source={require('../Assets/Images/user.png')} style={{height: swidth * 0.08, width : swidth * 0.08 }}/>*/}
 
-                        <View style={{justifyContent: 'center'}}>
-                            {
-                                imageLoader &&
-                                <ImageLoaderIndicator
-                                    style={{height: swidth * 0.09,
-                                        width : swidth * 0.09,}}
-                                />
-                            }
-                            {
-                                LogedInUser && LogedInUser.profileImage &&
-                                <Image
-                                source={{uri: LogedInUser.profileImage}}
-                                style={Styles.profileimage}
-                                onLoadStart={() => setImageLoader(true)}
-                                onLoadEnd={() => setImageLoader(false)}
-                                />
-                            }
+                            <View style={{justifyContent: 'center'}}>
+                                {
+                                    imageLoader &&
+                                    <ImageLoaderIndicator
+                                        style={{height: swidth * 0.09,
+                                            width : swidth * 0.09,}}
+                                    />
+                                }
+                                {
+                                    LogedInUser && LogedInUser.profileImage &&
+                                    <Image
+                                    source={{uri: LogedInUser.profileImage}}
+                                    style={Styles.profileimage}
+                                    onLoadStart={() => setImageLoader(true)}
+                                    onLoadEnd={() => setImageLoader(false)}
+                                    />
+                                }
 
-                        </View>
+                            </View>
                     </TouchableOpacity>
                 </View>
                 <View style={{alignItems: 'center', flex:1}}>

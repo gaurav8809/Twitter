@@ -202,9 +202,7 @@ class DrawerView extends Component{
                 ],
             });
 
-            debugger
             this.props.navigation.dispatch(resetAction);
-            debugger
         }
         else
         {

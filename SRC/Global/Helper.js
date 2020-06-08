@@ -74,6 +74,10 @@ const parseDate = (date) => {
     }
 };
 
+const UNIQUE = (value, index, self) => {
+    return self.indexOf(value) === index;
+};
+
 export const DismissKeyboardView = ({ children , actionCallback}) => (
     <TouchableWithoutFeedback onPress={() => {
         Keyboard.dismiss();
@@ -250,6 +254,7 @@ module.exports = {
     AsyncRemove,
     IS_IOS,
     parseDate,
+    UNIQUE,
     DismissKeyboardView,
     DynamicBottomBar,
     OfficialSymbol,

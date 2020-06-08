@@ -1,10 +1,12 @@
 import SystemReducer from './SystemReducer';
 import UserReducer from './UserReducer';
+import ChatReducer from './ChatReducer';
 import {combineReducers} from 'redux';
 
 export default combineReducers({
     SystemReducer:SystemReducer,
     UserReducer:UserReducer,
+    ChatReducer:ChatReducer,
 });
 
 

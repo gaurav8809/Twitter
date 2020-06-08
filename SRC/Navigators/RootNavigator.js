@@ -28,7 +28,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import HomeScreen from '../Components/TabsPages/HomeScreen';
 import SearchScreen from '../Components/TabsPages/SearchScreen';
 import NotificationScreen from '../Components/TabsPages/NotificationScreen';
-import MessageScreen from '../Components/TabsPages/MessageScreen';
+import MessageScreen from '../Components/TabsPages/Message/MessageScreen';
 import DrawerView from '../Components/DrawerView';
 import StartUpLoader from '../Components/StartUpLoader';
 import LoginPage from '../Components/LoginPage';
