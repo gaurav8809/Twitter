@@ -4,40 +4,33 @@ import {
     StyleSheet,
     ScrollView,
     View,
-    Text,
-    StatusBar,
     TouchableOpacity,
     Platform,
     Image,
     TextInput,
     PermissionsAndroid,
     FlatList, Modal,
-    Keyboard
 } from 'react-native';
 import {
     swidth,
     sheight,
     centertext,
     SHW,
-    NHW,
     RHW
 } from '../Global/ScreenSetting';
-import {AntDesign, MCI} from '../Global/VectorIcons';
+import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate'
 import {SystemButton} from '../Global/TwitterButton'
-import {safearea,mainview} from '../Global/ScreenSetting';
-import {MaterialIndicator, UIActivityIndicator} from 'react-native-indicators';
-import {DefaultIndicator,IOSIndicator} from '../Global/Indicators';
-import HELPER, {DismissKeyboardView,DynamicBottomBar} from '../Global/Helper';
-import {NavigationActions, StackActions, withNavigation} from 'react-navigation';
+import {safearea} from '../Global/ScreenSetting';
+import {UIActivityIndicator} from 'react-native-indicators';
+import {IOSIndicator} from '../Global/Indicators';
+import {DismissKeyboardView,DynamicBottomBar} from '../Global/Helper';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {connect} from "react-redux";
 import CameraRoll from "@react-native-community/cameraroll";
 import ProgressCircle from 'react-native-progress-circle'
 import ImagePicker from "react-native-image-picker";
-import {
-    PostTweet
-} from '../Actions/UserAction';
+import {PostTweet} from '../Actions/UserAction';
 import firebase from "react-native-firebase";
 import {FireBaseStoreData} from "../Actions/SystemAction";
 import {UpdateWhere} from '../Actions/FireBaseDBAction';
@@ -282,9 +275,6 @@ class CreateTweetPage extends Component{
     makeTweet = () => {
 
         let STD = this.state;
-
-        debugger
-
         let dataObj = {
             userID: STD.LogedInUser.id,
             tweetValue: STD.tweet,
@@ -293,8 +283,6 @@ class CreateTweetPage extends Component{
             likes: [],
             imagePath: STD.selectdGif !== null && STD.selectdGif.gif.url
         };
-
-        // STD.selectdGif !== null && dataObj['imagePath'] = STD.selectdGif.gif.url;
 
         this.setLoader(true);
         this.props.PostTweet('tweets', dataObj)
@@ -324,25 +312,8 @@ class CreateTweetPage extends Component{
                             console.log("Firestore Error = ",error)
                         });
                 }
-                // else
-                // {
-                //     console.log("No photo");
-                //     this.props.UpdateWhere(`tweets`,tweetResponse.data.id,{'imagePath': STD.selectdGif.gif.url})
-                //         .then(updateResponse => {
-                //
-                //             this.setLoader(false);
-                //             this.props.navigation.goBack();
-                //
-                //         })
-                //         .catch(error => {
-                //             this.setLoader(false);
-                //             console.log("Update Error = ",error)
-                //         })
-                // }
-                debugger
                 this.setLoader(false);
                 this.props.navigation.goBack();
-
 
             })
             .catch(error => {
@@ -363,14 +334,10 @@ class CreateTweetPage extends Component{
 
         const btnstyles = {
             view:{
-                // marginTop: swidth * 0.15,
                 alignItems: 'center',
                 marginRight: swidth * 0.03,
-                // position: 'relative'
-                // justifySelf: this.state.currenttextinput == 1 && 'flex-end'
             },
             button:{
-                // padding:4,
                 backgroundColor: SystemBlue,
                 borderRadius: 100,
                 width: swidth * 0.19,
@@ -379,7 +346,6 @@ class CreateTweetPage extends Component{
             },
             text:{
                 fontSize: swidth * 0.04,
-                // fontFamily: 'Roboto-Bold',
                 color:'white',
                 fontWeight:"bold"
             }
@@ -451,8 +417,6 @@ class CreateTweetPage extends Component{
                                             : require('../Assets/Images/usergray.png')
                                     }
                                     style={Styles.profileimage}
-                                    // onLoadStart={() => setImageLoader(true)}
-                                    // onLoadEnd={() => setImageLoader(false)}
                                 />
 
                                 <ScrollView
@@ -472,8 +436,6 @@ class CreateTweetPage extends Component{
                                         multiline={true}
                                         autoCorrect={false}
                                         maxLength={280}
-                                        // onFocus={() => this.setState({photosListEnable: false})}
-                                        // onBlur={() => this.setState({photosListEnable: true})}
                                         onChangeText={text => this.setState({tweet: text})}
                                     />
 
@@ -501,7 +463,6 @@ class CreateTweetPage extends Component{
                                             <View style={closebutton}
                                             >
                                                 <Icon
-                                                    // style={{position:'absolute', }}
                                                     onPress={() => this.setState({selectedPhoto:null, selectdGif: null})}
                                                     name={"ios-close"}
                                                     type={"Ionicons"}
@@ -514,19 +475,6 @@ class CreateTweetPage extends Component{
                                 </ScrollView>
                             </View>
                         </View>
-
-
-
-                        {/*<ScrollView*/}
-                        {/*    horizontal={true}*/}
-                        {/*    contentContainerStyle={{backgroundColor: 'pink', flex:1}}*/}
-                        {/*>*/}
-                        {/*    {*/}
-                        {/*        this.state.photos !== [] && this.state.photos*/}
-                        {/*            .map((item,index) => this.renderGalleryPhotos(item,index))*/}
-                        {/*    }*/}
-                        {/*</ScrollView>*/}
-
                     </View>
                 </DismissKeyboardView>
 
@@ -566,21 +514,11 @@ class CreateTweetPage extends Component{
                             <Icon name={"marker"} type={"Foundation"} size={swidth * 0.065} color={SystemBlue} />
                         </View>
                         <View style={bottomActionView}>
-                            {/*<View*/}
-                            {/*    style={{*/}
-                            {/*        borderLeftWidth:1,*/}
-                            {/*        borderLeftColor: 'black',*/}
-                            {/*        height: swidth * 0.055,*/}
-                            {/*        right: swidth * 0.04,*/}
-                            {/*        borderColor: 'lightgray',*/}
-                            {/*    }}*/}
-                            {/*/>*/}
                             <ProgressCircle
                                 percent={(tweet.length * 100 / 280)}
                                 radius={13}
                                 borderWidth={2}
                                 color={SystemBlue}
-                                // color="#3399FF"
                                 shadowColor="lightgray"
                                 bgColor="#fff"
                             />
@@ -613,7 +551,6 @@ let Styles = StyleSheet.create({
         marginTop: swidth * 0.04,
     },
     inputview:{
-        // width: swidth * 0.93,
         flex:1,
         marginTop: swidth * 0.03,
         marginBottom: swidth * 0.03
@@ -622,7 +559,6 @@ let Styles = StyleSheet.create({
         height: swidth * 0.09,
         width : swidth * 0.09,
         borderRadius: 100,
-        // marginTop: sheight * 0.01,
     },
     tweetinput:{
         marginLeft: swidth * 0.01,
@@ -632,8 +568,6 @@ let Styles = StyleSheet.create({
     },
     imagecommentpanel:{
         flexDirection: 'row',
-        // width: swidth * 0.93,
-        // alignItems: 'center'
     },
     imageliststyle:{
         position:'absolute',
@@ -659,7 +593,6 @@ let Styles = StyleSheet.create({
         top: swidth * 0.03
     },
     gallaryimageview:{
-        // height: swidth * 0.17, width: swidth * 0.17,
         ...RHW(0.19),
         borderRadius: 10,
         borderColor: 'lightgray',
@@ -675,26 +608,18 @@ let Styles = StyleSheet.create({
         height: swidth * 0.12,
         width:swidth,
         backgroundColor:'white',
-        // justifyContent: 'space-between',
-        // backgroundColor:'pink',
-        // padding: 10
     },
     bottomOptionView:{
-        // marginLeft: 1,
-        // flex: 1,
         width: swidth * 0.35,
         alignItems: 'center',
         justifyContent: 'space-around',
         flexDirection:'row',
-        // backgroundColor: 'gray'
     },
     bottomActionView:{
-        // flex: 1,
         width: swidth * 0.62,
         alignItems: 'center',
         justifyContent: 'flex-end',
         flexDirection:'row',
-        // backgroundColor: 'gray'
     },
     gifView:{
         ...SHW(Platform.OS === 'ios' ? 0.05 : 0.05,0.055 ),
@@ -709,7 +634,6 @@ let Styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         position: 'absolute',
-        // justifySelf:'center',
         height: swidth * 0.83,
         width : swidth * 0.85,
         borderColor: 'lightgray'
@@ -733,5 +657,4 @@ const mapDispatchToProps = {
     UpdateWhere
 };
 
-// export default CreateTweetPage;
 export default connect(mapStateToProps, mapDispatchToProps)(CreateTweetPage);

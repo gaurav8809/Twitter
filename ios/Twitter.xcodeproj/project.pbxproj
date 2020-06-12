@@ -35,6 +35,7 @@
 		586231DF588C4301AAD30CCC /* JosefinSans-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F8ED42B0CDA440139392FA73 /* JosefinSans-ThinItalic.ttf */; };
 		5CBFFECE5B7D4E1B98AEA45E /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD92430DCB6D446A801484E8 /* Roboto-Black.ttf */; };
 		5E90F8EEB1FF9BDE12B81499 /* libPods-Twitter-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DCC07D1B6A2C71F5CD98848 /* libPods-Twitter-tvOSTests.a */; };
+		75630E6D248F93E70047F861 /* Twitter_Logo_WhiteOnImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 75630E6B248F93E70047F861 /* Twitter_Logo_WhiteOnImage.png */; };
 		820D4D18820E4631BE6A460B /* Merriweather-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64B2CEE2D5DB46A8AA056292 /* Merriweather-LightItalic.ttf */; };
 		885DCB3D38D54009948BFFB4 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44CA72A45CC34AEEBE68FFC8 /* Roboto-Medium.ttf */; };
 		A118D8EA831E405A8BAD8616 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A927AACE0E049988398D02A /* Roboto-LightItalic.ttf */; };
@@ -108,6 +109,7 @@
 		6F4A049BD59B43D38C09052B /* Merriweather-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Merriweather-Italic.ttf"; path = "../SRC/Assets/fonts/Merriweather-Italic.ttf"; sourceTree = "<group>"; };
 		6F807482DBEC411D9C0E60C0 /* JosefinSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "JosefinSans-Bold.ttf"; path = "../SRC/Assets/fonts/JosefinSans-Bold.ttf"; sourceTree = "<group>"; };
 		71CDE18EFFF44E80969279EA /* Roboto-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Thin.ttf"; path = "../SRC/Assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
+		75630E6B248F93E70047F861 /* Twitter_Logo_WhiteOnImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Twitter_Logo_WhiteOnImage.png; path = "../../Twitter Social Icons/Twitter Logos/Twitter Logos/Twitter_Logo_WhiteOnImage/Twitter_Logo_WhiteOnImage.png"; sourceTree = "<group>"; };
 		75A0BC5B2420C4A30091C68A /* RNCCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCCameraRoll.xcodeproj; path = "../node_modules/@react-native-community/cameraroll/ios/RNCCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		77886BA6F47A5F2DCF0F1732 /* libPods-Twitter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Twitter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE2A756EFA94FE0B97C0F51 /* Merriweather-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Merriweather-BoldItalic.ttf"; path = "../SRC/Assets/fonts/Merriweather-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 			children = (
 				06360BFE23FD6DCF006FB004 /* GoogleService-Info.plist */,
 				063F948B23EC26EF000DBFC7 /* Images.xcassets */,
+				75630E6B248F93E70047F861 /* Twitter_Logo_WhiteOnImage.png */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -490,6 +493,7 @@
 				562D92A54C40423AA241C422 /* Merriweather-Bold.ttf in Resources */,
 				07D2F195EE4E48B0A4A06F79 /* Merriweather-BoldItalic.ttf in Resources */,
 				2E19CF1EDA374BB78E0A6559 /* Merriweather-Italic.ttf in Resources */,
+				75630E6D248F93E70047F861 /* Twitter_Logo_WhiteOnImage.png in Resources */,
 				BC4CAEE9EC99478D8A6CFDFD /* Merriweather-Light.ttf in Resources */,
 				820D4D18820E4631BE6A460B /* Merriweather-LightItalic.ttf in Resources */,
 				C79CAE72EEFB4CBB8084D5B2 /* Merriweather-Regular.ttf in Resources */,

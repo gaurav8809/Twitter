@@ -11,15 +11,14 @@ import {
     Platform
 } from 'react-native';
 import COLOR, {SystemBlue} from "./ColorPalate";
-import {SW, SH, sheight, swidth, RHW, SHW, NHW, TransIT, centertext} from "./ScreenSetting";
+import {sheight, swidth, RHW, centertext} from "./ScreenSetting";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import ImageZoom from 'react-native-image-pan-zoom';
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 const setLoader = (flag) => {
-    // state.setState({
-    //     loader: flag
-    // });
     const [loader, set] = useState(false);
     set(flag);
 
@@ -30,7 +29,6 @@ const AsyncStore = async (key,data) => {
         let dataObj = JSON.stringify(data);
         await AsyncStorage.setItem(key, dataObj);
     } catch (e) {
-        // saving error
         console.log(e);
     }
 };
@@ -74,6 +72,11 @@ const parseDate = (date) => {
     }
 };
 
+const DMYFormat = (date) => {
+    let f = new Date(date.seconds * 1000);
+    return `${f.getDate()} ${shortMonths[f.getMonth()]} ${f.getFullYear() % 100}`
+};
+
 const UNIQUE = (value, index, self) => {
     return self.indexOf(value) === index;
 };
@@ -104,7 +107,6 @@ export const OfficialSymbol = (props) => (
 
 export const DynamicTopBar = ({ children }) => (
     <View style={{
-        // marginTop: 30,
         height: swidth * 0.12,
         width: swidth,
         flexDirection: 'row',
@@ -148,8 +150,6 @@ export const PreviewImageView = (props) => {
         PreviewImage
     } = props;
 
-    // const [pre,setPre] = useState(preview);
-
     return (
         <Modal
             visible={preview}
@@ -162,17 +162,6 @@ export const PreviewImageView = (props) => {
                 <View style={{justifySelf: 'center', alignSelf: 'center', }}>
                     {
                         PreviewImage !== null &&
-                        // <Image
-                        //     source={{uri: PreviewImage.pImagePath}}
-                        //     style={[
-                        //         {
-                        //             height: (sheight * PreviewImage.pImageHeight) / 1000,
-                        //             width: swidth,
-                        //             overlayColor: 'black',
-                        //         }
-                        //     ]}
-                        //     resizeMode={'contain'}
-                        // />
                         <ImageZoom
                             cropWidth={swidth}
                             cropHeight={sheight}
@@ -233,7 +222,6 @@ let Styles = StyleSheet.create({
     pImaheView:{
         flex:1,
         backgroundColor: 'rgb(0,0,0)',
-        // alignItems: 'center',
         justifyContent: 'center',
         overlayColor: 'black',
     },
@@ -241,7 +229,6 @@ let Styles = StyleSheet.create({
         ...RHW(0.07),
         backgroundColor: 'rgba(0,0,0,0.65)',
         ...centertext,
-        // backgroundColor: 'black'
     },
 
 });
@@ -255,6 +242,7 @@ module.exports = {
     IS_IOS,
     parseDate,
     UNIQUE,
+    DMYFormat,
     DismissKeyboardView,
     DynamicBottomBar,
     OfficialSymbol,

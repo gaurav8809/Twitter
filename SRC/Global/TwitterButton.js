@@ -120,15 +120,12 @@ export const BubbleButton = (props) => {
     let {
         onPress,
         IconDetails,
-        uri
+        screen,
     } = props;
+    let component;
 
-    return(
-        <TouchableOpacity
-            activeOpacity={1}
-            onPress={onPress && onPress}
-            style={Styles.bubblecontainer}
-        >
+    const renderForHome = () => {
+        return (
             <View style={{marginTop: swidth * 0.04, marginLeft: swidth * 0.04}}>
                 <Icon name={'plus'}
                       type={'MaterialCommunityIcons'}
@@ -144,7 +141,46 @@ export const BubbleButton = (props) => {
                     style={{ marginTop: swidth * 0.001, marginLeft: swidth * 0.008}}
                 />
             </View>
+        );
+    };
 
+    const renderForChat = () => {
+        return (
+            <View style={{marginTop: swidth * 0.04, marginLeft: swidth * 0.04}}>
+                {/*<Icon name={'plus'}*/}
+                {/*      type={'MaterialCommunityIcons'}*/}
+                {/*      color={'white'}*/}
+                {/*      size={swidth * 0.04}*/}
+                {/*      style={{ position:'absolute'}}*/}
+                {/*/>*/}
+                <Icon
+                    name={IconDetails.name}
+                    type={IconDetails.type}
+                    color={IconDetails.color}
+                    size={IconDetails.size}
+                    // style={}
+                />
+            </View>
+        );
+    };
+
+    switch(screen)
+    {
+        case 'HOME':
+            component = renderForHome();
+            break;
+        case 'CHAT':
+            component = renderForChat();
+            break;
+    }
+
+    return(
+        <TouchableOpacity
+            activeOpacity={1}
+            onPress={onPress && onPress}
+            style={Styles.bubblecontainer}
+        >
+            {component}
             {/*<Image style={Styles.bubbleimage} source={uri} resizeMode="cover"  />*/}
             {/*<Image style={Styles.bubbleimage} source={{uri:'/SRC//Assets/Images/FeatherWhite.png'}}/>*/}
         </TouchableOpacity>

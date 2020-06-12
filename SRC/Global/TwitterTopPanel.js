@@ -1,9 +1,8 @@
-import {KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {centertext, swidth} from './ScreenSetting';
+import {StyleSheet, View} from 'react-native';
+import React from 'react';
+import {swidth} from './ScreenSetting';
 import {SystemBlue} from './ColorPalate';
 import {AntDesign} from './VectorIcons';
-
 
 let TwitterTopPanel;
 export default TwitterTopPanel = (props) => {
@@ -39,12 +38,7 @@ let Styles = StyleSheet.create({
     twittericonview: {
         flexDirection: 'row',
         marginTop: swidth * 0.02,
-        // backgroundColor: 'red',
         justifyContent: 'center',
     },
-
-
-    //       Text        //
-
 
 });

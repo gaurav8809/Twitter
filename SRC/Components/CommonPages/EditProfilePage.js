@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {IS_IOS, OfficialSymbol, parseDate} from "../../Global/Helper";
+import {IS_IOS, parseDate} from "../../Global/Helper";
 import {
     TouchableOpacity,
     Modal,
@@ -11,15 +11,15 @@ import {
     FlatList,
     YellowBox,
 } from "react-native";
-import {RHW, safearea, sheight, SHW, SW, swidth, centertext} from "../../Global/ScreenSetting";
-import {IOSIndicator,SideLoader} from "../../Global/Indicators";
-import {GetFollowingList, GetLocation} from "../../Actions/GeneralAction";
+import {RHW, safearea, SHW, SW, swidth, centertext} from "../../Global/ScreenSetting";
+import {SideLoader} from "../../Global/Indicators";
+import {GetLocation} from "../../Actions/GeneralAction";
 import {UpdateProfileInfo} from "../../Actions/UserAction";
 import {connect} from "react-redux";
 import {SlateGray, SystemBlue} from "../../Global/ColorPalate";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {TopHeader} from "./TopHeader";
-import {NavigationActions, ScrollView, StackActions} from "react-navigation";
+import {ScrollView} from "react-navigation";
 import {TextInputWithLabel} from "../../Global/CommonTextInputs";
 import TakePhotoPopUp from "../../Global/TakePhotoPopUp";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -59,15 +59,9 @@ class EditProfilePage extends Component{
             tmpBirthDate: '',
             tmpTimeStamp: '',
         };
-
-        debugger
-
-
     }
 
     componentDidMount(){
-
-
         YellowBox.ignoreWarnings([
             'VirtualizedLists should never be nested', // TODO: Remove when fixed
         ])
@@ -475,7 +469,6 @@ let Styles = StyleSheet.create({
     InfoView: {
         // position: 'absolute',
         marginTop: SW(-0.08),
-        // backgroundColor:'pink'
         alignItems:'center',
     },
     prfileImageView: {
@@ -483,7 +476,6 @@ let Styles = StyleSheet.create({
         width: SW(0.95),
         justifyContent: 'space-between',
         alignItems: 'flex-end',
-        // backgroundColor: SlateGray,
         alignSelf: 'center'
     },
     profileImageStyle: {
@@ -491,9 +483,6 @@ let Styles = StyleSheet.create({
         borderColor: 'white',
         borderWidth: SW(0.009),
         backgroundColor: SlateGray,
-        // height: SW(0.08),
-        // width: SW(0.04),
-        // borderRadius: 100,
     },
     inputBox:{
         borderBottomWidth:0.5,
@@ -501,7 +490,6 @@ let Styles = StyleSheet.create({
         width: SW(0.93),
         marginTop: SW(0.03),
         height: SW(0.08),
-        // backgroundColor:'red'
     },
 
 });
@@ -522,5 +510,4 @@ const mapDispatchToProps = {
     FireBaseStoreData
 };
 
-// export default CodeVerification;
 export default connect(mapStateToProps, mapDispatchToProps)(EditProfilePage);

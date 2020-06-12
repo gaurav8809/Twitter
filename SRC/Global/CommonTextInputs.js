@@ -1,7 +1,7 @@
-import {swidth, SW, IS_IOS} from "./ScreenSetting";
+import {SW, IS_IOS} from "./ScreenSetting";
 import React from "react";
 import {View,TextInput, Text,StyleSheet} from 'react-native';
-import {SystemBlue,SlateGray} from "./ColorPalate";
+import {SlateGray} from "./ColorPalate";
 
 export const TextInputWithLabel = (props) => {
 
@@ -46,24 +46,16 @@ export const TextInputWithLabel = (props) => {
 let Styles = StyleSheet.create({
 
     textInputView:{
-        // marginTop: SW(0.03),
         borderBottomWidth:0.5,
         borderColor: SlateGray,
-        // backgroundColor:'red',
-        // fontSize: swidth * 0.06,
-        // height: swidth * 0.095,
         width: SW(0.93),
-
     },
     textInput:{
-        // backgroundColor:'pink',
-        // height: SW(0.07),
         fontSize: SW(0.04)
     },
     labelText:{
         fontSize: SW(0.04),
         color: SlateGray
     },
-
 
 });

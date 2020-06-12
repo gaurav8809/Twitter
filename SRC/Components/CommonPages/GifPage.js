@@ -1,5 +1,5 @@
 import {FlatList, Modal, StyleSheet, View, Text, TouchableOpacity, TextInput} from "react-native";
-import {sheight, swidth, RHW, SHW} from "../../Global/ScreenSetting";
+import {swidth, RHW, SHW} from "../../Global/ScreenSetting";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import React, {useEffect,useState} from "react";
 import {SystemBlue} from "../../Global/ColorPalate";
@@ -7,8 +7,6 @@ import Image from "react-native-image-progress";
 import {SafeAreaView} from "react-native-safe-area-context";
 import axios from "axios";
 import {IS_IOS} from "../../Global/Helper";
-import {GetLoginUserData} from "../../Actions/UserAction";
-import {NavigationActions, StackActions} from "react-navigation";
 import {IOSIndicator} from "../../Global/Indicators";
 
 const MENULIST = [
@@ -66,7 +64,6 @@ export const GifCategoryView = (props) => {
         gifPreview,
         backPress,
         setGifState
-        // PreviewImage
     } = props;
 
     const [GifArray,setGifArray] = useState(null);
@@ -93,12 +90,6 @@ export const GifCategoryView = (props) => {
             });
 
     };
-
-    useEffect(() => {
-
-        // GetGifs('https://api.tenor.com/v1/trending?media_filter=basic&limit=2');
-
-    },null);
 
     const onGifPress= (item) => {
 
@@ -129,7 +120,6 @@ export const GifCategoryView = (props) => {
                     source={{
                         uri: GifArray !== null ? item.nanogif.url : item.gifPath
                     }}
-                    // source={{uri:item.nanogif.url}}
                 />
                 {
                     GifArray === null &&
@@ -181,7 +171,6 @@ export const GifCategoryView = (props) => {
                 <View style={Styles.GifListView}>
                     <FlatList
                         contentContainerStyle={{paddingBottom: swidth * (IS_IOS() ? 0.08 : 0.13)}}
-                        // data={MENULIST}
                         data={GifArray !== null ? GifArray : MENULIST}
                         renderItem={({item,index}) => renderCategoryList(item,index)}
                         keyExtractor={item => GifArray !== null ? item.nanogif.url : item.title}
@@ -219,7 +208,6 @@ let Styles = StyleSheet.create({
         top: swidth * 0.04,
     },
     searchBox:{
-        // backgroundColor: 'pink',
         marginLeft: swidth * 0.02,
         width: swidth * 0.89
     },
@@ -237,8 +225,6 @@ let Styles = StyleSheet.create({
         fontFamily: 'Roboto-Bold'
     },
     GifListView:{
-        // justifySelf: 'center',
-        // alignSelf: 'center',
         marginTop: swidth * 0.055
     },
 

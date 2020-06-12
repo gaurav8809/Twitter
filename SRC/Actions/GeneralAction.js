@@ -1,14 +1,16 @@
 import firebase from "react-native-firebase";
-import TYPE, {LOGEDIN_USER} from '../Reducers/TypeConstants';
-import HELPER from '../Global/Helper';
-import {FireBaseStoreData} from '../Actions/SystemAction';
-import {NavigationActions, StackActions} from "react-navigation";
-import {MakeRequest} from "../EndPoints/ApiCall";
-import API from "../EndPoints/ApiConstants";
+import TYPE from '../Reducers/TypeConstants';
 import axios from "axios";
 
 const FireRef = firebase.firestore();
 const TENOR_API_KEY = 'MOAF0HON3GCO';
+
+export const LogOutSystem = () => {
+    return dispatch => {
+        // Your code here...
+        dispatch({ type: TYPE.RESET_STORE });
+    };
+};
 
 export const GetTweets = (collection, currentUser) => {
 

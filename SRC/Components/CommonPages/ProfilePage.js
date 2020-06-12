@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {TouchableOpacity, Animated,} from 'react-native';
 import {OfficialSymbol, PreviewImageView, IS_IOS, parseDate} from "../../Global/Helper";
-import {FlatList, Modal, SafeAreaView, StyleSheet, Text, View, Image, YellowBox} from "react-native";
+import {FlatList, SafeAreaView, StyleSheet, Text, View, Image, YellowBox} from "react-native";
 import {TweetBadge} from "../../Global/TwitterBadges";
 import {safearea, swidth} from "../../Global/ScreenSetting";
 import {LinerButton} from "../../Global/TwitterButton";
@@ -9,11 +9,10 @@ import {GetTweets, GetUserTweets} from "../../Actions/GeneralAction";
 import {connect} from "react-redux";
 import {SystemBlue, SlateGray, BackGrayColor} from "../../Global/ColorPalate";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
-import {SHW, RHW, SH, SW, centertext} from '../../Global/ScreenSetting'
+import {SHW, RHW, SW, centertext} from '../../Global/ScreenSetting'
 import {ScrollView} from "react-navigation";
 import {ScrollableTabView} from '@valdio/react-native-scrollable-tabview'
-import {DotIndicator, UIActivityIndicator, WaveIndicator} from "react-native-indicators";
-import {WaveLoader} from "../../Global/Indicators";
+import {DotIndicator, UIActivityIndicator} from "react-native-indicators";
 import {LikeUnlikeTweet} from "../../Actions/UserAction";
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -41,9 +40,6 @@ class ProfilePage extends Component {
             PreviewImage: null,
             scrollY: new Animated.Value(0),
         };
-
-        // console.log(parseDate(this.state.NavUser.timestamp.seconds));
-
     }
 
     componentDidMount(){
@@ -238,8 +234,6 @@ class ProfilePage extends Component {
         let {NavUser} = STD;
 
         // let joined = NavUser.timestamp && parseDate(NavUser.timestamp.seconds);
-        //
-
         const nav = this.props.navigation;
 
         const headerHeight = STD.scrollY.interpolate({
@@ -478,7 +472,6 @@ let Styles = StyleSheet.create({
     mainview: {
         flex: 1,
         width: swidth,
-        // backgroundColor: 'red',
     },
     topHeader: {
         top: 0,
@@ -498,14 +491,12 @@ let Styles = StyleSheet.create({
     InfoView: {
         // position: 'absolute',
         marginTop: SW(-0.08),
-        // backgroundColor:'pink'
     },
     prfileImageView: {
         flexDirection: 'row',
         width: SW(0.95),
         justifyContent: 'space-between',
         alignItems: 'flex-end',
-        // backgroundColor: SlateGray,
         alignSelf: 'center'
     },
     profileImageStyle: {
@@ -589,5 +580,4 @@ const mapDispatchToProps = {
     LikeUnlikeTweet
 };
 
-// export default CodeVerification;
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);

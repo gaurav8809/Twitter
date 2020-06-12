@@ -456,6 +456,5 @@ const mapDispatchToProps = {
     GetLoginUserData,
 };
 
-// export default CodeVerification;
 export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(DrawerView));
 

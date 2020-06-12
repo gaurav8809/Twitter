@@ -1,18 +1,13 @@
 import React,{Component} from 'react';
 import {Platform} from 'react-native';
-import HELPER, {DynamicTopBar} from "../../Global/Helper";
-import {FlatList, Modal, SafeAreaView, StyleSheet, Text, View} from "react-native";
-import {ProfileInfoBadge, TweetBadge} from "../../Global/TwitterBadges";
+import {FlatList, Modal, SafeAreaView, StyleSheet, View} from "react-native";
+import {ProfileInfoBadge} from "../../Global/TwitterBadges";
 import {safearea, swidth} from "../../Global/ScreenSetting";
-import {BlackBigText, BlueText} from "../../Global/TwitterText";
-import {BubbleButton} from "../../Global/TwitterButton";
 import {IOSIndicator} from "../../Global/Indicators";
 import {FollowUser, GetLoginUserData, UnFollowUser} from "../../Actions/UserAction";
 import {SelectAll} from "../../Actions/FireBaseDBAction";
 import {GetFollowingList} from "../../Actions/GeneralAction";
 import {connect} from "react-redux";
-import {SystemBlue} from "../../Global/ColorPalate";
-import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {TopHeader} from "./TopHeader";
 
 class FollowingListPage extends Component{
@@ -41,7 +36,6 @@ class FollowingListPage extends Component{
 
         let STD = this.state;
 
-        // this.props.GetFollowingList('users', STD.requestedList)
         this.props.GetFollowingList('users', STD.NavUser.following)
             .then(response => {
 
@@ -190,5 +184,4 @@ const mapDispatchToProps = {
     GetFollowingList
 };
 
-// export default CodeVerification;
 export default connect(mapStateToProps, mapDispatchToProps)(FollowingListPage);

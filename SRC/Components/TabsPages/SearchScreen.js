@@ -57,6 +57,5 @@ const mapDispatchToProps = {
 
 };
 
-// export default CodeVerification;
 export default connect(null, null)(SearchScreen);
 

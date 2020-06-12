@@ -1,5 +1,6 @@
 import {SystemState} from '../InitialStates';
 
+let reducer
 export default reducer = (state = SystemState, action) => {
 
     switch (action.type) {

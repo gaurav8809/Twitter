@@ -1,8 +1,8 @@
 import React from "react";
-import {Platform, StyleSheet, Text, View, TouchableOpacity} from "react-native";
+import {StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {SystemBlue} from "../../Global/ColorPalate";
-import {swidth, SW, SH} from "../../Global/ScreenSetting";
+import {swidth, SW} from "../../Global/ScreenSetting";
 import {DynamicTopBar} from "../../Global/Helper";
 
 export const TopHeader = (props) => {

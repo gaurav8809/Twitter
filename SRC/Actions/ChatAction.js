@@ -12,7 +12,6 @@ export const chatListener = (collection) => {
             .doc('nNWjAF1SQRc220TxYfMb').collection('messages');
 
         let observer = DBRef.onSnapshot(docSnapshot => {
-            debugger
             console.log(`Received doc snapshot: ${JSON.stringify(docSnapshot.val, null, 4)}`);
             // ...
         }, err => {
@@ -98,7 +97,6 @@ export const getChatIDList = () => {
 
             })
             .catch(error => {
-                    debugger
                     console.log(error);
                     return Promise.reject({
                         status: 400,
@@ -139,7 +137,6 @@ export const getChatUserList = () => {
             .then(response => {
 
                 // let dataArray = response._docs;
-                debugger
                 messageListArray.push(response._docs[0]._data);
 
             })
@@ -149,7 +146,6 @@ export const getChatUserList = () => {
         //     debugger
         // });
 
-        debugger
         // if(messageListArray.length > 0)
         // {
         //     debugger
@@ -166,7 +162,6 @@ export const getChatUserList = () => {
 
 export const getChatList = () => {
 
-    debugger
     return (dispatch,getState) => {
         const {
             LogedInUserData
@@ -179,7 +174,6 @@ export const getChatList = () => {
         return ChatRef.get()
             .then(chatRes => {
 
-                let userArray = [];
                 let chatData = chatRes._docs;
                 let members = chatData.map(i => i._data.members);
                 let idList = chatData.map(i => i.id);
@@ -222,7 +216,6 @@ export const getChatList = () => {
 
             })
             .catch(error => {
-                debugger
                 console.log(error);
                 return Promise.reject({
                     status: 400,

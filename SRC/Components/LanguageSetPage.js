@@ -267,6 +267,5 @@ const mapDispatchToProps = {
     SelectUserById
 };
 
-// export default CodeVerification;
 export default connect(null, mapDispatchToProps)(LanguageSetPage);
 

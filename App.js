@@ -1,18 +1,13 @@
 import React, {Component} from 'react';
-import {
-    Alert
-} from 'react-native';
+import {Alert} from 'react-native';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import SplashScreen from './SRC/Global/SplashScreen';
-import HelloScreen from './SRC/Components/HelloScreen';
 import {persistStore, persistReducer} from 'redux-persist';
 import RootNavigator from './SRC/Navigators/RootNavigator';
 import {PersistGate} from 'redux-persist/integration/react';
 import AppReducer from './SRC/Reducers';
 import storage from '@react-native-community/async-storage';
-// import inAppMessaging from '@react-native-firebase/in-app-messaging';
 import messaging from '@react-native-firebase/messaging';
 import firebase from "react-native-firebase";
 import HELPER from "./SRC/Global/Helper";
@@ -62,30 +57,21 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        // checkApplicationPermission();
-
-        // requestUserPermission();
-        // messaging().onNotificationOpenedApp(remoteMessage => {
-        //     console.log(
-        //         'Notification caused app to open from background state:',
-        //         remoteMessage.notification,
-        //     );
-        //     this.props.navigation.navigate(remoteMessage.data.type);
-        // });
+        checkApplicationPermission();
+        requestUserPermission();
+        messaging().onNotificationOpenedApp(remoteMessage => {
+            console.log(
+                'Notification caused app to open from background state:',
+                remoteMessage.notification,
+            );
+            this.props.navigation.navigate(remoteMessage.data.type);
+        });
     }
 
     componentDidMount(){
         this.getDeviceTocken();
         this.checkMessage();
-        // this.checkNotification();
-        messaging().onNotificationOpenedApp(remoteMessage => {
-            debugger
-            console.log(
-                'Notification caused app to open from background state:',
-                remoteMessage.notification,
-            );
-            // navigation.navigate(remoteMessage.data.type);
-        });
+        this.checkNotification();
     }
 
     getDeviceTocken = async () => {
@@ -147,8 +133,6 @@ class App extends Component {
         //     debugger
         //     // this.showNotification(title, body);
         // });
-
-        debugger
         messaging().onNotificationOpenedApp(remoteMessage => {
             debugger
             console.log(

@@ -22,7 +22,6 @@ const safearea = {
     width: swidth,
 };
 const mainview = {
-    // backgroundColor:'red',
     flex: 1,
     alignItems:'center',
     // width: swidth * 0.85,

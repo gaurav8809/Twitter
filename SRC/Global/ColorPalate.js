@@ -1,5 +1,3 @@
-const SystemBlue = '#00acee';
-
 const TransColor = (color) => { return 'rgba(' + 0 + ',' + 0 + ',' + 0 + ',' + color + ')'};
 
 module.exports = {

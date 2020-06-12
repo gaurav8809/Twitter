@@ -1,5 +1,5 @@
 import firebase from "react-native-firebase";
-import TYPE, {LOGEDIN_USER} from '../Reducers/TypeConstants';
+import TYPE from '../Reducers/TypeConstants';
 
 export const GetUserInfo = (collection, id) => {
 
@@ -97,7 +97,6 @@ export const FollowUser = (collection, dataObj, currentUser) => {
                 return Promise.resolve({
                     status: 200,
                     message: 'Successfully follow',
-                    // data: response.data
                 });
 
             })
@@ -133,7 +132,6 @@ export const UnFollowUser = (collection, dataObj, currentUser) => {
                 return Promise.resolve({
                     status: 200,
                     message: 'Successfully Unfollow',
-                    // data: response.data
                 });
 
             })
@@ -179,14 +177,12 @@ export const PostTweet = (collection,dataObj) => {
 
 export const UpdateProfileInfo = (collection,userID,dataObj) => {
 
-    // console.log("Doc name = ",doc);
     const DBRef = firebase.firestore().collection(collection).doc(userID);
 
     return (dispatch,getState) => {
 
         return DBRef.update(dataObj)
             .then(response => {
-
 
                 dispatch(GetLoginUserData('users',userID));
 

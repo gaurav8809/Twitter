@@ -5,22 +5,15 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
-    TouchableOpacity,
-    Platform,
     TextInput,
-    KeyboardAvoidingView
 } from 'react-native';
-import {swidth,sheight,centertext} from '../Global/ScreenSetting';
+import {swidth, centertext} from '../Global/ScreenSetting';
 import {AntDesign} from '../Global/VectorIcons';
-import {SystemBlue} from '../Global/ColorPalate'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {SystemButton} from '../Global/TwitterButton';
+import {SystemBlue} from '../Global/ColorPalate';
 import {safearea,mainview} from '../Global/ScreenSetting';
 import {emailValidation} from '../Global/validationHelper';
 import TwitterBottomPanel from '../Global/TwitterBottomPanel'
 import TwitterTopPanel from '../Global/TwitterTopPanel';
-import GLOBAL from '../Global/Initialization';
 
 class SignUp extends Component{
 
@@ -48,23 +41,17 @@ class SignUp extends Component{
 
     namechange = (text) => {
 
-        // text.trim();
         this.setState({
             name:text,
             totalnumber:50 - text.length,
             correctsign: false,
         });
-        // this.forceUpdate();
-
 
         setTimeout(() => this.setState({
             correctsign: (this.state.totalnumber >= 0 && (50 - text.length) < 50),
             nextopacity: (this.state.totalnumber >= 0 && (50 - text.length) < 50) ? 1 : 0.5
         }),500);
 
-
-        // alert(this.state.totalnumber);
-        // alert(text.length)
     };
 
     nextbuttonclick = () => {
@@ -81,16 +68,13 @@ class SignUp extends Component{
             }
             else
             {
-                //alert("Success");
                 this.props.navigation.navigate('SignUpFinalPage',{
                     name: this.state.name,
                     type: this.state.currentplace ? 'Phone' : 'Email',
                     poe: this.state.phoneoremail
                 });
             }
-
         }
-
     };
 
     successmark = () => {
@@ -113,21 +97,17 @@ class SignUp extends Component{
 
             if(this.state.currentplace)
             {
-                // alert(this.state.phoneoremail.includes('.'));
                 if((this.state.phoneoremail !== '' && this.state.phoneoremail.length !== 10 || isNaN(this.state.phoneoremail)) || this.state.phoneoremail.includes('.') === true)
                 {
-                    // console.log("Sorry");
                     this.setState({
                         pemsg:'Please enter a valid phone number.',
                         nextopacity: 0.5,
                         poecorrectsign:false
                     });
-                    // return true;
                 }
                 else
                 {
                     this.successmark();
-                    // return false;
                 }
             }
             else
@@ -139,12 +119,10 @@ class SignUp extends Component{
                         nextopacity: 0.5,
                         poecorrectsign:false
                     });
-                    // return true;
                 }
                 else
                 {
                     this.successmark();
-                    // return false;
                 }
             }
 
@@ -165,43 +143,9 @@ class SignUp extends Component{
             namemsg
         } = Styles;
 
-        const btnstyles = {
-            view:{
-                // marginTop: swidth * 0.15,
-                alignItems: 'center',
-                marginRight: swidth * 0.03,
-                // position: 'relative'
-                // justifySelf: this.state.currenttextinput == 1 && 'flex-end'
-            },
-            button:{
-                backgroundColor: SystemBlue,
-                borderRadius: 50,
-                width: swidth * 0.14,
-                height: swidth * 0.08,
-                ...centertext
-            },
-            text:{
-                fontSize: swidth * 0.04,
-                fontFamily: 'Roboto-Bold',
-                color:'white',
-                // fontWeight:"500"
-            }
-        };
-
         return(
             <SafeAreaView style={{...safearea}}>
                 <View style={{...mainview}}>
-
-                    {/*<View style={[Styles.twittericonview]}>*/}
-                    {/*    <View style={{flex:1}}>*/}
-                    {/*        <TouchableOpacity onPress={() => this.props.navigation.goBack()} >*/}
-                    {/*            <AntDesign name={'arrowleft'} color={SystemBlue} size={swidth * 0.07}/>*/}
-                    {/*        </TouchableOpacity>*/}
-                    {/*    </View>*/}
-                    {/*    <View style={{flex:1.1}}>*/}
-                    {/*        <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>*/}
-                    {/*    </View>*/}
-                    {/*</View>*/}
 
                     <TwitterTopPanel
                         onBackPress={() => this.props.navigation.goBack()}
@@ -323,11 +267,6 @@ class SignUp extends Component{
                             phoneoremail: '',
                         })}
                     text={this.state.currentplace ? 'Use email instead' : 'Use phone instead'}
-                    // textpress={() => this.setState(
-                    //     {
-                    //         currentplace:!this.state.currentplace,
-                    //         placeholder: this.state.currentplace ? 'Email' : 'Phone'
-                    //     })}
                     buttonopacity={this.state.nextopacity}
                     buttontext={"Next"}
                     buttonpress={() => this.nextbuttonclick()}
@@ -379,7 +318,6 @@ let Styles = StyleSheet.create({
         alignItems:'center'
     },
     mainview:{
-        // backgroundColor:'red',
         flex: 1,
     },
     createtextview:{
