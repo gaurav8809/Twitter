@@ -107,7 +107,7 @@ export const OfficialSymbol = (props) => (
 
 export const DynamicTopBar = ({ children }) => (
     <View style={{
-        height: swidth * 0.12,
+        height: swidth * 0.15,
         width: swidth,
         flexDirection: 'row',
         justifyContent: 'center',

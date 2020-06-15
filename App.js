@@ -12,6 +12,8 @@ import messaging from '@react-native-firebase/messaging';
 import firebase from "react-native-firebase";
 import HELPER from "./SRC/Global/Helper";
 
+// console.disableYellowBox = true;
+
 async function requestUserPermission() {
     const settings = await messaging().requestPermission();
 
@@ -94,7 +96,6 @@ class App extends Component {
                     });
             })
             .catch(error => {
-                debugger
                 console.log(error);
             });
 
@@ -106,7 +107,6 @@ class App extends Component {
 
     checkMessage = () => {
         messaging().onMessage(async remoteMessage => {
-            debugger
             doOnMessage(remoteMessage)
         });
 
@@ -134,7 +134,6 @@ class App extends Component {
         //     // this.showNotification(title, body);
         // });
         messaging().onNotificationOpenedApp(remoteMessage => {
-            debugger
             console.log(
                 'Notification caused app to open from background state:',
                 remoteMessage.notification,
@@ -145,7 +144,6 @@ class App extends Component {
         messaging()
             .getInitialNotification()
             .then(remoteMessage => {
-                debugger
                 if (remoteMessage) {
                     console.log(
                         'Notification caused app to open from quit state:',
@@ -153,7 +151,7 @@ class App extends Component {
                     );
                     setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
                 }
-                setLoading(false);
+                // setLoading(false);
             });
     };
 

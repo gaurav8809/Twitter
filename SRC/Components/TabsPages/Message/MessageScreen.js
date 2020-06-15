@@ -103,6 +103,7 @@ class MessageScreen extends Component{
             <View key={index}>
                 <ChatUserListBadge
                     data={item}
+                    onPress={() => this.props.navigation.navigate('PersonalChatScreen',{data: item})}
                 />
             </View>
         );

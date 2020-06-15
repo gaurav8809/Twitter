@@ -3,7 +3,6 @@ import React, {useEffect, useState,} from 'react';
 import {centertext, swidth} from './ScreenSetting';
 import {LikeRed, SystemBlue} from './ColorPalate';
 import {BlueWhiteButton} from './TwitterButton';
-import {SlateGrayText} from './TwitterText';
 import {UIActivityIndicator} from 'react-native-indicators';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {OfficialSymbol, DMYFormat} from '../Global/Helper';
@@ -345,7 +344,11 @@ export const ChatUserListBadge = (props) => {
     const [imageLoader,setimageLoader] = useState(false);
 
     return(
-        <TouchableOpacity style={ChatStyle.OuterView} activeOpacity={1}>
+        <TouchableOpacity
+            style={ChatStyle.OuterView}
+            activeOpacity={1}
+            onPress={props.onPress}
+        >
             <View style={ChatStyle.pimageview}>
                 <TouchableOpacity
                     style={{justifyContent: 'center'}}

@@ -43,13 +43,6 @@ export const GetTweets = (collection, currentUser) => {
                                 )
                         );
 
-                        // udata.map(item =>
-                        //     finalTweet.map(fitem =>
-                        //         fitem.userID === item.id && sendObj.push(Object.assign(item._data, fitem))
-                        //     )
-                        // );
-
-
                         return Promise.resolve({
                             status: 200,
                             message: 'Successfully Get users',

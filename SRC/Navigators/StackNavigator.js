@@ -9,6 +9,7 @@ import {SystemBlue} from '../Global/ColorPalate';
 import {createStackNavigator} from 'react-navigation-stack';
 import {AppHeader} from '../Global/AppHeader';
 import HomeScreen from '../Components/TabsPages/HomeScreen';
+import PersonalChatScreen from '../Components/TabsPages/Message/PersonalChatScreen';
 import React from 'react';
 import CreateTweetPage from "../Components/CreateTweetPage";
 import ProfilePage from '../Components/CommonPages/ProfilePage';
@@ -106,7 +107,8 @@ const StackNav = createStackNavigator({
         ProfilePage,
         FollowingListPage,
         FollowersListPage,
-        EditProfilePage
+        EditProfilePage,
+        PersonalChatScreen
     },
     {
         defaultNavigationOptions:({navigation}) => ({

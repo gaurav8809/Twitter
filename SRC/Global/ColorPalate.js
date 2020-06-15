@@ -5,5 +5,7 @@ module.exports = {
     BackGrayColor: 'rgb(231,236,240)',
     SlateGray: 'slategray',
     LikeRed: 'rgb(224,36,94)',
+    MyChatColor: 'rgb(29,161,242)',
+    OpChatColor: 'rgb(23,236,240)',
     TransColor
 };

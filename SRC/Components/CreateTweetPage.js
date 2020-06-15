@@ -72,7 +72,6 @@ class CreateTweetPage extends Component{
     };
 
     getPhotos = async () => {
-
         let flag = false;
         if(Platform.OS === 'android')
         {
@@ -290,7 +289,6 @@ class CreateTweetPage extends Component{
 
                 if(STD.selectedPhoto !== null)
                 {
-                    debugger
                     console.log("There is photo");
                     this.props.FireBaseStoreData('TweetResources',STD.selectedPhoto)
                         .then(firestoreResponse => {
@@ -493,7 +491,7 @@ class CreateTweetPage extends Component{
                 }
 
                 <DynamicBottomBar>
-                    <View style={[Styles.bottombarview,  ]}>
+                    <View style={[Styles.bottombarview,]}>
                         <View style={bottomOptionView}>
                             <Icon
                                 name={"photo"}
