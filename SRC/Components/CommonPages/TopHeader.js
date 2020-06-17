@@ -4,7 +4,6 @@ import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {SystemBlue} from "../../Global/ColorPalate";
 import {swidth, SW} from "../../Global/ScreenSetting";
 import {DynamicTopBar} from "../../Global/Helper";
-import styles from "react-native-webview/lib/WebView.styles";
 import {SlateGrayText} from "../../Global/TwitterText";
 
 export const TopHeader = (props) => {

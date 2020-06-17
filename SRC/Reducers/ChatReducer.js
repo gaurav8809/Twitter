@@ -25,6 +25,12 @@ export default reducer = (state = ChatState, action) => {
                 ChatList: action.payload
             };
 
+        case TYPE.SAVE_CURRENT_CHAT:
+            return state = {
+                ...state,
+                CurrentChat: action.payload
+            };
+
         default:
             return state;
     }

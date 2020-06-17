@@ -171,8 +171,6 @@ export const UpdateWhere = (collection,doc,dataObj) => {
         return DBRef.update(dataObj)
             .then(response => {
 
-
-                debugger
                 console.log(response);
                 return Promise.resolve({
                     status: 200,

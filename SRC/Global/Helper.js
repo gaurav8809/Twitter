@@ -73,7 +73,7 @@ const parseDate = (date) => {
 };
 
 const DMYFormat = (date) => {
-    let f = new Date(date.seconds * 1000);
+    let f = new Date((typeof date === 'object' ? date.seconds : date) * 1000);
     return `${f.getDate()} ${shortMonths[f.getMonth()]} ${f.getFullYear() % 100}`
 };
 
@@ -90,8 +90,8 @@ export const DismissKeyboardView = ({ children , actionCallback}) => (
     </TouchableWithoutFeedback>
 );
 
-export const DynamicBottomBar = ({ children }) => (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null}  >
+export const DynamicBottomBar = ({props,  children}) => (
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} {...props} >
         {children}
     </KeyboardAvoidingView>
 );
@@ -106,15 +106,7 @@ export const OfficialSymbol = (props) => (
 );
 
 export const DynamicTopBar = ({ children }) => (
-    <View style={{
-        height: swidth * 0.15,
-        width: swidth,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        borderBottomWidth: 1.2,
-        borderColor: 'lightgray',
-        alignItems: 'center',
-    }}>
+    <View style={[Styles.dynamicTopBar]}>
         {children}
     </View>
 );
@@ -230,7 +222,15 @@ let Styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.65)',
         ...centertext,
     },
-
+    dynamicTopBar:{
+        height: swidth * 0.15,
+        width: swidth,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderBottomWidth: 1.2,
+        borderColor: 'lightgray',
+        alignItems: 'center',
+    },
 });
 
 

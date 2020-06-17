@@ -1,6 +1,7 @@
 import firebase from "react-native-firebase";
 import TYPE from '../Reducers/TypeConstants';
 import {UNIQUE} from '../Global/Helper';
+import {GetLoginUserData} from "./UserAction";
 
 const FireRef = firebase.firestore();
 
@@ -177,7 +178,7 @@ export const getChatList = () => {
                 let chatData = chatRes._docs;
                 let members = chatData.map(i => i._data.members);
                 let idList = chatData.map(i => i.id);
-                let chatUserIDS = members.filter(UNIQUE).filter(item => item !== LogedInUserData.id);
+                // let chatUserIDS = members.filter(UNIQUE).filter(item => item !== LogedInUserData.id);
                 let finalArray = [];
                 // members.map(i => i.map(i => i !== LogedInUserData.id && chatUserIDS.push(i)));
 
@@ -194,7 +195,8 @@ export const getChatList = () => {
                                 });
                                 finalArray.push({
                                     chatInfo: item._data.messages,
-                                    userInfo: userInfo
+                                    userInfo: userInfo,
+                                    channelID: item.id,
                                 })
                             });
                         });
@@ -226,6 +228,49 @@ export const getChatList = () => {
 
     };
 
+
+};
+
+export const saveCurrentChat = (data) => {
+
+    return (dispatch, getState) => {
+
+        dispatch({
+            type: TYPE.SAVE_CURRENT_CHAT,
+            payload: data,
+        });
+
+
+    };
+
+};
+
+export const sendMessage = (channelID, dataObj) => {
+
+    // alert("In Action ==> Chanel ===>" + channelID);
+
+    return (dispatch, getState) => {
+
+        return FireRef.collection('chats').doc(channelID).update({
+            messages: firebase.firestore.FieldValue.arrayUnion(dataObj)
+        })
+            // .then(response => {
+            //
+            //     return Promise.resolve({
+            //         status: 200,
+            //         message: "Message sent",
+            //     });
+            //
+            // })
+            // .catch(error => {
+            //     console.log(error);
+            //     return Promise.reject({
+            //         status: 400,
+            //         message: "Message not sent",
+            //         data: error
+            //     });
+            // })
+    };
 
 };
 

@@ -7,10 +7,11 @@ import {
 } from 'react-native';
 import {safearea, swidth} from '../../../Global/ScreenSetting'
 import {connect} from 'react-redux';
-import {getChatIDList, getChatUserList, getChatList} from '../../../Actions/ChatAction';
+import {getChatIDList, getChatUserList, getChatList, saveCurrentChat} from '../../../Actions/ChatAction';
 import COLOR from "../../../Global/ColorPalate";
 import {ChatUserListBadge} from "../../../Global/TwitterBadges";
 import {BubbleButton} from "../../../Global/TwitterButton";
+import firebase from "react-native-firebase";
 
 const CHAT_LIST = [
     {
@@ -94,16 +95,27 @@ class MessageScreen extends Component{
     }
 
     componentDidMount(){
-        this.props.getChatList();
+        this.getLatest();
     }
 
-    renderUserBadge = ({item,index}) => {
+    getLatest = () => {
+        const subscriber = firebase.firestore()
+            .collection('chats')
+            .onSnapshot(documentSnapshot => {
+                this.props.getChatList();
+            });
+        return () => subscriber();
+    };
 
+    renderUserBadge = ({item,index}) => {
         return (
             <View key={index}>
                 <ChatUserListBadge
                     data={item}
-                    onPress={() => this.props.navigation.navigate('PersonalChatScreen',{data: item})}
+                    onPress={() => {
+                        this.props.saveCurrentChat(item);
+                        this.props.navigation.navigate('PersonalChatScreen',{data: item});
+                    }}
                 />
             </View>
         );
@@ -159,7 +171,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
     getChatIDList,
     getChatUserList,
-    getChatList
+    getChatList,
+    saveCurrentChat
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessageScreen);
