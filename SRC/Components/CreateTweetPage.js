@@ -283,6 +283,8 @@ class CreateTweetPage extends Component{
             imagePath: STD.selectdGif !== null && STD.selectdGif.gif.url
         };
 
+        debugger
+
         this.setLoader(true);
         this.props.PostTweet('tweets', dataObj)
             .then(tweetResponse => {

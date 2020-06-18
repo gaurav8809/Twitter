@@ -12,16 +12,24 @@ import {
 } from 'react-native';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {SlateGray, SystemBlue, MyChatColor, OpChatColor, DarkGray} from '../../../Global/ColorPalate';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector, useDispatch, connect} from 'react-redux';
 import {safearea, swidth, IS_IOS, SHW, SW, SH} from "../../../Global/ScreenSetting";
 import {TopHeader} from "../../CommonPages/TopHeader";
 import {DismissKeyboardView, DynamicBottomBar} from "../../../Global/Helper";
 import {sendMessage, saveCurrentChat} from '../../../Actions/ChatAction';
 import firebase from "react-native-firebase";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ImagePicker from "react-native-image-picker";
+import TakePhotoPopUp from "../../../Global/TakePhotoPopUp";
+import {UIActivityIndicator} from "react-native-indicators";
+import {GifCategoryView} from "../../CommonPages/GifPage";
+import {debug} from "react-native-reanimated";
+import {GetLocation} from "../../../Actions/GeneralAction";
+import {UpdateProfileInfo} from "../../../Actions/UserAction";
+import {FireBaseStoreData} from "../../../Actions/SystemAction";
 
-let PersonalChatScreen;
-export default PersonalChatScreen = (props) => {
+// let PersonalChatScreen;
+const PersonalChatScreen = (props) => {
 
     const dispatch = useDispatch();
     let {
@@ -32,7 +40,23 @@ export default PersonalChatScreen = (props) => {
     const {CurrentChat} = useSelector(state => state.ChatReducer);
     const [chatText, setChatText] = useState('');
     const [typing, setTyping] = useState(false);
-
+    const [popUp, setPopUp] = useState(false);
+    const [gifPopUp, setGifPopUp] = useState(false);
+    // const [selectedPhoto, setSelectedPhoto] = useState({
+    //     fileName: "75586126_2424022534481303_3919068421064491008_o.jpg",
+    //     fileSize: 63117,
+    //     height: 960,
+    //     isVertical: true,
+    //     originalRotation: 0,
+    //     path: "/storage/0DF6-2607/Pictures/75586126_2424022534481303_3919068421064491008_o.jpg",
+    //     type: "image/jpeg",
+    //     uri: "content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F34/ORIGINAL/NONE/1688944780",
+    //     width: 539
+    // });
+    const [selectedPhoto, setSelectedPhoto] = useState(null);
+    const [selectedGif, setSelectedGif] = useState(null);
+    const [imageLoader, setImageLoader] = useState(null);
+    const SELECTED = (selectedPhoto !== null || selectedGif !== null);
     // let chatDataParam = props.navigation.state.params.data;
     let chatDataParam = CurrentChat;
     let {
@@ -65,15 +89,42 @@ export default PersonalChatScreen = (props) => {
     const renderMyChatBox = (item) => {
         let {
             messageText,
-            timestamp
+            timestamp,
+            chatImage
         } = item;
         return (
             <View style={Styles.myBoxOuter}>
-                <View style={Styles.blueBox}>
-                    <Text style={Styles.myMessageText}>
-                        {messageText}
-                    </Text>
-                </View>
+                {
+                    chatImage &&
+                    <Image
+                        style={[Styles.myChatPhotoView,
+                            messageText === '' &&
+                            {
+                                borderBottomLeftRadius: 10,
+                            }]}
+                        resizeMode="cover"
+                        source={{uri: chatImage}}
+                        // onLoadStart={() => setImageLoader(true)}
+                        // onLoadEnd={() => setImageLoader(false)}
+                    />
+                }
+                {
+                    messageText !== '' &&
+                    <View style={[Styles.blueBox,
+                        chatImage &&
+                        {
+                            width: SW(0.635),
+                            borderTopLeftRadius: 0,
+                            borderTopRightRadius: 0,
+                        }
+                    ]}>
+                        <View>
+                            <Text style={Styles.myMessageText}>
+                                {messageText}
+                            </Text>
+                        </View>
+                    </View>
+                }
                 <Text style={Styles.myDate}>
                     {DMYFormat(timestamp)}
                 </Text>
@@ -84,7 +135,8 @@ export default PersonalChatScreen = (props) => {
     const renderOpChatBox = (item) => {
         let {
             messageText,
-            timestamp
+            timestamp,
+            chatImage
         } = item;
         return (
             <View style={Styles.opBoxOut}>
@@ -93,10 +145,48 @@ export default PersonalChatScreen = (props) => {
                         source={{uri:profileImage}}
                         style={Styles.profileimage}
                     />
-                    <View style={Styles.grayBox}>
-                        <Text style={Styles.opMessageText}>
-                            {messageText}
-                        </Text>
+                    <View>
+                        {
+                            chatImage &&
+                            <Image
+                                style={[Styles.opChatPhotoView,
+                                    messageText === '' &&
+                                    {
+                                        borderBottomRightRadius: 10,
+                                        marginLeft: SW(0.02)
+                                    }
+                                ]}
+                                resizeMode="cover"
+                                source={{uri: chatImage}}
+                                // onLoadStart={() => setImageLoader(true)}
+                                // onLoadEnd={() => setImageLoader(false)}
+                            />
+                        }
+                        {
+                            messageText !== '' &&
+                            <View style={[Styles.grayBox,
+                                chatImage &&
+                                {
+                                    width: SW(0.635),
+                                    borderTopLeftRadius: 0,
+                                    borderTopRightRadius: 0,
+                                }
+                            ]}>
+                                {/*<View style={Styles.blueBox}>*/}
+
+                                {/*</View>*/}
+
+                                <View>
+                                    <Text style={Styles.opMessageText}>
+                                        {messageText}
+                                    </Text>
+                                </View>
+
+                            </View>
+                        }
+                        {/*<Text style={Styles.opMessageText}>*/}
+                        {/*    {messageText}*/}
+                        {/*</Text>*/}
                     </View>
                 </View>
                 <Text style={Styles.opDate}>
@@ -109,7 +199,7 @@ export default PersonalChatScreen = (props) => {
     const renderChat = ({item, index}) => {
         return (
             <DynamicBottomBar>
-                <View style={{backgroundColor:' pink', alignItems: 'center'}}>
+                <View style={{alignItems: 'center'}}>
                     {
                         item.senderID === ME.id
                             ?
@@ -125,16 +215,60 @@ export default PersonalChatScreen = (props) => {
 
     const sendMessageAction = () => {
 
+        // if(!SELECTED)
+        // {
+        //
+        // }
+
         let dataObj = {
             messageText: chatText,
             receiverID: id,
             senderID: ME.id,
             timestamp: Math.floor(Date.now() / 1000)
         };
+        const cleanup = () => {
+            debugger
+            setSelectedPhoto(null);
+            setSelectedGif(null);
+            setChatText('');
+        };
 
-        dispatch(sendMessage(channelID, dataObj));
+        if(selectedPhoto !== null)
+        {
 
-        setChatText('');
+            props.FireBaseStoreData('ChatResources',selectedPhoto)
+                .then(firestoreResponse => {
+
+                    debugger
+                    dataObj.chatImage = firestoreResponse.data;
+                    chatArray.push(dataObj);
+                    props.sendMessage(channelID, dataObj);
+                    cleanup();
+                })
+                .catch(error => {
+                    console.log("Firestore Error = ",error)
+                });
+        }
+        else if(selectedGif !== null)
+        {
+            dataObj.chatImage = STD.selectdGif.gif.url;
+            chatArray.push(dataObj);
+            props.sendMessage(channelID, dataObj);
+            cleanup();
+        }
+        else{
+            debugger
+            chatArray.push(dataObj);
+            props.sendMessage(channelID, dataObj);
+            cleanup();
+        }
+
+
+        // props.sendMessage(channelID, dataObj)
+        //     .then(r => {
+        //         alert("Done");
+        //     });
+debugger
     };
 
     useEffect(() => {
@@ -160,59 +294,109 @@ export default PersonalChatScreen = (props) => {
     },[]);
 
     const renderBottomBar = () => {
+
         return (
-            <DynamicBottomBar keyboardVerticalOffset={64}>
-                <View style={[Styles.bottombarview]}>
-                    {/*<View style={Styles.bottomcontainer}>*/}
-                    <Icon
-                        name={"photo"}
-                        type={"Foundation"}
-                        size={swidth * 0.065}
-                        color={SystemBlue}
-                        // onPress={() => this.openPhotoGallery()}
-                    />
-                    <View style={Styles.gifView}>
-                        <Icon
-                            name={"gif"}
-                            type={"MaterialCommunityIcons"}
-                            size={swidth * 0.045}
-                            color={SystemBlue}
-                            // onPress={() => this.toggleGifPage(!gifPreview)}
-                        />
-                    </View>
-                    <View
-                        style={[
-                            Styles.nametextview,
-                            {borderColor: typing ? SystemBlue : 'lightgray'},
+            <DynamicBottomBar>
+                <View style={[Styles.bottombarview, {
+                    flexDirection: SELECTED ? 'column' : 'row',
+                    padding: SELECTED ? 10 : 8,
+                }]}>
+                    {
+                        SELECTED ?
+                            <View style={Styles.photoContainer}>
+                                <Image
+                                    style={Styles.selectedPhotoView}
+                                    resizeMode="cover"
+                                    source={{uri: selectedGif !== null ? selectedGif.gif.url : selectedPhoto.uri}}
+                                    onLoadStart={() => setImageLoader(true)}
+                                    onLoadEnd={() => setImageLoader(false)}
+                                />
+                                {
+                                    imageLoader &&
+                                    <UIActivityIndicator
+                                        color={'gray'}
+                                        size={swidth * 0.06}
+                                        style={Styles.imageLoaderStyle}
+                                    />
+                                }
+                                <View style={Styles.closebutton}
+                                >
+                                    <Icon
+                                        onPress={() => {
+                                            setSelectedPhoto(null);
+                                            setSelectedGif(null);
+                                        }}
+                                        name={"ios-close"}
+                                        type={"Ionicons"}
+                                        size={swidth * 0.08}
+                                        color={'white'}
+                                    />
+                                </View>
+                            </View>
+                            :
+                            <View style={Styles.bottomIcons}>
+                                <Icon
+                                    name={"photo"}
+                                    type={"Foundation"}
+                                    size={swidth * 0.065}
+                                    color={SystemBlue}
+                                    onPress={() => setPopUp(true)}
+                                />
+                                <View style={Styles.gifView}>
+                                    <Icon
+                                        name={"gif"}
+                                        type={"MaterialCommunityIcons"}
+                                        size={swidth * 0.045}
+                                        color={SystemBlue}
+                                        onPress={() => setGifPopUp(true)}
+                                    />
+                                </View>
+                            </View>
+                    }
+                    <View style={[
+                            Styles.bottomRightPanel,
+                            {width: SW(SELECTED ? 0.90 : 0.7)},
+                            SELECTED && typing && !IS_IOS() && {bottom: SH(0.02)}
                         ]}>
-                        <TextInput
-                            onFocus={() => {
-                                chatListRef.current.scrollToEnd({animated: true});
-                                // chatListRef.current.scrollToItem({ animated: true, viewPosition: 4 });
-                                setTyping(true)
-                            }}
-                            onBlur={() => setTyping(false)}
-                            style={[Styles.inputText, IS_IOS() && {marginBottom: SH(0.007)}]}
-                            value={chatText}
-                            onChangeText={text => setChatText(text)}
-                            placeholder={'Start a message'}
-                            placeholderTextColor={"gray"}
-                            selectionColor={SystemBlue}
-                            returnKeyType={'next'}
-                            multiline
-                            spellCheck
-                            autoCorrect={false}
-                            // onSubmitEditing={() => this.b.current.focus()}
-                        />
+                        <View
+                            style={[
+                                Styles.nametextview,
+                                {borderColor: typing ? SystemBlue : 'lightgray'},
+                                {width: SW(SELECTED ? 0.8 : 0.6)},
+                            ]}>
+                            <TextInput
+                                onFocus={() => {
+                                    chatListRef.current.scrollToEnd({animated: true});
+                                    // chatListRef.current.scrollToItem({ animated: true, viewPosition: 4 });
+                                    setTyping(true)
+                                }}
+                                onBlur={() => setTyping(false)}
+                                style={[Styles.inputText,
+                                    IS_IOS() && {marginBottom: SH(0.007)},
+                                    {width: SW(SELECTED ? 0.8 : 0.6)}
+                                ]}
+                                value={chatText}
+                                onChangeText={text => setChatText(text)}
+                                placeholder={'Start a message'}
+                                placeholderTextColor={"gray"}
+                                selectionColor={SystemBlue}
+                                returnKeyType={'next'}
+                                multiline
+                                spellCheck
+                                autoCorrect={false}
+                                // onSubmitEditing={() => this.b.current.focus()}
+                            />
+                        </View>
+                        <View style={{alignSelf: 'center'}}>
+                            <Icon
+                                name={"ios-send"}
+                                type={"Ionicons"}
+                                size={swidth * 0.067}
+                                color={SystemBlue}
+                                onPress={sendMessageAction}
+                            />
+                        </View>
                     </View>
-                    <Icon
-                        name={"ios-send"}
-                        type={"Ionicons"}
-                        size={swidth * 0.067}
-                        color={SystemBlue}
-                        onPress={chatText !== '' ? sendMessageAction : null}
-                    />
-                    {/*</View>*/}
                 </View>
             </DynamicBottomBar>
         );
@@ -228,37 +412,58 @@ export default PersonalChatScreen = (props) => {
                 userName={username}
             />
 
-                    {/*<DismissKeyboardView >*/}
-                    {/*    <KeyboardAvoidingView*/}
-                    {/*        behavior={IS_IOS() ? "position" : 'padding'}*/}
-                    {/*        style={{flex: 1}}*/}
-                    {/*        // keyboardVerticalOffset={-150}*/}
-                    {/*    >*/}
-                            <View style={{flex:1, width: SW(0.94), alignSelf: 'center'}}>
-                                <FlatList
-                                    // contentContainerStyle={{flex:1,  }}
-                                    // style={{flex:1, bottom: typing ? SH(0.25) : 0}}
-                                    ref={chatListRef}
-                                    data={chatArray}
-                                    keyExtractor={(item,index) => index.toString()}
-                                    ListHeaderComponent={
-                                        <View style={{marginTop: SH(0.02)}} />
-                                    }
-                                    ListFooterComponent={
-                                        <View style={{marginTop: SH(0.02)}} />
-                                    }
-                                    ItemSeparatorComponent={() =>
-                                        <View style={{marginTop: SH(0.02)}} />
-                                    }
-                                    renderItem={renderChat}
-                                    showsVerticalScrollIndicator={false}
-                                />
-                            </View>
-                        {/*</KeyboardAvoidingView>*/}
-                    {/*</DismissKeyboardView>*/}
+            {/*<DismissKeyboardView >*/}
+            {/*    <KeyboardAvoidingView*/}
+            {/*        behavior={IS_IOS() ? "position" : 'padding'}*/}
+            {/*        style={{flex: 1}}*/}
+            {/*        // keyboardVerticalOffset={-150}*/}
+            {/*    >*/}
+            <View style={{flex:1, width: SW(0.94), alignSelf: 'center'}}>
+                <FlatList
+                    // contentContainerStyle={{flex:1,  }}
+                    // style={{flex:1, bottom: typing ? SH(0.25) : 0}}
+                    ref={chatListRef}
+                    data={chatArray}
+                    keyExtractor={(item,index) => index.toString()}
+                    ListHeaderComponent={
+                        <View style={{marginTop: SH(0.02)}} />
+                    }
+                    ListFooterComponent={
+                        <View style={{marginTop: SH(0.02)}} />
+                    }
+                    ItemSeparatorComponent={() =>
+                        <View style={{marginTop: SH(0.02)}} />
+                    }
+                    renderItem={renderChat}
+                    showsVerticalScrollIndicator={false}
+                />
+            </View>
+            {/*</KeyboardAvoidingView>*/}
+            {/*</DismissKeyboardView>*/}
 
 
-                {renderBottomBar()}
+            <TakePhotoPopUp
+                visible={popUp}
+                onPhotoSelect={(photo) => {
+                    setSelectedPhoto(photo);
+                    setSelectedGif(null);
+                    setPopUp(false);
+                }}
+                onRequestClose={() => setPopUp(false)}
+            />
+
+            <GifCategoryView
+                gifPreview={gifPopUp}
+                backPress={() => setGifPopUp(false)}
+                setGifState={(Gif) => {
+                    setSelectedGif(Gif);
+                    setSelectedPhoto(null);
+                    setGifPopUp(false);
+                }}
+            />
+
+            {renderBottomBar()}
+
         </SafeAreaView>
     );
 };
@@ -266,6 +471,13 @@ export default PersonalChatScreen = (props) => {
 PersonalChatScreen.navigationOptions = {
     headerShown: false,
 };
+
+const mapDispatchToProps = {
+    sendMessage,
+    FireBaseStoreData
+};
+
+export default connect(null, mapDispatchToProps)(PersonalChatScreen);
 
 const Styles = StyleSheet.create({
     mainview:{
@@ -286,7 +498,6 @@ const Styles = StyleSheet.create({
         backgroundColor:'white',
         alignItems: 'center',
         justifyContent: 'space-around',
-        padding: 8,
     },
     bottomcontainer:{
         alignItems: 'center',
@@ -307,7 +518,7 @@ const Styles = StyleSheet.create({
         borderBottomWidth: 2,
         fontSize: swidth * 0.12,
         height: 'auto',
-        bottom: SH(0.007),
+        // bottom: SH(0.007),
         alignSelf: 'flex-end',
     },
     inputText:{
@@ -336,7 +547,7 @@ const Styles = StyleSheet.create({
         width: 'auto',
     },
     grayBox:{
-        padding: 11,
+        padding: 10,
         backgroundColor: OpChatColor,
         borderRadius: 15,
         borderBottomLeftRadius: 0,
@@ -346,9 +557,9 @@ const Styles = StyleSheet.create({
     },
     opInnerContainer:{
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         alignSelf: 'flex-start',
-        alignItems: 'center',
+        alignItems: 'flex-end',
     },
     myDate:{
         color: DarkGray,
@@ -369,5 +580,63 @@ const Styles = StyleSheet.create({
         color: 'black',
         fontSize: SW(0.035),
     },
+    photoContainer:{
+        alignSelf:'flex-start',
+        marginBottom: SH(0.03),
+    },
+    selectedPhotoView:{
+        height: SW(0.63),
+        width: SW(0.63),
+        borderRadius: 10,
+        overlayColor: 'white',
+    },
+    myChatPhotoView:{
+        height: SW(0.63),
+        width: SW(0.635),
+        borderRadius: 15,
+        overlayColor: 'white',
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+    },
+    opChatPhotoView:{
+        height: SW(0.63),
+        width: SW(0.635),
+        borderRadius: 15,
+        overlayColor: 'white',
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        alignSelf: 'flex-end',
+    },
+    imageLoaderStyle:{
+        borderRadius: 10,
+        borderWidth: 1,
+        position: 'absolute',
+        height: SW(0.65),
+        width: SW(0.65),
+        borderColor: 'lightgray'
+    },
+    closebutton:{
+        height: swidth * 0.08,
+        width: swidth * 0.08,
+        backgroundColor: 'black',
+        borderRadius: 100,
+        alignItems: 'center',
+        position: 'absolute',
+        right: swidth * 0.03,
+        top: swidth * 0.03
+    },
+    bottomIcons:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: SW(0.16)
+    },
+    bottomRightPanel:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        alignSelf: 'center',
+    }
 });
+
 

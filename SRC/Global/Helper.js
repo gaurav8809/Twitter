@@ -14,6 +14,7 @@ import COLOR, {SystemBlue} from "./ColorPalate";
 import {sheight, swidth, RHW, centertext} from "./ScreenSetting";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import ImageZoom from 'react-native-image-pan-zoom';
+import ImagePicker from "react-native-image-picker";
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
