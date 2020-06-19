@@ -188,7 +188,6 @@ class HomeScreen extends Component{
     };
 
     openImage = (url) => {
-
         Image.getSize(url, (width, height) => {
             this.setState({
                 preview: true,
@@ -199,8 +198,6 @@ class HomeScreen extends Component{
                 }
             })
         });
-
-
     };
 
     LikePress = (flag, item) => {

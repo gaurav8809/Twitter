@@ -393,13 +393,20 @@ export const ChatUserListBadge = (props) => {
             </View>
                 <View style={ChatStyle.messageTextView}>
                     <Text style={ChatStyle.messageText}>
-                        {/*<SlateGrayText textstyle={ChatStyle.messageText}>*/}
                         {
-                            messageText && messageText.length > 35
-                                ? messageText.substr(0,35) + "..."
-                                : messageText
+                            messageText ?
+                                (
+                                    messageText.length > 35
+                                    ? messageText.substr(0,35) + "..."
+                                    : messageText
+                                )
+                                :
+                                (
+                                    senderID === id
+                                        ? `Sent you a photo`
+                                        : 'You sent a photo'
+                                )
                         }
-                        {/*</SlateGrayText>*/}
                     </Text>
                 </View>
             </View>

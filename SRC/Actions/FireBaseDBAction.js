@@ -196,7 +196,6 @@ export const SelectAll = (collection) => {
     const DBRef = firebase.firestore().collection(collection);
 
     return (dispatch,getState) => {
-
         return DBRef.get()
             .then(response => {
                 // console.log("Response==========================");

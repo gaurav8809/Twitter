@@ -7,28 +7,21 @@ import {
     FlatList,
     StyleSheet,
     TextInput,
-    KeyboardAvoidingView,
-    ScrollView,
+    TouchableWithoutFeedback
 } from 'react-native';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {SlateGray, SystemBlue, MyChatColor, OpChatColor, DarkGray} from '../../../Global/ColorPalate';
 import {useSelector, useDispatch, connect} from 'react-redux';
 import {safearea, swidth, IS_IOS, SHW, SW, SH} from "../../../Global/ScreenSetting";
 import {TopHeader} from "../../CommonPages/TopHeader";
-import {DismissKeyboardView, DynamicBottomBar} from "../../../Global/Helper";
+import {DismissKeyboardView, DynamicBottomBar, DATES, PreviewImageView} from "../../../Global/Helper";
 import {sendMessage, saveCurrentChat} from '../../../Actions/ChatAction';
 import firebase from "react-native-firebase";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import ImagePicker from "react-native-image-picker";
 import TakePhotoPopUp from "../../../Global/TakePhotoPopUp";
 import {UIActivityIndicator} from "react-native-indicators";
 import {GifCategoryView} from "../../CommonPages/GifPage";
-import {debug} from "react-native-reanimated";
-import {GetLocation} from "../../../Actions/GeneralAction";
-import {UpdateProfileInfo} from "../../../Actions/UserAction";
 import {FireBaseStoreData} from "../../../Actions/SystemAction";
 
-// let PersonalChatScreen;
 const PersonalChatScreen = (props) => {
 
     const dispatch = useDispatch();
@@ -56,6 +49,10 @@ const PersonalChatScreen = (props) => {
     const [selectedPhoto, setSelectedPhoto] = useState(null);
     const [selectedGif, setSelectedGif] = useState(null);
     const [imageLoader, setImageLoader] = useState(null);
+    const [previewImage, setPreviewImage] = useState({
+        preview: false,
+        PreviewImage: {}
+    });
     const SELECTED = (selectedPhoto !== null || selectedGif !== null);
     // let chatDataParam = props.navigation.state.params.data;
     let chatDataParam = CurrentChat;
@@ -69,8 +66,11 @@ const PersonalChatScreen = (props) => {
     let channelID = chatDataParam.channelID;
 
     const DMYFormat = (date) => {
-
         let f = new Date((typeof date === 'object' ? date.seconds : date) * 1000);
+        let {
+            TODAY,
+            YESTERDAY
+        } = DATES(f);
         let fdate = f.getDate();
         let month = f.getMonth() + 1;
         let year = f.getFullYear() % 100;
@@ -82,8 +82,13 @@ const PersonalChatScreen = (props) => {
             return value.toString().length < 2 ? ('0' + value.toString()) : value
         };
 
-        return `${getFor(fdate)}/${getFor(month)}/${year}` +
-            `, ${getFor(hour > 12 ? (hour % 12) : hour)}:${getFor(minute)} ${AMPM}`;
+        if(TODAY)
+            return `${getFor(hour > 12 ? (hour % 12) : hour)}:${getFor(minute)} ${AMPM}`;
+        else if(YESTERDAY)
+            return `Yesterday, ${getFor(hour > 12 ? (hour % 12) : hour)}:${getFor(minute)} ${AMPM}`;
+        else
+            return `${getFor(fdate)}/${getFor(month)}/${year}` +
+                `, ${getFor(hour > 12 ? (hour % 12) : hour)}:${getFor(minute)} ${AMPM}`;
     };
 
     const renderMyChatBox = (item) => {
@@ -96,33 +101,31 @@ const PersonalChatScreen = (props) => {
             <View style={Styles.myBoxOuter}>
                 {
                     chatImage &&
-                    <Image
-                        style={[Styles.myChatPhotoView,
-                            messageText === '' &&
-                            {
-                                borderBottomLeftRadius: 10,
-                            }]}
-                        resizeMode="cover"
-                        source={{uri: chatImage}}
-                        // onLoadStart={() => setImageLoader(true)}
-                        // onLoadEnd={() => setImageLoader(false)}
-                    />
+                    <TouchableWithoutFeedback onPress={() => openImage(chatImage)}>
+                        <Image
+                            onPress={() => {alert()}}
+                            style={[Styles.myChatPhotoView,
+                                messageText === '' &&
+                                {
+                                    borderBottomLeftRadius: 10,
+                                }]}
+                            resizeMode="cover"
+                            source={{uri: chatImage}}
+                        />
+                    </TouchableWithoutFeedback>
                 }
                 {
                     messageText !== '' &&
-                    <View style={[Styles.blueBox,
-                        chatImage &&
+                    <View style={[Styles.blueBox, chatImage &&
                         {
                             width: SW(0.635),
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
                         }
                     ]}>
-                        <View>
-                            <Text style={Styles.myMessageText}>
-                                {messageText}
-                            </Text>
-                        </View>
+                        <Text style={Styles.myMessageText}>
+                            {messageText}
+                        </Text>
                     </View>
                 }
                 <Text style={Styles.myDate}>
@@ -146,24 +149,21 @@ const PersonalChatScreen = (props) => {
                         style={Styles.profileimage}
                     />
                     <View>
-                        {
-                            chatImage &&
-                            <Image
-                                style={[Styles.opChatPhotoView,
-                                    messageText === '' &&
-                                    {
-                                        borderBottomRightRadius: 10,
-                                        marginLeft: SW(0.02)
-                                    }
-                                ]}
-                                resizeMode="cover"
-                                source={{uri: chatImage}}
-                                // onLoadStart={() => setImageLoader(true)}
-                                // onLoadEnd={() => setImageLoader(false)}
-                            />
+                        {chatImage &&
+                            <TouchableWithoutFeedback onPress={() => openImage(chatImage)}>
+                                <Image
+                                    style={[Styles.opChatPhotoView, messageText === '' &&
+                                        {
+                                            borderBottomRightRadius: 10,
+                                            marginLeft: SW(0.02)
+                                        }
+                                    ]}
+                                    resizeMode="cover"
+                                    source={{uri: chatImage}}
+                                />
+                            </TouchableWithoutFeedback>
                         }
-                        {
-                            messageText !== '' &&
+                        {messageText !== '' &&
                             <View style={[Styles.grayBox,
                                 chatImage &&
                                 {
@@ -172,21 +172,11 @@ const PersonalChatScreen = (props) => {
                                     borderTopRightRadius: 0,
                                 }
                             ]}>
-                                {/*<View style={Styles.blueBox}>*/}
-
-                                {/*</View>*/}
-
-                                <View>
-                                    <Text style={Styles.opMessageText}>
-                                        {messageText}
-                                    </Text>
-                                </View>
-
+                                <Text style={Styles.opMessageText}>
+                                    {messageText}
+                                </Text>
                             </View>
                         }
-                        {/*<Text style={Styles.opMessageText}>*/}
-                        {/*    {messageText}*/}
-                        {/*</Text>*/}
                     </View>
                 </View>
                 <Text style={Styles.opDate}>
@@ -215,10 +205,8 @@ const PersonalChatScreen = (props) => {
 
     const sendMessageAction = () => {
 
-        // if(!SELECTED)
-        // {
-        //
-        // }
+        if(!SELECTED && chatText === '')
+            return;
 
         let dataObj = {
             messageText: chatText,
@@ -227,7 +215,6 @@ const PersonalChatScreen = (props) => {
             timestamp: Math.floor(Date.now() / 1000)
         };
         const cleanup = () => {
-            debugger
             setSelectedPhoto(null);
             setSelectedGif(null);
             setChatText('');
@@ -235,13 +222,13 @@ const PersonalChatScreen = (props) => {
 
         if(selectedPhoto !== null)
         {
+            dataObj.chatImage = selectedPhoto.uri;
+            chatArray.push(dataObj);
+            !IS_IOS() ? selectedPhoto.uri = 'file://' + selectedPhoto.path : null;
 
             props.FireBaseStoreData('ChatResources',selectedPhoto)
                 .then(firestoreResponse => {
-
-                    debugger
                     dataObj.chatImage = firestoreResponse.data;
-                    chatArray.push(dataObj);
                     props.sendMessage(channelID, dataObj);
                     cleanup();
                 })
@@ -251,15 +238,15 @@ const PersonalChatScreen = (props) => {
         }
         else if(selectedGif !== null)
         {
-            dataObj.chatImage = STD.selectdGif.gif.url;
+            dataObj.chatImage = selectedGif.gif.url;
             chatArray.push(dataObj);
-            props.sendMessage(channelID, dataObj);
+            dispatch(sendMessage(channelID, dataObj));
             cleanup();
         }
         else{
             debugger
             chatArray.push(dataObj);
-            props.sendMessage(channelID, dataObj);
+            dispatch(sendMessage(channelID, dataObj));
             cleanup();
         }
 
@@ -402,6 +389,26 @@ debugger
         );
     };
 
+    const openImage = (url) => {
+        Image.getSize(url, (width, height) => {
+            setPreviewImage({
+                preview: true,
+                PreviewImage:{
+                    pImageHeight: height,
+                    pImageWidth: width,
+                    pImagePath: url
+                }
+            })
+        });
+    };
+
+    const closePreviewImage = () => {
+        setPreviewImage({
+            preview: false,
+            PreviewImage: {}
+        })
+    };
+
     return (
         <SafeAreaView style={[safearea]}>
 
@@ -460,6 +467,12 @@ debugger
                     setSelectedPhoto(null);
                     setGifPopUp(false);
                 }}
+            />
+
+            <PreviewImageView
+                preview={previewImage.preview}
+                PreviewImage={previewImage.PreviewImage}
+                backPress={closePreviewImage}
             />
 
             {renderBottomBar()}

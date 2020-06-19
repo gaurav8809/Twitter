@@ -20,14 +20,14 @@ export const SystemButton = (props) => {
     const dis = opacity === 0.5;
 
     return(
-    <View style={[styles.view, {opacity: opacity}]}>
+    <View style={[Styles.sysView, styles && styles.view, {opacity: opacity}]}>
         <TouchableOpacity
             activeOpacity={aOpacity && aOpacity}
-            style={[styles.button, ]}
+            style={[Styles.sysButton, styles && styles.button]}
             onPress={onPress}
             disabled={dis}
         >
-            <Text style={styles.text}>
+            <Text style={[Styles.sysText, styles && styles.text]}>
                 {text}
             </Text>
         </TouchableOpacity>
@@ -43,6 +43,7 @@ export const BlueWhiteButton = (props) => {
         activeText,
         btnStatus,
         useColor,
+        btnStyle
     } = props;
 
 
@@ -71,7 +72,8 @@ export const BlueWhiteButton = (props) => {
                     borderWidth: flag ? 0 : 1.5,
                     borderColor: useColor,
                 },
-                btnStatus && {borderColor: borderColor}
+                btnStatus && {borderColor: borderColor},
+                btnStyle
             ]}
             onPress={() => {
                     setFlag(!flag);
@@ -196,8 +198,25 @@ module.extends = {
 
 let Styles = StyleSheet.create({
 
+    sysView:{
+        marginTop: swidth * 0.04,
+        alignItems: 'center',
+    },
+    sysButton:{
+        backgroundColor: SystemBlue,
+        borderRadius: 50,
+        width: swidth * 0.85,
+        height: swidth * 0.1,
+        ...centertext
+    },
+    sysText:{
+        fontSize: swidth * 0.05,
+        fontFamily: 'Roboto-Bold',
+        color:'white',
+    },
     button:{
-        width: swidth * 0.27,
+        minWidth: swidth * 0.27,
+        width: 'auto',
         // padding:5,
         backgroundColor:'white',
         borderColor: SystemBlue,

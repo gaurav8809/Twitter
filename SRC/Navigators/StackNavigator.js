@@ -2,6 +2,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import SearchScreen from '../Components/TabsPages/SearchScreen';
 import NotificationScreen from '../Components/TabsPages/NotificationScreen';
 import MessageScreen from '../Components/TabsPages/Message/MessageScreen';
+import NewMessageScreen from '../Components/TabsPages/Message/NewMessageScreen';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {swidth} from '../Global/ScreenSetting';
@@ -108,7 +109,8 @@ const StackNav = createStackNavigator({
         FollowingListPage,
         FollowersListPage,
         EditProfilePage,
-        PersonalChatScreen
+        PersonalChatScreen,
+        NewMessageScreen
     },
     {
         defaultNavigationOptions:({navigation}) => ({

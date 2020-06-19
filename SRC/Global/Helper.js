@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
     Keyboard,
@@ -8,7 +8,8 @@ import {
     Image,
     StyleSheet,
     Modal,
-    Platform
+    Platform,
+    YellowBox
 } from 'react-native';
 import COLOR, {SystemBlue} from "./ColorPalate";
 import {sheight, swidth, RHW, centertext} from "./ScreenSetting";
@@ -56,9 +57,7 @@ const AsyncRemove = async (key) => {
 };
 
 const IS_IOS = () => {
-
     return Platform.OS === 'ios';
-
 };
 
 const parseDate = (date) => {
@@ -80,6 +79,17 @@ const DMYFormat = (date) => {
 
 const UNIQUE = (value, index, self) => {
     return self.indexOf(value) === index;
+};
+
+const DATES = (date) => {
+    let today = new Date();
+    var yDate = new Date();
+    yDate.setDate(yDate.getDate() - 1);
+
+    return {
+        TODAY: (date.toDateString() === today.toDateString()),
+        YESTERDAY: (yDate.toDateString() === date.toDateString()),
+    }
 };
 
 export const DismissKeyboardView = ({ children , actionCallback}) => (
@@ -142,6 +152,14 @@ export const PreviewImageView = (props) => {
         backPress,
         PreviewImage
     } = props;
+
+    useEffect(() => {
+        YellowBox.ignoreWarnings([
+            'Warning: componentWillMount is deprecated',
+            'Warning: componentWillReceiveProps is deprecated',
+            'Module RCTImageLoader requires',
+        ]);
+    },[]);
 
     return (
         <Modal
@@ -244,6 +262,7 @@ module.exports = {
     parseDate,
     UNIQUE,
     DMYFormat,
+    DATES,
     DismissKeyboardView,
     DynamicBottomBar,
     OfficialSymbol,

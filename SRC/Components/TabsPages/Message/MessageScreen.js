@@ -3,14 +3,15 @@ import {
     SafeAreaView,
     StyleSheet,
     View,
-    FlatList
+    FlatList,
+    Text
 } from 'react-native';
-import {safearea, swidth} from '../../../Global/ScreenSetting'
+import {safearea, swidth, SW, SH, centertext} from '../../../Global/ScreenSetting'
 import {connect} from 'react-redux';
 import {getChatIDList, getChatUserList, getChatList, saveCurrentChat} from '../../../Actions/ChatAction';
-import COLOR from "../../../Global/ColorPalate";
+import COLOR, {SlateGray, SystemBlue} from "../../../Global/ColorPalate";
 import {ChatUserListBadge} from "../../../Global/TwitterBadges";
-import {BubbleButton} from "../../../Global/TwitterButton";
+import {BlueWhiteButton, BubbleButton, LinerButton, SystemButton} from "../../../Global/TwitterButton";
 import firebase from "react-native-firebase";
 
 const CHAT_LIST = [
@@ -114,7 +115,7 @@ class MessageScreen extends Component{
                     data={item}
                     onPress={() => {
                         this.props.saveCurrentChat(item);
-                        this.props.navigation.navigate('PersonalChatScreen',{data: item});
+                        this.props.navigation.navigate('PersonalChatScreen');
                     }}
                 />
             </View>
@@ -122,15 +123,40 @@ class MessageScreen extends Component{
     };
 
     render(){
-
         return(
             <SafeAreaView style={[safearea]}>
                 <View style={Styles.mainview}>
                     <FlatList
-                        // data={CHAT_LIST}
+                        contentContainerStyle={{flex:1}}
                         data={this.props.ChatList}
                         keyExtractor={(item,index) => index.toString()}
                         renderItem={this.renderUserBadge}
+                        ListEmptyComponent={
+                            <View style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                // backgroundColor: 'pink',
+                                flex:1,
+                            }}>
+                                <Text style={{textAlign: 'center',fontSize: SW(0.055), fontWeight: 'bold'}}>
+                                    {"Send a message, got a message"}
+                                </Text>
+                                <Text style={{marginTop: SH(0.02),textAlign: 'center',width: SW(0.85), fontSize: SW(0.04), color: COLOR.SlateGray}}>
+                                    {"Direct Messages are private conversations between you and other people on Twitter. Share Tweets, media, and more!"}
+                                </Text>
+                                <SystemButton
+                                    text={"Write a message"}
+                                    styles={{
+                                        button: {
+                                            width: SW(0.4),
+                                            height: SW(0.09),
+                                        },
+                                        text:{fontSize: SW(0.04)}
+                                    }}
+                                    // onPress={}
+                                />
+                            </View>
+                        }
                     />
                     <BubbleButton
                         screen={'CHAT'}
@@ -140,7 +166,7 @@ class MessageScreen extends Component{
                             color: 'white',
                             size: swidth * 0.062,
                         }}
-                        onPress={() => this.props.navigation.navigate("CreateTweetPage")}
+                        onPress={() => this.props.navigation.navigate("NewMessageScreen")}
                     />
                 </View>
             </SafeAreaView>

@@ -77,6 +77,7 @@ export const FireBaseStoreData = (folderPath,dataobj) => {
                 });
             })
             .catch(error => {
+                debugger
                 console.log(error);
                 return Promise.reject({
                     status: 400,
