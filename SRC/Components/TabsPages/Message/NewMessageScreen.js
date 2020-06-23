@@ -5,77 +5,111 @@ import {
     StyleSheet,
     View,
     FlatList,
-    Text
+    TextInput
 } from 'react-native';
-import {safearea, swidth, SW, SH, centertext} from '../../../Global/ScreenSetting'
+import {safearea, swidth, SW, SH, IS_IOS} from '../../../Global/ScreenSetting'
 import {connect} from 'react-redux';
-import {getChatIDList, getChatUserList, getChatList, saveCurrentChat} from '../../../Actions/ChatAction';
 import {SelectAll} from '../../../Actions/FireBaseDBAction';
+import {saveCurrentChat, getChatIDList} from '../../../Actions/ChatAction';
 import COLOR, {SlateGray, SystemBlue} from "../../../Global/ColorPalate";
-import {ChatUserListBadge} from "../../../Global/TwitterBadges";
-import {BlueWhiteButton, BubbleButton, LinerButton, SystemButton} from "../../../Global/TwitterButton";
-import firebase from "react-native-firebase";
+import {ChatUserListBadge, SimpleUserBadge} from "../../../Global/TwitterBadges";
+import {TopHeader} from "../../CommonPages/TopHeader";
+import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 
 const NewMessageScreen = (props) => {
 
+    let CurrentUser = props.LogedInUserData;
+    const [usersList, setUsersList] = useState([]);
+    const [AllUsers, setAllUsers] = useState([]);
+    const [searchText, setSearchText] = useState('');
+
     useEffect(() => {
         getLatest();
+        props.getChatIDList();
     },[]);
 
+    useEffect(() => {
+        props.getChatIDList();
+    },[props.CurrentChat.channelID]);
+
+    useEffect(() => searchAction(),[searchText]);
+
     const getLatest = () => {
-        const subscriber = firebase.firestore()
-            .collection('users')
-            .where("timestamp",">", Math.floor(Date.now() / 1000))
-            .onSnapshot(documentSnapshot => {
-
-                debugger
-                alert("adw");
-
-                // props.SelectAll('users')
-                //     .then(response => {
-                //         let wtfList = [];
-                //         for(let item of response.data)
-                //         {
-                //             if(!item.followers.includes(this.state.currentUser.id))
-                //             {
-                //                 if(item.id !== this.state.currentUser.id)
-                //                     wtfList.push(item);
-                //             }
-                //         }
-                //
-                //         this.setState({wtfList,refreshLoader:false},() =>  this.getTweetList());
-                //     })
-                //     .catch(error => {
-                //         console.log(error)
-                //     });
-
+        props.SelectAll('users')
+            .then(response => {
+                let finalArray = response.data.filter(item => item.id !== CurrentUser.id);
+                setUsersList(finalArray);
+                setAllUsers(finalArray);
+            })
+            .catch(error => {
+                console.log(error)
             });
-        return () => subscriber();
     };
 
-    // renderUserBadge = ({item,index}) => {
-    //     return (
-    //         <View key={index}>
-    //             <ChatUserListBadge
-    //                 data={item}
-    //                 onPress={() => {
-    //                     this.props.saveCurrentChat(item);
-    //                     this.props.navigation.navigate('PersonalChatScreen');
-    //                 }}
-    //             />
-    //         </View>
-    //     );
-    // };
+    const renderUserBadge = ({item,index}) => {
+        return (
+            <View key={index}>
+                <SimpleUserBadge
+                    data={item}
+                    onPress={() => {
+                        let IDS = props.ChatIDsList.filter(i => i.userID === item.id);
+                        let dataObj = {
+                            userInfo: item,
+                            chatInfo: [],
+                            channelID: IDS.length > 0 ? IDS[0].channelID : null,
+                        };
+                        props.saveCurrentChat(dataObj);
+                        props.navigation.navigate('PersonalChatScreen');
+                    }}
+                />
+            </View>
+        );
+    };
+
+    const searchAction = () => {
+        if(searchText === '')
+        {
+            setUsersList(AllUsers);
+            return;
+        }
+
+        let data = [];
+        usersList.map(i => i.profilename.toLowerCase().includes(searchText.toLowerCase()) && data.push(i))
+        setUsersList(data);
+    };
 
     return(
         <SafeAreaView style={[safearea]}>
             <View style={Styles.mainview}>
-                {/*<FlatList*/}
-                {/*    contentContainerStyle={{flex:1}}*/}
-                {/*    data={this.props.ChatList}*/}
-                {/*    keyExtractor={(item,index) => index.toString()}*/}
-                {/*    renderItem={this.renderUserBadge}*/}
-                {/*/>*/}
+
+                <TopHeader
+                    text={"New Message"}
+                    nav={props.navigation}
+                />
+
+                <View style={{alignItems: 'center',padding: SH(IS_IOS() ? 0.02 : 0.01), flexDirection: 'row', backgroundColor: COLOR.BackGrayColor}}>
+                    <Icon
+                        name={"search1"}
+                        type={"AntDesign"}
+                        color={SlateGray}
+                        size={SW(0.06)}
+                        style={{marginLeft: SW(0.025)}}
+                    />
+                    <TextInput
+                        style={{marginLeft: SW(0.04), fontSize: SW(0.05)}}
+                        placeholder={"Search for people and groups"}
+                        placeholderTextColor={SlateGray}
+                        value={searchText}
+                        onChangeText={text => setSearchText(text)}
+                    />
+                </View>
+
+                <FlatList
+                    contentContainerStyle={{flex:1}}
+                    data={usersList}
+                    keyExtractor={(item,index) => index.toString()}
+                    renderItem={renderUserBadge}
+                />
             </View>
         </SafeAreaView>
     )
@@ -87,26 +121,35 @@ let Styles = StyleSheet.create({
     mainview:{
         flex:1,
         width: swidth,
-        backgroundColor: COLOR.BackGrayColor
     },
 
 });
 
 const mapStateToProps = state => {
     const {
-        ChatList,
+        LogedInUserData
+    } = state.UserReducer;
+
+    const {
+        ChatIDsList,
+        CurrentChat
     } = state.ChatReducer;
+
     return {
-        ChatList
+        LogedInUserData,
+        ChatIDsList,
+        CurrentChat
     };
 };
 
 const mapDispatchToProps = {
-    getChatIDList,
-    getChatUserList,
-    getChatList,
-    saveCurrentChat
+    SelectAll,
+    saveCurrentChat,
+    getChatIDList
 };
 
-export default NewMessageScreen;
+NewMessageScreen.navigationOptions = {
+    headerShown: false,
+};
 
+export default connect(mapStateToProps, mapDispatchToProps)(NewMessageScreen);

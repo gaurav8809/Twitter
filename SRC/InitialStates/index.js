@@ -8,8 +8,7 @@ const ProfileState = {
 };
 
 const ChatState = {
-    ChatIDList: [],
-    ChatUsersList: [],
+    ChatIDsList: [],
     ChatList: [],
     CurrentChat: {},
 };

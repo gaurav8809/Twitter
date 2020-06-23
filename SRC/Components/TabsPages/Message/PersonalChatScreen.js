@@ -7,7 +7,8 @@ import {
     FlatList,
     StyleSheet,
     TextInput,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    KeyboardAvoidingView
 } from 'react-native';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {SlateGray, SystemBlue, MyChatColor, OpChatColor, DarkGray} from '../../../Global/ColorPalate';
@@ -15,7 +16,7 @@ import {useSelector, useDispatch, connect} from 'react-redux';
 import {safearea, swidth, IS_IOS, SHW, SW, SH} from "../../../Global/ScreenSetting";
 import {TopHeader} from "../../CommonPages/TopHeader";
 import {DismissKeyboardView, DynamicBottomBar, DATES, PreviewImageView} from "../../../Global/Helper";
-import {sendMessage, saveCurrentChat} from '../../../Actions/ChatAction';
+import {sendMessage, saveCurrentChat, changeStatus} from '../../../Actions/ChatAction';
 import firebase from "react-native-firebase";
 import TakePhotoPopUp from "../../../Global/TakePhotoPopUp";
 import {UIActivityIndicator} from "react-native-indicators";
@@ -33,6 +34,8 @@ const PersonalChatScreen = (props) => {
     const {CurrentChat} = useSelector(state => state.ChatReducer);
     const [chatText, setChatText] = useState('');
     const [typing, setTyping] = useState(false);
+    const [typeStatus, setTypeStatus] = useState(false);
+    const [opTyping, setOpTyping] = useState(false);
     const [popUp, setPopUp] = useState(false);
     const [gifPopUp, setGifPopUp] = useState(false);
     // const [selectedPhoto, setSelectedPhoto] = useState({
@@ -64,6 +67,58 @@ const PersonalChatScreen = (props) => {
     } = chatDataParam.userInfo;
     let chatArray = chatDataParam.chatInfo;
     let channelID = chatDataParam.channelID;
+
+    useEffect(() => {
+        setTimeout(() => {
+            if(chatListRef) {
+                // chatListRef.current.scrollToOffset({animated: true, offset: 1000})
+            }
+        }, 1);
+        // chatListRef.scrollTo({x:0, y:this.props.defaultValues.scrollY, animated: true});
+        if(channelID !== null)
+        {
+            const subscriber = firebase.firestore()
+                .collection('chats')
+                .doc(CurrentChat.channelID)
+                .onSnapshot(documentSnapshot => {
+                    let messagesArray = documentSnapshot._data.messages;
+                    let dataObj = {
+                        chatInfo: messagesArray.reverse(),
+                        userInfo: chatDataParam.userInfo,
+                        channelID: channelID,
+                    };
+                    dispatch(saveCurrentChat(dataObj))
+                });
+            return () => subscriber();
+        }
+    },[CurrentChat.channelID]);
+
+    useEffect(() => {
+        if(channelID !== null)
+        {
+            let dataObj = ME.id;
+            props.changeStatus(channelID, dataObj, typeStatus)
+                .then(response => {
+
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        }
+    },[typeStatus]);
+
+    useEffect(() => {
+        if(channelID !== null) {
+            const subscriber = firebase.firestore()
+                .collection('chats')
+                .doc(CurrentChat.channelID)
+                .onSnapshot(documentSnapshot => {
+                    debugger
+                    setOpTyping(documentSnapshot._data.typing.includes(id))
+                });
+            return () => subscriber();
+        }
+    },[]);
 
     const DMYFormat = (date) => {
         let f = new Date((typeof date === 'object' ? date.seconds : date) * 1000);
@@ -208,29 +263,55 @@ const PersonalChatScreen = (props) => {
         if(!SELECTED && chatText === '')
             return;
 
-        let dataObj = {
-            messageText: chatText,
-            receiverID: id,
-            senderID: ME.id,
-            timestamp: Math.floor(Date.now() / 1000)
-        };
         const cleanup = () => {
             setSelectedPhoto(null);
             setSelectedGif(null);
             setChatText('');
         };
 
+        let dataObj = {
+            messageText: chatText,
+            receiverID: id,
+            senderID: ME.id,
+            timestamp: Math.floor(Date.now() / 1000)
+        };
+        let selPhoto = selectedPhoto;
+        let selGif = selectedGif;
+        cleanup();
+
+        const callSendMessage = () => {
+            if(channelID !== null) {
+                props.sendMessage(channelID, dataObj);
+            }
+            else
+            {
+                let members = [ME.id, id];
+                props.sendMessage(channelID, dataObj, members)
+                    .then(response => {
+                        debugger
+
+                        // let dataObj = {
+                        //     userInfo: item,
+                        //     chatInfo: [],
+                        //     channelID: IDS.length > 0 ? IDS[0].channelID : null,
+                        // };
+                    })
+                    .catch(error => {
+                        console.log("Send Message Error = ",error)
+                    });
+            }
+        };
+
         if(selectedPhoto !== null)
         {
-            dataObj.chatImage = selectedPhoto.uri;
+            dataObj.chatImage = selPhoto.uri;
             chatArray.push(dataObj);
-            !IS_IOS() ? selectedPhoto.uri = 'file://' + selectedPhoto.path : null;
+            !IS_IOS() ? selPhoto.uri = 'file://' + selPhoto.path : null;
 
-            props.FireBaseStoreData('ChatResources',selectedPhoto)
+            props.FireBaseStoreData('ChatResources',selPhoto)
                 .then(firestoreResponse => {
                     dataObj.chatImage = firestoreResponse.data;
-                    props.sendMessage(channelID, dataObj);
-                    cleanup();
+                    callSendMessage();
                 })
                 .catch(error => {
                     console.log("Firestore Error = ",error)
@@ -238,47 +319,15 @@ const PersonalChatScreen = (props) => {
         }
         else if(selectedGif !== null)
         {
-            dataObj.chatImage = selectedGif.gif.url;
+            dataObj.chatImage = selGif.gif.url;
             chatArray.push(dataObj);
-            dispatch(sendMessage(channelID, dataObj));
-            cleanup();
+            callSendMessage();
         }
         else{
-            debugger
             chatArray.push(dataObj);
-            dispatch(sendMessage(channelID, dataObj));
-            cleanup();
+            callSendMessage();
         }
-
-
-        // props.sendMessage(channelID, dataObj)
-        //     .then(r => {
-        //         alert("Done");
-        //     });
-debugger
     };
-
-    useEffect(() => {
-        setTimeout(() => {
-            if(chatListRef) {
-                chatListRef.current.scrollToEnd({animated: true})
-            }
-        }, 1);
-        // chatListRef.scrollTo({x:0, y:this.props.defaultValues.scrollY, animated: true});
-        const subscriber = firebase.firestore()
-            .collection('chats')
-            .doc(CurrentChat.channelID)
-            .onSnapshot(documentSnapshot => {
-                let messagesArray = documentSnapshot._data.messages;
-                let dataObj = {
-                    chatInfo: messagesArray,
-                    userInfo: chatDataParam.userInfo,
-                    channelID: channelID,
-                };
-                dispatch(saveCurrentChat(dataObj))
-            });
-        return () => subscriber();
-    },[]);
 
     const renderBottomBar = () => {
 
@@ -353,7 +402,7 @@ debugger
                             ]}>
                             <TextInput
                                 onFocus={() => {
-                                    chatListRef.current.scrollToEnd({animated: true});
+                                    // chatListRef.current.scrollToEnd({animated: true});
                                     // chatListRef.current.scrollToItem({ animated: true, viewPosition: 4 });
                                     setTyping(true)
                                 }}
@@ -371,6 +420,12 @@ debugger
                                 multiline
                                 spellCheck
                                 autoCorrect={false}
+                                onKeyPress={({ nativeEvent: { key } }) =>
+                                {
+                                    setTypeStatus(true);
+                                    console.log("Pressed",key)
+                                }}
+                                onEndEditing={() => setTypeStatus(false)}
                                 // onSubmitEditing={() => this.b.current.focus()}
                             />
                         </View>
@@ -416,36 +471,36 @@ debugger
                 text={profilename}
                 image={profileImage}
                 nav={navigation}
-                userName={username}
+                userName={opTyping ? "typing..." : username}
             />
 
             {/*<DismissKeyboardView >*/}
-            {/*    <KeyboardAvoidingView*/}
-            {/*        behavior={IS_IOS() ? "position" : 'padding'}*/}
-            {/*        style={{flex: 1}}*/}
-            {/*        // keyboardVerticalOffset={-150}*/}
-            {/*    >*/}
-            <View style={{flex:1, width: SW(0.94), alignSelf: 'center'}}>
-                <FlatList
-                    // contentContainerStyle={{flex:1,  }}
-                    // style={{flex:1, bottom: typing ? SH(0.25) : 0}}
-                    ref={chatListRef}
-                    data={chatArray}
-                    keyExtractor={(item,index) => index.toString()}
-                    ListHeaderComponent={
-                        <View style={{marginTop: SH(0.02)}} />
-                    }
-                    ListFooterComponent={
-                        <View style={{marginTop: SH(0.02)}} />
-                    }
-                    ItemSeparatorComponent={() =>
-                        <View style={{marginTop: SH(0.02)}} />
-                    }
-                    renderItem={renderChat}
-                    showsVerticalScrollIndicator={false}
-                />
-            </View>
-            {/*</KeyboardAvoidingView>*/}
+            <KeyboardAvoidingView
+                behavior={IS_IOS() ? "padding" : null}
+                style={{flex: 1}}
+                keyboardVerticalOffset={64}
+            >
+                <View style={{flex:1, width: SW(0.94), alignSelf: 'center'}}>
+                    <FlatList
+                        style={{flex:1}}
+                        ref={chatListRef}
+                        data={chatArray}
+                        keyExtractor={(item,index) => index.toString()}
+                        ListHeaderComponent={
+                            <View style={{marginTop: SH(0.02)}} />
+                        }
+                        ListFooterComponent={
+                            <View style={{marginTop: SH(0.02)}} />
+                        }
+                        ItemSeparatorComponent={() =>
+                            <View style={{marginTop: SH(0.02)}} />
+                        }
+                        renderItem={renderChat}
+                        showsVerticalScrollIndicator={false}
+                        inverted={-1}
+                    />
+                </View>
+            </KeyboardAvoidingView>
             {/*</DismissKeyboardView>*/}
 
 
@@ -487,7 +542,8 @@ PersonalChatScreen.navigationOptions = {
 
 const mapDispatchToProps = {
     sendMessage,
-    FireBaseStoreData
+    FireBaseStoreData,
+    changeStatus
 };
 
 export default connect(null, mapDispatchToProps)(PersonalChatScreen);

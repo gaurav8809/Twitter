@@ -4,15 +4,17 @@ import {
     StyleSheet,
     View,
     FlatList,
-    Text
+    Text, Modal
 } from 'react-native';
 import {safearea, swidth, SW, SH, centertext} from '../../../Global/ScreenSetting'
 import {connect} from 'react-redux';
-import {getChatIDList, getChatUserList, getChatList, saveCurrentChat} from '../../../Actions/ChatAction';
+import {getChatList, saveCurrentChat} from '../../../Actions/ChatAction';
 import COLOR, {SlateGray, SystemBlue} from "../../../Global/ColorPalate";
 import {ChatUserListBadge} from "../../../Global/TwitterBadges";
 import {BlueWhiteButton, BubbleButton, LinerButton, SystemButton} from "../../../Global/TwitterButton";
 import firebase from "react-native-firebase";
+import {DefaultIndicator} from "../../../Global/Indicators";
+import {MaterialIndicator} from "react-native-indicators";
 
 const CHAT_LIST = [
     {
@@ -90,9 +92,10 @@ class MessageScreen extends Component{
     constructor(props) {
         super(props);
 
-        this.state = {
-        };
 
+        this.state = {
+            chatLoader: true,
+        };
     }
 
     componentDidMount(){
@@ -103,7 +106,13 @@ class MessageScreen extends Component{
         const subscriber = firebase.firestore()
             .collection('chats')
             .onSnapshot(documentSnapshot => {
-                this.props.getChatList();
+                this.props.getChatList()
+                    .then(res => {
+                        this.setState({chatLoader: false});
+                    })
+                    .catch(err => {
+                        this.setState({chatLoader: false});
+                    });
             });
         return () => subscriber();
     };
@@ -123,41 +132,51 @@ class MessageScreen extends Component{
     };
 
     render(){
+        let STD = this.state;
+        let CHAT_DATA = this.props.ChatList;
         return(
             <SafeAreaView style={[safearea]}>
                 <View style={Styles.mainview}>
-                    <FlatList
-                        contentContainerStyle={{flex:1}}
-                        data={this.props.ChatList}
-                        keyExtractor={(item,index) => index.toString()}
-                        renderItem={this.renderUserBadge}
-                        ListEmptyComponent={
-                            <View style={{
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                // backgroundColor: 'pink',
-                                flex:1,
-                            }}>
-                                <Text style={{textAlign: 'center',fontSize: SW(0.055), fontWeight: 'bold'}}>
-                                    {"Send a message, got a message"}
-                                </Text>
-                                <Text style={{marginTop: SH(0.02),textAlign: 'center',width: SW(0.85), fontSize: SW(0.04), color: COLOR.SlateGray}}>
-                                    {"Direct Messages are private conversations between you and other people on Twitter. Share Tweets, media, and more!"}
-                                </Text>
-                                <SystemButton
-                                    text={"Write a message"}
-                                    styles={{
-                                        button: {
-                                            width: SW(0.4),
-                                            height: SW(0.09),
-                                        },
-                                        text:{fontSize: SW(0.04)}
-                                    }}
-                                    // onPress={}
-                                />
-                            </View>
-                        }
-                    />
+                    {
+                        STD.chatLoader
+                        ?
+                            <DefaultIndicator viewStyle={{marginTop: SH(0.06),backgroundColor: 'pink', flex:0,justifyContent: 'flex-start'}}/>
+                        :
+                            <FlatList
+                                contentContainerStyle={{flex:1}}
+                                data={CHAT_DATA}
+                                keyExtractor={(item,index) => index.toString()}
+                                renderItem={this.renderUserBadge}
+
+                                ListEmptyComponent={
+                                    <View style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        flex:1,
+                                    }}>
+                                        <Text style={{textAlign: 'center',fontSize: SW(0.055), fontWeight: 'bold'}}>
+                                            {"Send a message, got a message"}
+                                        </Text>
+                                        <Text style={{marginTop: SH(0.02),textAlign: 'center',width: SW(0.85), fontSize: SW(0.04), color: COLOR.SlateGray}}>
+                                            {"Direct Messages are private conversations between you and other people on Twitter. Share Tweets, media, and more!"}
+                                        </Text>
+                                        <SystemButton
+                                            text={"Write a message"}
+                                            styles={{
+                                                button: {
+                                                    marginTop: SH(0.03),
+                                                    width: SW(0.4),
+                                                    height: SW(0.09),
+                                                },
+                                                text:{fontSize: SW(0.04)}
+                                            }}
+                                            onPress={() => this.props.navigation.navigate("NewMessageScreen")}
+                                        />
+                                    </View>
+                                }
+                            />
+                    }
+
                     <BubbleButton
                         screen={'CHAT'}
                         IconDetails={{
@@ -195,8 +214,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    getChatIDList,
-    getChatUserList,
     getChatList,
     saveCurrentChat
 };

@@ -6,17 +6,10 @@ export default reducer = (state = ChatState, action) => {
 
     switch (action.type) {
 
-        case TYPE.SAVE_CHAT_ID_LIST:
+        case TYPE.SAVE_CHAT_IDS_LIST:
             return state = {
                 ...state,
-                ChatIDList: action.payload.ChatIDList,
-                ChatUsersList: action.payload.ChatUsersList
-            };
-
-        case TYPE.SAVE_CHAT_USER_LIST:
-            return state = {
-                ...state,
-                ChatUsersList: action.payload.ChatUsersList
+                ChatIDsList: action.payload
             };
 
         case TYPE.SAVE_CHAT_LIST:

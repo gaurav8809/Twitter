@@ -73,9 +73,9 @@ const coreTabNavigator = createBottomTabNavigator({
                 type = 'Octicons';
                 size = swidth * 0.06;
             } else if (routeName === 'SearchScreen') {
-                name = 'search';
-                type = 'Feather';
-                size = swidth * 0.08;
+                name = 'search1';
+                type = 'AntDesign';
+                size = swidth * 0.06;
             } else if (routeName === 'NotificationScreen') {
                 name = 'bell';
                 type = 'Entypo';

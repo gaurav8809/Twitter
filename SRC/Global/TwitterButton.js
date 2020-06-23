@@ -199,7 +199,7 @@ module.extends = {
 let Styles = StyleSheet.create({
 
     sysView:{
-        marginTop: swidth * 0.04,
+        // marginTop: swidth * 0.04,
         alignItems: 'center',
     },
     sysButton:{

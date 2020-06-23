@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert} from 'react-native';
+import {Alert, YellowBox} from 'react-native';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
@@ -13,6 +13,12 @@ import firebase from "react-native-firebase";
 import HELPER from "./SRC/Global/Helper";
 
 // console.disableYellowBox = true;
+
+YellowBox.ignoreWarnings([
+    'Warning: componentWillMount is deprecated',
+    'Warning: componentWillReceiveProps is deprecated',
+    'Module RCTImageLoader requires',
+]);
 
 async function requestUserPermission() {
     const settings = await messaging().requestPermission();
