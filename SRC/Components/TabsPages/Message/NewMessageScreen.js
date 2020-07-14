@@ -22,6 +22,7 @@ const NewMessageScreen = (props) => {
     const [usersList, setUsersList] = useState([]);
     const [AllUsers, setAllUsers] = useState([]);
     const [searchText, setSearchText] = useState('');
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         getLatest();
@@ -40,9 +41,11 @@ const NewMessageScreen = (props) => {
                 let finalArray = response.data.filter(item => item.id !== CurrentUser.id);
                 setUsersList(finalArray);
                 setAllUsers(finalArray);
+                setRefresh(false);
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
+                setRefresh(false);
             });
     };
 
@@ -105,6 +108,11 @@ const NewMessageScreen = (props) => {
                 </View>
 
                 <FlatList
+                    refreshing={refresh}
+                    onRefresh={() => {
+                        setRefresh(true);
+                        getLatest();
+                    }}
                     contentContainerStyle={{flex:1}}
                     data={usersList}
                     keyExtractor={(item,index) => index.toString()}

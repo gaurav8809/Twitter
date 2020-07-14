@@ -60,7 +60,7 @@ const coreTabNavigator = createBottomTabNavigator({
         },
     },
 },{
-    initialRouteName:"MessageScreen",
+    initialRouteName:"HomeScreen",
     defaultNavigationOptions: ({navigation}) => ({
         tabBarIcon: ({ focused}) => {
 

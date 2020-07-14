@@ -1,7 +1,7 @@
 import React from "react";
 import {StyleSheet, Text, View, TouchableOpacity, Image} from "react-native";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
-import {SystemBlue} from "../../Global/ColorPalate";
+import {SlateGray, SystemBlue} from "../../Global/ColorPalate";
 import {swidth, SW, SH} from "../../Global/ScreenSetting";
 import {DynamicTopBar} from "../../Global/Helper";
 import {SlateGrayText} from "../../Global/TwitterText";
@@ -51,12 +51,15 @@ export const TopHeader = (props) => {
                                     </Text>
                                     {
                                         userName &&
-                                        // <Text style={screenText}>
-                                        //     {userName}
-                                        // </Text>
-                                        <SlateGrayText
-                                            text={`${userName}`}
-                                        />
+                                        <Text style={[{
+                                            color: SlateGray,
+                                            fontSize: swidth * 0.040,
+                                        }, props.userText]}>
+                                            {userName}
+                                        </Text>
+                                        // <SlateGrayText
+                                        //     text={`${userName}`}
+                                        // />
                                     }
                                 </View>
                             </View>

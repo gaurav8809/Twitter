@@ -33,7 +33,7 @@ class SearchScreen extends Component{
             <SafeAreaView style={[safearea]}>
                 {/*<AppHeader text={'Search'} navigation={this.props.navigation}/>*/}
                 <View>
-                    <Text>{'Search'}</Text>
+                    <Text>{'Search -> Work in progress'}</Text>
                 </View>
             </SafeAreaView>
         )

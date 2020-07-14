@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import io.invertase.firebase.fiam.ReactNativeFirebaseFiamPackage;
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
+//import io.invertase.firebase.fiam.ReactNativeFirebaseFiamPackage;
 import com.reactnativecommunity.cameraroll.CameraRollPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
@@ -16,9 +16,9 @@ import java.util.List;
 
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
-import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+//import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+//import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -38,8 +38,8 @@ public class MainApplication extends Application implements ReactApplication {
             packages.add(new RNFirebaseAuthPackage());
             packages.add(new RNFirebaseFirestorePackage());
             packages.add(new RNFirebaseStoragePackage());
-            packages.add(new RNFirebaseMessagingPackage());
-            packages.add(new RNFirebaseNotificationsPackage());
+//            packages.add(new RNFirebaseMessagingPackage());
+//            packages.add(new RNFirebaseNotificationsPackage());
 
           return packages;
         }

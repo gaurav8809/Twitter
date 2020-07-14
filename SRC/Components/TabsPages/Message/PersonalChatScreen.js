@@ -472,6 +472,7 @@ const PersonalChatScreen = (props) => {
                 image={profileImage}
                 nav={navigation}
                 userName={opTyping ? "typing..." : username}
+                userText={{color: opTyping ? SystemBlue : SlateGray}}
             />
 
             {/*<DismissKeyboardView >*/}

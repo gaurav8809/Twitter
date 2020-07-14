@@ -484,7 +484,7 @@ class CreateTweetPage extends Component{
                         horizontal={true}
                         style={imageliststyle}
                         data={this.state.photos !== [] && this.state.photos}
-                        keyExtractor={item => item.node.image.filename}
+                        keyExtractor={(item, index) => index.toString()}
                         ListHeaderComponent={() => this.renderTakePhotoView()}
                         ItemSeparatorComponent={() => <View style={{width: swidth * 0.02}}/>}
                         renderItem={({item,index}) => this.renderGalleryPhotos(item,index)}
