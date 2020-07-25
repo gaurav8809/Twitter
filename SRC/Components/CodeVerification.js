@@ -68,12 +68,11 @@ class CodeVerification extends Component {
                             this.setState({
                                 loader: false,
                                 confirmResult: confirmResult,
-                            });
+                            }, () => alert("Verification code successfully sent to your phone"));
 
                         }) // save confirm result to use with the manual verification code)
                         .catch(error => {
-                            this.setLoader(false,alert("Problem occur"));
-
+                            this.setLoader(false,alert("Something went wrong"));
                             console.log('Send SMS data error =' + error);
                         });
 
@@ -92,7 +91,7 @@ class CodeVerification extends Component {
                             this.setLoader(false);
                             if(res.status === 200)
                             {
-                                alert("Verification code has been successfully sent to your mail");
+                                alert("Verification code successfully sent to your mail");
                             }
                         })
                         .catch(err => {
@@ -114,17 +113,18 @@ class CodeVerification extends Component {
         if(GLOBAL.CodeSendMode)
         {
             if (this.state.signupdata.type === 'Phone') {
-                this.state.confirmResult !== null && this.state.code.toString().length === 6 &&
-                this.state.confirmResult.confirm(this.state.code.toString())
-                    .then(confirmResult => {
-                        this.setState({
-                            buttonenable: true,
+                if(this.state.confirmResult !== null && this.state.code.toString().length === 6)
+                {
+                    debugger
+                    this.state.confirmResult.confirm(this.state.code.toString())
+                        .then(confirmResult => {
+                            this.props.navigation.navigate('PasswordSetPage',this.state.signupdata);
+                            return true;
+                        }) // save confirm result to use with the manual verification code)
+                        .catch(error => {
+                            return false;
                         });
-                        return true;
-                    }) // save confirm result to use with the manual verification code)
-                    .catch(error => {
-                        return false;
-                    });
+                }
             }
             else
             {
@@ -180,7 +180,7 @@ class CodeVerification extends Component {
                         <TouchableOpacity onPress={() => this.SendCodeToClient()}>
                             <BlueText
                                 textstyle={{fontSize: swidth * 0.04}}
-                                text={this.state.type === 'Email' ? 'Didn\'t receive email?' : 'Didn\'t receive SMS?'}
+                                text={this.state.signupdata.type === 'Email' ? 'Didn\'t receive email?' : 'Didn\'t receive SMS?'}
                             />
                         </TouchableOpacity>
                     </View>

@@ -72,10 +72,10 @@ export const BlackBigText = (props) => {
     )
 };
 
-export const SlateGrayText = (props, {children}) => {
+export const SlateGrayText = (props) => {
     return(
         <Text style={[Styles.slateGrayText, props.textstyle && props.textstyle]}>
-            {children}
+            {props.text}
         </Text>
     )
 };
@@ -134,7 +134,7 @@ let Styles = StyleSheet.create({
     },
     slateGrayText:{
         color: SlateGray,
-        fontSize: swidth * 0.045,
+        fontSize: swidth * 0.040,
     },
 
 });

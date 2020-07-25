@@ -9,9 +9,9 @@ import React from 'react';
 import {swidth} from '../Global/ScreenSetting';
 import {AntDesign} from './VectorIcons';
 
-export const DefaultIndicator = () => {
+export const DefaultIndicator = (props) => {
     return (
-        <View style={{flex:1, backgroundColor:'rgba(0,0,0,0)'}}>
+        <View style={[{flex:1, backgroundColor:'rgba(0,0,0,0)', justifyContent: 'flex-start'}, props.viewStyle]}>
             <MaterialIndicator color={SystemBlue} size={swidth * 0.04} trackWidth={2}/>
         </View>
     );

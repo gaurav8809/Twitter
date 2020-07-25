@@ -1,6 +1,7 @@
 import firebase from "react-native-firebase";
 import TYPE from '../Reducers/TypeConstants';
 import {UNIQUE} from '../Global/Helper';
+import {GetLoginUserData} from "./UserAction";
 
 const FireRef = firebase.firestore();
 
@@ -34,69 +35,33 @@ export const getChatIDList = () => {
 
         const DBRef = FireRef.collection('chats')
             .where("members", "array-contains", LogedInUserData.id);
-        const UserRef = FireRef.collection('users');
 
         return DBRef.get()
             .then(response => {
 
-                let chatUserIDS = [];
-                let userArray = [];
+                let chatIDsList = [];
                 let dataArray = response._docs;
                 let members = dataArray.map(i => i._data.members);
                 let idList = dataArray.map(i => i.id);
-                members.map(i => i.map(i => i !== LogedInUserData.id && chatUserIDS.push(i)));
+                dataArray.map(d =>
+                {
+                    d._data.members.map(item =>
+                        item !== LogedInUserData.id &&
+                        chatIDsList.push(Object.assign({
+                            channelID: d.id,
+                            userID: item
+                        }))
+                    )
+                });
 
-                return UserRef.get()
-                    .then(response => {
-
-                        chatUserIDS.map(userID => {
-                            response._docs.filter(i => userID === i.id && i._data).map(it =>
-                                userArray.push(Object.assign({
-                                    id: userID,
-                                    ...it._data
-                                }))
-                            );
-                        });
-
-                        // let messageListArray = [];
-
-                        // await idList.map(id => {
-                        //     let reference = FireRef.collection('chats').doc(id).collection('messages')
-                        //         .orderBy("timestamp","desc").limit(1);
-                        //
-                        //     reference.get()
-                        //         .then(response => {
-                        //
-                        //             // let dataArray = response._docs;
-                        //             debugger
-                        //             messageListArray.push(response._docs[0]._data);
-                        //
-                        //         })
-                        // });
-
-                        let PAYLOAD = {
-                            ChatIDList: idList,
-                            ChatUsersList: userArray,
-                        };
-
-                        dispatch({
-                            type: TYPE.SAVE_CHAT_ID_LIST,
-                            payload: PAYLOAD,
-                        });
-
-
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        return Promise.reject({
-                            status: 400,
-                            message: 'Not Got data',
-                            data: error
-                        });
-                    })
+                dispatch({
+                    type: TYPE.SAVE_CHAT_IDS_LIST,
+                    payload: chatIDsList
+                })
 
             })
             .catch(error => {
+                debugger
                     console.log(error);
                     return Promise.reject({
                         status: 400,
@@ -177,7 +142,7 @@ export const getChatList = () => {
                 let chatData = chatRes._docs;
                 let members = chatData.map(i => i._data.members);
                 let idList = chatData.map(i => i.id);
-                let chatUserIDS = members.filter(UNIQUE).filter(item => item !== LogedInUserData.id);
+                // let chatUserIDS = members.filter(UNIQUE).filter(item => item !== LogedInUserData.id);
                 let finalArray = [];
                 // members.map(i => i.map(i => i !== LogedInUserData.id && chatUserIDS.push(i)));
 
@@ -194,7 +159,8 @@ export const getChatList = () => {
                                 });
                                 finalArray.push({
                                     chatInfo: item._data.messages,
-                                    userInfo: userInfo
+                                    userInfo: userInfo,
+                                    channelID: item.id,
                                 })
                             });
                         });
@@ -202,6 +168,11 @@ export const getChatList = () => {
                         dispatch({
                             type: TYPE.SAVE_CHAT_LIST,
                             payload: finalArray,
+                        });
+
+                        return Promise.resolve({
+                            status: 200,
+                            message: 'Successfully Get all data',
                         });
 
                     })
@@ -229,5 +200,93 @@ export const getChatList = () => {
 
 };
 
+export const saveCurrentChat = (data) => {
+
+    return (dispatch, getState) => {
+
+        dispatch({
+            type: TYPE.SAVE_CURRENT_CHAT,
+            payload: data,
+        });
+
+
+    };
+
+};
+
+export const sendMessage = (channelID, dataObj, members) => {
+
+    // alert("In Action ==> Chanel ===>" + channelID);
+
+    return (dispatch, getState) =>
+    {
+        if(channelID !== null)
+        {
+            return FireRef.collection('chats').doc(channelID).update({
+                messages: firebase.firestore.FieldValue.arrayUnion(dataObj)
+            })
+        }
+        else
+        {
+            return FireRef.collection('chats').add({
+                members: members,
+                messages: [dataObj]
+            })
+            .then(response => {
+
+                const {
+                    CurrentChat
+                } = getState().ChatReducer;
+
+                let data = {
+                    ...CurrentChat,
+                    chatInfo: [dataObj],
+                    channelID: response.id,
+                };
+
+                dispatch({
+                    type: TYPE.SAVE_CURRENT_CHAT,
+                    payload: data,
+                });
+
+                return Promise.resolve({
+                    status: 200,
+                    message: "Message sent",
+                });
+
+            })
+            .catch(error => {
+                console.log(error);
+                return Promise.reject({
+                    status: 400,
+                    message: "Message not sent",
+                    data: error
+                });
+            })
+        }
+    };
+
+};
+
+export const changeStatus = (doc, dataObj, status) => {
+
+    return (dispatch, getState) => {
+
+        return FireRef.collection('chats').doc(doc).update({
+            typing: status ?
+                firebase.firestore.FieldValue.arrayUnion(dataObj)
+                :
+                firebase.firestore.FieldValue.arrayRemove(dataObj)
+
+        });
+
+        // dispatch({
+        //     type: TYPE.SAVE_CURRENT_CHAT,
+        //     payload: data,
+        // });
+
+    };
+
+};
 
 

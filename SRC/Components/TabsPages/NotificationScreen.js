@@ -31,7 +31,7 @@ class NotificationScreen extends Component{
         return(
             <SafeAreaView style={[safearea]}>
                 <View style={{...mainview}}>
-
+                    <Text>{'Notification -> Work in progress'}</Text>
                 </View>
             </SafeAreaView>
         )

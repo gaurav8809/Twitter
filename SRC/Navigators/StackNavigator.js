@@ -2,6 +2,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import SearchScreen from '../Components/TabsPages/SearchScreen';
 import NotificationScreen from '../Components/TabsPages/NotificationScreen';
 import MessageScreen from '../Components/TabsPages/Message/MessageScreen';
+import NewMessageScreen from '../Components/TabsPages/Message/NewMessageScreen';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {swidth} from '../Global/ScreenSetting';
@@ -9,6 +10,7 @@ import {SystemBlue} from '../Global/ColorPalate';
 import {createStackNavigator} from 'react-navigation-stack';
 import {AppHeader} from '../Global/AppHeader';
 import HomeScreen from '../Components/TabsPages/HomeScreen';
+import PersonalChatScreen from '../Components/TabsPages/Message/PersonalChatScreen';
 import React from 'react';
 import CreateTweetPage from "../Components/CreateTweetPage";
 import ProfilePage from '../Components/CommonPages/ProfilePage';
@@ -58,7 +60,7 @@ const coreTabNavigator = createBottomTabNavigator({
         },
     },
 },{
-    initialRouteName:"MessageScreen",
+    initialRouteName:"HomeScreen",
     defaultNavigationOptions: ({navigation}) => ({
         tabBarIcon: ({ focused}) => {
 
@@ -71,9 +73,9 @@ const coreTabNavigator = createBottomTabNavigator({
                 type = 'Octicons';
                 size = swidth * 0.06;
             } else if (routeName === 'SearchScreen') {
-                name = 'search';
-                type = 'Feather';
-                size = swidth * 0.08;
+                name = 'search1';
+                type = 'AntDesign';
+                size = swidth * 0.06;
             } else if (routeName === 'NotificationScreen') {
                 name = 'bell';
                 type = 'Entypo';
@@ -106,7 +108,9 @@ const StackNav = createStackNavigator({
         ProfilePage,
         FollowingListPage,
         FollowersListPage,
-        EditProfilePage
+        EditProfilePage,
+        PersonalChatScreen,
+        NewMessageScreen
     },
     {
         defaultNavigationOptions:({navigation}) => ({

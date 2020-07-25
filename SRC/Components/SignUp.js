@@ -240,7 +240,7 @@ class SignUp extends Component{
                                 {
                                     this.state.poecorrectsign &&
                                     <View style={[Styles.correctsigncircle]}>
-                                        <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.07}/>
+                                        <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.05}/>
                                     </View>
                                 }
 

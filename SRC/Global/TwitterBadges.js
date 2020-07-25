@@ -1,9 +1,8 @@
 import {Animated, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState,} from 'react';
-import {centertext, swidth} from './ScreenSetting';
+import {centertext, swidth, SH, SW} from './ScreenSetting';
 import {LikeRed, SystemBlue} from './ColorPalate';
 import {BlueWhiteButton} from './TwitterButton';
-import {SlateGrayText} from './TwitterText';
 import {UIActivityIndicator} from 'react-native-indicators';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {OfficialSymbol, DMYFormat} from '../Global/Helper';
@@ -345,7 +344,11 @@ export const ChatUserListBadge = (props) => {
     const [imageLoader,setimageLoader] = useState(false);
 
     return(
-        <TouchableOpacity style={ChatStyle.OuterView} activeOpacity={1}>
+        <TouchableOpacity
+            style={ChatStyle.OuterView}
+            activeOpacity={1}
+            onPress={props.onPress}
+        >
             <View style={ChatStyle.pimageview}>
                 <TouchableOpacity
                     style={{justifyContent: 'center'}}
@@ -387,18 +390,81 @@ export const ChatUserListBadge = (props) => {
                             {` ${DMYFormat(timestamp)}`}
                         </Text>
                     </View>
-            </View>
+                </View>
                 <View style={ChatStyle.messageTextView}>
                     <Text style={ChatStyle.messageText}>
-                        {/*<SlateGrayText textstyle={ChatStyle.messageText}>*/}
                         {
-                            messageText && messageText.length > 35
-                                ? messageText.substr(0,35) + "..."
-                                : messageText
+                            messageText ?
+                                (
+                                    messageText.length > 35
+                                    ? messageText.substr(0,35) + "..."
+                                    : messageText
+                                )
+                                :
+                                (
+                                    senderID === id
+                                        ? `Sent you a photo`
+                                        : 'You sent a photo'
+                                )
                         }
-                        {/*</SlateGrayText>*/}
                     </Text>
                 </View>
+            </View>
+        </TouchableOpacity>
+    )
+};
+
+export const SimpleUserBadge = (props) => {
+
+    let {
+        id,
+        profileImage,
+        profilename,
+        username,
+        official,
+    } = props.data;
+
+    const [imageLoader,setimageLoader] = useState(false);
+
+    return(
+        <TouchableOpacity
+            style={ChatStyle.OuterView}
+            activeOpacity={1}
+            onPress={props.onPress}
+        >
+            <View style={ChatStyle.pimageview}>
+                <TouchableOpacity
+                    style={{justifyContent: 'center'}}
+                    // onPress={() => props.imagePress(imageurl)}
+                >
+                    {
+                        imageLoader &&
+                        <UIActivityIndicator
+                            color={'white'}
+                            size={swidth * 0.04}
+                            style={{position: 'absolute',height: swidth * 0.135,
+                                width : swidth * 0.135, backgroundColor:'lightgray', borderRadius: 100}}
+                        />
+                    }
+                    <Image
+                        source={ profileImage ? {uri: profileImage} : require('../Assets/Images/usergray.png')}
+                        style={[ChatStyle.profileimage]}
+                        onLoadStart={() => setimageLoader(true)}
+                        onLoadEnd={() => setimageLoader(false)}
+                    />
+                </TouchableOpacity>
+            </View>
+            <View style={ChatStyle.detailsview}>
+                <Text style={ChatStyle.profilenametext}>
+                    {`${profilename} `}
+                    {
+                        official &&
+                        <OfficialSymbol/>
+                    }
+                </Text>
+                <Text style={[ChatStyle.usernametext, {paddingVertical: SH(0.005)}]}>
+                    {username}
+                </Text>
             </View>
         </TouchableOpacity>
     )
@@ -536,10 +602,9 @@ let ChatStyle = StyleSheet.create({
     pimageview:{
         flex:1,
         alignSelf:'flex-start'
-        // backgroundColor: 'pink'
     },
     detailsview:{
-        flex:4.5
+        flex:4.5,
     },
     profileimage:{
         height: swidth * 0.135,

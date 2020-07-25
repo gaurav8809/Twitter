@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
     Keyboard,
@@ -8,12 +8,14 @@ import {
     Image,
     StyleSheet,
     Modal,
-    Platform
+    Platform,
+    YellowBox
 } from 'react-native';
 import COLOR, {SystemBlue} from "./ColorPalate";
 import {sheight, swidth, RHW, centertext} from "./ScreenSetting";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import ImageZoom from 'react-native-image-pan-zoom';
+import ImagePicker from "react-native-image-picker";
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -55,9 +57,7 @@ const AsyncRemove = async (key) => {
 };
 
 const IS_IOS = () => {
-
     return Platform.OS === 'ios';
-
 };
 
 const parseDate = (date) => {
@@ -73,12 +73,23 @@ const parseDate = (date) => {
 };
 
 const DMYFormat = (date) => {
-    let f = new Date(date.seconds * 1000);
+    let f = new Date((typeof date === 'object' ? date.seconds : date) * 1000);
     return `${f.getDate()} ${shortMonths[f.getMonth()]} ${f.getFullYear() % 100}`
 };
 
 const UNIQUE = (value, index, self) => {
     return self.indexOf(value) === index;
+};
+
+const DATES = (date) => {
+    let today = new Date();
+    var yDate = new Date();
+    yDate.setDate(yDate.getDate() - 1);
+
+    return {
+        TODAY: (date.toDateString() === today.toDateString()),
+        YESTERDAY: (yDate.toDateString() === date.toDateString()),
+    }
 };
 
 export const DismissKeyboardView = ({ children , actionCallback}) => (
@@ -90,8 +101,8 @@ export const DismissKeyboardView = ({ children , actionCallback}) => (
     </TouchableWithoutFeedback>
 );
 
-export const DynamicBottomBar = ({ children }) => (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null}  >
+export const DynamicBottomBar = ({props,  children}) => (
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} {...props} >
         {children}
     </KeyboardAvoidingView>
 );
@@ -106,15 +117,7 @@ export const OfficialSymbol = (props) => (
 );
 
 export const DynamicTopBar = ({ children }) => (
-    <View style={{
-        height: swidth * 0.12,
-        width: swidth,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        borderBottomWidth: 1.2,
-        borderColor: 'lightgray',
-        alignItems: 'center',
-    }}>
+    <View style={[Styles.dynamicTopBar]}>
         {children}
     </View>
 );
@@ -149,6 +152,14 @@ export const PreviewImageView = (props) => {
         backPress,
         PreviewImage
     } = props;
+
+    useEffect(() => {
+        YellowBox.ignoreWarnings([
+            'Warning: componentWillMount is deprecated',
+            'Warning: componentWillReceiveProps is deprecated',
+            'Module RCTImageLoader requires',
+        ]);
+    },[]);
 
     return (
         <Modal
@@ -230,7 +241,15 @@ let Styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.65)',
         ...centertext,
     },
-
+    dynamicTopBar:{
+        height: swidth * 0.15,
+        width: swidth,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderBottomWidth: 1.2,
+        borderColor: 'lightgray',
+        alignItems: 'center',
+    },
 });
 
 
@@ -243,6 +262,7 @@ module.exports = {
     parseDate,
     UNIQUE,
     DMYFormat,
+    DATES,
     DismissKeyboardView,
     DynamicBottomBar,
     OfficialSymbol,

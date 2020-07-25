@@ -72,7 +72,6 @@ class CreateTweetPage extends Component{
     };
 
     getPhotos = async () => {
-
         let flag = false;
         if(Platform.OS === 'android')
         {
@@ -284,13 +283,14 @@ class CreateTweetPage extends Component{
             imagePath: STD.selectdGif !== null && STD.selectdGif.gif.url
         };
 
+        debugger
+
         this.setLoader(true);
         this.props.PostTweet('tweets', dataObj)
             .then(tweetResponse => {
 
                 if(STD.selectedPhoto !== null)
                 {
-                    debugger
                     console.log("There is photo");
                     this.props.FireBaseStoreData('TweetResources',STD.selectedPhoto)
                         .then(firestoreResponse => {
@@ -484,7 +484,7 @@ class CreateTweetPage extends Component{
                         horizontal={true}
                         style={imageliststyle}
                         data={this.state.photos !== [] && this.state.photos}
-                        keyExtractor={item => item.node.image.filename}
+                        keyExtractor={(item, index) => index.toString()}
                         ListHeaderComponent={() => this.renderTakePhotoView()}
                         ItemSeparatorComponent={() => <View style={{width: swidth * 0.02}}/>}
                         renderItem={({item,index}) => this.renderGalleryPhotos(item,index)}
@@ -493,7 +493,7 @@ class CreateTweetPage extends Component{
                 }
 
                 <DynamicBottomBar>
-                    <View style={[Styles.bottombarview,  ]}>
+                    <View style={[Styles.bottombarview,]}>
                         <View style={bottomOptionView}>
                             <Icon
                                 name={"photo"}

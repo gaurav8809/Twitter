@@ -171,8 +171,6 @@ export const UpdateWhere = (collection,doc,dataObj) => {
         return DBRef.update(dataObj)
             .then(response => {
 
-
-                debugger
                 console.log(response);
                 return Promise.resolve({
                     status: 200,
@@ -198,7 +196,6 @@ export const SelectAll = (collection) => {
     const DBRef = firebase.firestore().collection(collection);
 
     return (dispatch,getState) => {
-
         return DBRef.get()
             .then(response => {
                 // console.log("Response==========================");
