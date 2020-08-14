@@ -11,7 +11,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <Firebase.h>
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #if RCT_DEV
 #import <React/RCTDevLoadingView.h>
 #endif

@@ -10,5 +10,6 @@ module.exports = {
     // MyChatColor: 'rgb(29,161,242)',
     OpChatColor: '#E1E8ED',
     DarkGray: '#657786',
-    TransColor
+    TransColor,
+    FB_BLUE: '#3b5998',
 };

@@ -204,6 +204,9 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:2.0.0'
     implementation 'com.facebook.fresco:animated-gif:2.0.0'
 
+    //Facebook Login
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Twitter by Gaurav</string>
     <string name="SystemBlue">#00acee</string>
+    <string name="facebook_app_id">3341166209238836</string>
 </resources>
