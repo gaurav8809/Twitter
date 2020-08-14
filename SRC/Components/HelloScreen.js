@@ -13,37 +13,48 @@ import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue, FB_BLUE} from '../Global/ColorPalate'
 import {SystemButton} from '../Global/TwitterButton'
 import {safearea,mainview} from '../Global/ScreenSetting';
-import { LoginButton, LoginManager, AccessToken } from 'react-native-fbsdk';
+import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 
 class HelloScreen extends Component{
 
     constructor(props) {
         super(props);
-
-
     }
 
     loginWithFacebook = () => {
         LoginManager.logInWithPermissions(['public_profile']).then(
             function(result) {
-                debugger
                 if (result.isCancelled) {
-                    alert('Login was cancelled');
                 } else {
-                    // alert('Login was successful with permissions: '
-                    //     + result.grantedPermissions.toString());
-                    // debugger
                     AccessToken.getCurrentAccessToken().then(
                         (data) => {
-                            debugger
                             console.log(data.accessToken.toString())
+                            const infoRequest = new GraphRequest(
+                                '/me',
+                                {
+                                    accessToken: data.accessToken.toString(),
+                                    parameters: {
+                                        fields: {string: 'email,name,first_name,middle_name,last_name'}
+                                    }
+                                },
+                                (error, res) => {
+                                    if(error)
+                                    {
+                                        alert("Something went wrong!!");
+                                        return;
+                                    }
+                                    alert("Successfully LoggedIn")
+                                }
+                            );
+
+                            // Start the graph request.
+                            new GraphRequestManager().addRequest(infoRequest).start()
                         }
                     )
                 }
             },
             (error) => {
-                debugger
                 alert('Login failed with error: ' + error);
             }
         );
