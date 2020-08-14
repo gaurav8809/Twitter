@@ -252,6 +252,5 @@ const mapDispatchToProps = {
     UpdateWhere
 };
 
-// export default CodeVerification;
 export default connect(null, mapDispatchToProps)(InterestSetPage);
 

@@ -1,23 +1,17 @@
 import {
-    BallIndicator,
-    BarIndicator,
     DotIndicator,
     MaterialIndicator,
-    PacmanIndicator,
-    PulseIndicator,
-    SkypeIndicator,
     UIActivityIndicator,
-    WaveIndicator,
 } from 'react-native-indicators';
 import {SystemBlue} from './ColorPalate';
-import {View,Image,Text} from 'react-native';
+import {View, Text} from 'react-native';
 import React from 'react';
-import {swidth,sheight,centertext} from '../Global/ScreenSetting';
+import {swidth} from '../Global/ScreenSetting';
 import {AntDesign} from './VectorIcons';
 
-export const DefaultIndicator = () => {
+export const DefaultIndicator = (props) => {
     return (
-        <View style={{flex:1, backgroundColor:'rgba(0,0,0,0)'}}>
+        <View style={[{flex:1, backgroundColor:'rgba(0,0,0,0)', justifyContent: 'flex-start'}, props.viewStyle]}>
             <MaterialIndicator color={SystemBlue} size={swidth * 0.04} trackWidth={2}/>
         </View>
     );
@@ -26,8 +20,6 @@ export const DefaultIndicator = () => {
 export const TwitterCircleIndicator = () => {
     return (
         <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-            {/*<Image source={require('../Assets/Images/TwitterBlueLogo.png')} style={{height: swidth * 0.2, width: swidth * 0.2}}/>*/}
-
             <View style={{ position:'absolute', alignItems:'center'}}>
                 <MaterialIndicator color={SystemBlue} size={swidth * 0.2} trackWidth={3}/>
                 <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.1} style={{position:'absolute',marginTop: swidth * 0.055}}/>
@@ -85,12 +77,10 @@ export const IOSIndicator = (props) => {
 export const SideLoader = (props) => {
     return (
         <View style={[{flex:1, backgroundColor:'rgb(0,0,0,0)'}, props.viewStyle]} >
-            {/*<View style={{}}>*/}
-                <UIActivityIndicator
-                    color={SystemBlue}
-                    size={swidth * 0.05}
-                />
-            {/*</View>*/}
+            <UIActivityIndicator
+                color={SystemBlue}
+                size={swidth * 0.05}
+            />
         </View>
     );
 };
@@ -98,12 +88,10 @@ export const SideLoader = (props) => {
 export const WaveLoader = (props) => {
     return (
         <View style={[{flex:1, backgroundColor:'rgb(0,0,0,0)'}, props.viewStyle]} >
-            {/*<View style={{}}>*/}
             <DotIndicator
                 color={SystemBlue}
                 size={swidth * 0.01}
             />
-            {/*</View>*/}
         </View>
     );
 };

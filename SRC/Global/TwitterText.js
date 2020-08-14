@@ -1,7 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState,useEffect} from 'react';
 import {centertext, swidth} from './ScreenSetting';
-import {SystemBlue} from './ColorPalate';
+import {SystemBlue, SlateGray} from './ColorPalate';
 
 
 export const TextWithLink = (props) => {
@@ -72,10 +72,19 @@ export const BlackBigText = (props) => {
     )
 };
 
+export const SlateGrayText = (props) => {
+    return(
+        <Text style={[Styles.slateGrayText, props.textstyle && props.textstyle]}>
+            {props.text}
+        </Text>
+    )
+};
+
 module.extends = {
     BlueText,
     BlackBigText,
-    GrayText
+    GrayText,
+    SlateGrayText
 };
 
 let Styles = StyleSheet.create({
@@ -122,6 +131,10 @@ let Styles = StyleSheet.create({
     bluetest:{
         color:SystemBlue,
         fontSize: swidth * 0.045,
+    },
+    slateGrayText:{
+        color: SlateGray,
+        fontSize: swidth * 0.040,
     },
 
 });

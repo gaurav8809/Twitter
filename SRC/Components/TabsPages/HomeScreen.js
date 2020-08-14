@@ -8,16 +8,12 @@ import {
     Modal,
     Image
 } from 'react-native';
-import GLOBAL from '../../Global/Initialization';
-import {safearea, mainview, swidth, sheight} from '../../Global/ScreenSetting';
+import {safearea, mainview, swidth} from '../../Global/ScreenSetting';
 import {connect} from 'react-redux';
-import AppHeader from '../../Global/AppHeader';
-import COLOR, {SystemBlue} from '../../Global/ColorPalate';
-import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
-import {BlackBigText, BlueText} from '../../Global/TwitterText';
+import COLOR from '../../Global/ColorPalate';
+import {BlueText} from '../../Global/TwitterText';
 import {ProfileInfoBadge,TweetBadge} from '../../Global/TwitterBadges';
 import HELPER, {PreviewImageView} from '../../Global/Helper';
-import {NavigationActions, StackActions} from 'react-navigation';
 import {
     GetLoginUserData,
     FollowUser,
@@ -28,30 +24,6 @@ import {GetTweets} from '../../Actions/GeneralAction';
 import {SelectAll} from '../../Actions/FireBaseDBAction';
 import {BubbleButton} from '../../Global/TwitterButton';
 import {IOSIndicator} from "../../Global/Indicators";
-
-const MENULIST = [
-    {
-        profileImage:'https://pbs.twimg.com/profile_images/1166471091663122433/5ULjGFJS_400x400.jpg',
-        text:'Profile',
-        username:'@iHrithik',
-        profilename:'Hrithik Roshan',
-        bioDetails:'Man on mission- to live the best life possible come what may.',
-    },
-    {
-        text:'Profile',
-        profileImage:'https://pbs.twimg.com/profile_images/1134082549041393672/QbihPzrL_400x400.png',
-        username:'@narendramodi',
-        profilename:'Narendra Modi',
-        bioDetails:'Prime Minister of India',
-    },
-    {
-        profileImage:'https://pbs.twimg.com/profile_images/418848443881119744/uV7dEImQ_400x400.png',
-        text:'Profile',
-        username:'@pinkvilla',
-        profilename:'Pinkvilla',
-        bioDetails:'Your daily dose of Bollywood gossip and fashion. Instagram : https://Instagram.com/pinkvilla YouTube: https://youtube.com/pinkvilla',
-    },
-];
 
 class HomeScreen extends Component{
 
@@ -124,7 +96,6 @@ class HomeScreen extends Component{
     getWhoToFollowList = () => {
         this.props.SelectAll('users')
             .then(response => {
-
                 let wtfList = [];
                 for(let item of response.data)
                 {
@@ -135,7 +106,6 @@ class HomeScreen extends Component{
                     }
                 }
                 this.setState({wtfList,refreshLoader:false},() =>  this.getTweetList());
-
             })
             .catch(error => {
                 console.log(error)
@@ -144,17 +114,13 @@ class HomeScreen extends Component{
     };
 
     getTweetList = () => {
-
         let STD = this.state;
-
         this.props.GetTweets('tweets', STD.currentUser)
             .then(response => {
-
                 this.setState({
                     refreshLoader:false,
                     tweetList: response.data
                 });
-
             })
             .catch(error => {
                 console.log(error)
@@ -162,31 +128,20 @@ class HomeScreen extends Component{
     };
 
     followButtonPress = (item) => {
-
-        // alert(item.id + " / " + item.username);
-
         let Obj = {
             UserId: this.state.currentUser.id,
             Username: this.state.currentUser.username,
             OpUserId: item.id,
             OpUsername: item.username,
         };
-
-        // let final = this.state.currentUser;
-        // debugger
-        // final['following'].push(item.username);
 
         this.props.FollowUser('users', Obj, this.state.currentUser)
             .catch(error => {
                 console.log(error)
             });
-
     };
 
     unfollowButtonPress = (item) => {
-
-        // alert(item.id + " / " + item.username);
-
         let Obj = {
             UserId: this.state.currentUser.id,
             Username: this.state.currentUser.username,
@@ -194,26 +149,13 @@ class HomeScreen extends Component{
             OpUsername: item.username,
         };
 
-        // let final = this.state.currentUser;
-        // debugger
-        // final['following'].push(item.username);
-
         this.props.UnFollowUser('users', Obj, this.state.currentUser)
-            .then(response => {
-
-            })
             .catch(error => {
                 console.log(error)
             });
-
     };
 
     renderWhoToFollowList = (item,index) => {
-
-        let {
-            wholabelcontainer,
-            wholabeltext
-        } = Styles;
 
         return (
             <View key={index}>
@@ -240,15 +182,12 @@ class HomeScreen extends Component{
                     imagePress={() => this.props.navigation.navigate('ProfilePage',{
                         NavUser: item
                     })}
-                    // imagePress={(url) => this.openImage(url)}
-                    // BtnPress={(flag) => this.followButtonPress(item)}
                 />
             </View>
         );
     };
 
     openImage = (url) => {
-
         Image.getSize(url, (width, height) => {
             this.setState({
                 preview: true,
@@ -259,8 +198,6 @@ class HomeScreen extends Component{
                 }
             })
         });
-
-
     };
 
     LikePress = (flag, item) => {
@@ -331,7 +268,6 @@ class HomeScreen extends Component{
         } = this.state;
         return(
             <SafeAreaView style={[safearea]}>
-                {/*<AppHeader navigation={this.props.navigation}/>*/}
                 <View style={{...Styles.mainview}}>
                     <FlatList
                         ListHeaderComponent={() => this.WTFFlatList()}
@@ -343,6 +279,7 @@ class HomeScreen extends Component{
                     />
 
                     <BubbleButton
+                        screen={'HOME'}
                         IconDetails={{
                                 type: 'MaterialCommunityIcons',
                                 name: 'feather',
@@ -397,7 +334,6 @@ let Styles = StyleSheet.create({
     pImaheView:{
         flex:1,
         backgroundColor: 'white',
-        // alignItems: 'center',
         justifyContent: 'center'
     },
 
@@ -424,6 +360,5 @@ const mapDispatchToProps = {
     LikeUnlikeTweet
 };
 
-// export default CodeVerification;
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 

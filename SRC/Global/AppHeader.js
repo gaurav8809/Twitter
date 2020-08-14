@@ -1,13 +1,12 @@
-import React, {Component, useEffect, useState} from 'react';
-import {Image, SafeAreaView, Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, SafeAreaView, View, TouchableOpacity, StyleSheet} from 'react-native';
 import {swidth} from './ScreenSetting';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
-import {SystemBlue, SlateGray} from './ColorPalate';
-import {UIActivityIndicator} from 'react-native-indicators';
-import {GetLoginUserData, GetUserInfo} from '../Actions/UserAction';
-import {connect, useSelector, useDispatch} from 'react-redux';
+import {SystemBlue} from './ColorPalate';
+import {GetLoginUserData} from '../Actions/UserAction';
+import {useSelector, useDispatch} from 'react-redux';
 import {AntDesign} from './VectorIcons';
-import {NavigationActions, StackActions, withNavigation} from 'react-navigation';
+import {NavigationActions, StackActions} from 'react-navigation';
 import {ImageLoaderIndicator} from './Indicators';
 import { EventRegister } from 'react-native-event-listeners'
 import HELPER from "./Helper";
@@ -21,10 +20,8 @@ export const AppHeader = (props) => {
     } = props;
 
     const LogedInUserData = useSelector(state => state.UserReducer.LogedInUserData);
-
     const [LogedInUser, setLogedInUserData] = useState(LogedInUserData);
     const [imageLoader, setImageLoader] = useState(false);
-
 
     useEffect(() => {
         HELPER.AsyncFetch('AsyncLogedInUserData')
@@ -81,9 +78,6 @@ export const AppHeader = (props) => {
                         EventRegister.emit('UpdateUserListener');
                         navigation.openDrawer();
                     }} >
-
-                        {/*<Image source={require('../Assets/Images/user.png')} style={{height: swidth * 0.08, width : swidth * 0.08 }}/>*/}
-
                         <View style={{justifyContent: 'center'}}>
                             {
                                 imageLoader &&
@@ -109,15 +103,13 @@ export const AppHeader = (props) => {
                     <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>
                 </View>
                 <View style={{flex:1, marginRight:swidth * 0.03}}>
-                    {/*<Image source={require('../Assets/Images/MagicBlue.png')}*/}
-                    {/*       style={{height: swidth * 0.06, width: swidth * 0.06, alignSelf:'flex-end'}}/>*/}
-                           <Icon name={'react'}
-                                 type={'MaterialCommunityIcons'}
-                                 color={SystemBlue}
-                                 size={swidth * 0.06}
-                                 style={{alignSelf:'flex-end'}}
-                                 onPress={() => alert("Work in progress")}
-                           />
+                   <Icon name={'react'}
+                         type={'MaterialCommunityIcons'}
+                         color={SystemBlue}
+                         size={swidth * 0.06}
+                         style={{alignSelf:'flex-end'}}
+                         onPress={() => alert("Work in progress")}
+                   />
                 </View>
             </View>
         </SafeAreaView>
@@ -130,10 +122,7 @@ const Styles = StyleSheet.create({
         height: swidth * 0.09,
         width: swidth * 0.09,
         borderRadius: 100,
-        // backgroundColor: SlateGray
     },
 });
 
-
-// export default CodeVerification;
 export default AppHeader;

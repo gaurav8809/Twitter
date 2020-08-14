@@ -1,42 +1,45 @@
 import React, {Component} from 'react';
-import {
-    Alert
-} from 'react-native';
+import {Alert, YellowBox} from 'react-native';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import SplashScreen from './SRC/Global/SplashScreen';
-import HelloScreen from './SRC/Components/HelloScreen';
 import {persistStore, persistReducer} from 'redux-persist';
 import RootNavigator from './SRC/Navigators/RootNavigator';
 import {PersistGate} from 'redux-persist/integration/react';
 import AppReducer from './SRC/Reducers';
 import storage from '@react-native-community/async-storage';
-// import inAppMessaging from '@react-native-firebase/in-app-messaging';
-import messaging from '@react-native-firebase/messaging';
+// import messaging from '@react-native-firebase/messaging';
 import firebase from "react-native-firebase";
 import HELPER from "./SRC/Global/Helper";
 
-async function requestUserPermission() {
-    const settings = await messaging().requestPermission();
+// console.disableYellowBox = true;
 
-    if (settings) {
-        console.log('Permission settings:', settings);
-    }
-}
+YellowBox.ignoreWarnings([
+    'Warning: componentWillMount is deprecated',
+    'Warning: componentWillReceiveProps is deprecated',
+    'Module RCTImageLoader requires',
+]);
 
-async function checkApplicationPermission() {
-    const authorizationStatus = await messaging().requestPermission();
-
-    if (authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED) {
-        console.log('User has notification permissions enabled.');
-    } else if (authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL) {
-        console.log('User has provisional notification permissions.');
-    } else {
-        console.log('User has notification permissions disabled');
-    }
-}
-
+// async function requestUserPermission() {
+//     const settings = await messaging().requestPermission();
+//
+//     if (settings) {
+//         console.log('Permission settings:', settings);
+//     }
+// }
+//
+// async function checkApplicationPermission() {
+//     const authorizationStatus = await messaging().requestPermission();
+//
+//     if (authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED) {
+//         console.log('User has notification permissions enabled.');
+//     } else if (authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL) {
+//         console.log('User has provisional notification permissions.');
+//     } else {
+//         console.log('User has notification permissions disabled');
+//     }
+// }
+//
 const persistConfig = {
   key: 'root',
   storage,
@@ -63,7 +66,6 @@ class App extends Component {
     constructor(props) {
         super(props);
         // checkApplicationPermission();
-
         // requestUserPermission();
         // messaging().onNotificationOpenedApp(remoteMessage => {
         //     console.log(
@@ -75,17 +77,9 @@ class App extends Component {
     }
 
     componentDidMount(){
-        this.getDeviceTocken();
-        this.checkMessage();
+        // this.getDeviceTocken();
+        // this.checkMessage();
         // this.checkNotification();
-        messaging().onNotificationOpenedApp(remoteMessage => {
-            debugger
-            console.log(
-                'Notification caused app to open from background state:',
-                remoteMessage.notification,
-            );
-            // navigation.navigate(remoteMessage.data.type);
-        });
     }
 
     getDeviceTocken = async () => {
@@ -108,7 +102,6 @@ class App extends Component {
                     });
             })
             .catch(error => {
-                debugger
                 console.log(error);
             });
 
@@ -120,7 +113,6 @@ class App extends Component {
 
     checkMessage = () => {
         messaging().onMessage(async remoteMessage => {
-            debugger
             doOnMessage(remoteMessage)
         });
 
@@ -147,10 +139,7 @@ class App extends Component {
         //     debugger
         //     // this.showNotification(title, body);
         // });
-
-        debugger
         messaging().onNotificationOpenedApp(remoteMessage => {
-            debugger
             console.log(
                 'Notification caused app to open from background state:',
                 remoteMessage.notification,
@@ -161,7 +150,6 @@ class App extends Component {
         messaging()
             .getInitialNotification()
             .then(remoteMessage => {
-                debugger
                 if (remoteMessage) {
                     console.log(
                         'Notification caused app to open from quit state:',
@@ -169,7 +157,7 @@ class App extends Component {
                     );
                     setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
                 }
-                setLoading(false);
+                // setLoading(false);
             });
     };
 

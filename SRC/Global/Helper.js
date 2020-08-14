@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
     Keyboard,
@@ -8,18 +8,19 @@ import {
     Image,
     StyleSheet,
     Modal,
-    Platform
+    Platform,
+    YellowBox
 } from 'react-native';
 import COLOR, {SystemBlue} from "./ColorPalate";
-import {SW, SH, sheight, swidth, RHW, SHW, NHW, TransIT, centertext} from "./ScreenSetting";
+import {sheight, swidth, RHW, centertext} from "./ScreenSetting";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import ImageZoom from 'react-native-image-pan-zoom';
+import ImagePicker from "react-native-image-picker";
 
 const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 const setLoader = (flag) => {
-    // state.setState({
-    //     loader: flag
-    // });
     const [loader, set] = useState(false);
     set(flag);
 
@@ -30,7 +31,6 @@ const AsyncStore = async (key,data) => {
         let dataObj = JSON.stringify(data);
         await AsyncStorage.setItem(key, dataObj);
     } catch (e) {
-        // saving error
         console.log(e);
     }
 };
@@ -57,9 +57,7 @@ const AsyncRemove = async (key) => {
 };
 
 const IS_IOS = () => {
-
     return Platform.OS === 'ios';
-
 };
 
 const parseDate = (date) => {
@@ -74,6 +72,26 @@ const parseDate = (date) => {
     }
 };
 
+const DMYFormat = (date) => {
+    let f = new Date((typeof date === 'object' ? date.seconds : date) * 1000);
+    return `${f.getDate()} ${shortMonths[f.getMonth()]} ${f.getFullYear() % 100}`
+};
+
+const UNIQUE = (value, index, self) => {
+    return self.indexOf(value) === index;
+};
+
+const DATES = (date) => {
+    let today = new Date();
+    var yDate = new Date();
+    yDate.setDate(yDate.getDate() - 1);
+
+    return {
+        TODAY: (date.toDateString() === today.toDateString()),
+        YESTERDAY: (yDate.toDateString() === date.toDateString()),
+    }
+};
+
 export const DismissKeyboardView = ({ children , actionCallback}) => (
     <TouchableWithoutFeedback onPress={() => {
         Keyboard.dismiss();
@@ -83,8 +101,8 @@ export const DismissKeyboardView = ({ children , actionCallback}) => (
     </TouchableWithoutFeedback>
 );
 
-export const DynamicBottomBar = ({ children }) => (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null}  >
+export const DynamicBottomBar = ({props,  children}) => (
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : null} {...props} >
         {children}
     </KeyboardAvoidingView>
 );
@@ -99,16 +117,7 @@ export const OfficialSymbol = (props) => (
 );
 
 export const DynamicTopBar = ({ children }) => (
-    <View style={{
-        // marginTop: 30,
-        height: swidth * 0.12,
-        width: swidth,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        borderBottomWidth: 1.2,
-        borderColor: 'lightgray',
-        alignItems: 'center',
-    }}>
+    <View style={[Styles.dynamicTopBar]}>
         {children}
     </View>
 );
@@ -144,7 +153,13 @@ export const PreviewImageView = (props) => {
         PreviewImage
     } = props;
 
-    // const [pre,setPre] = useState(preview);
+    useEffect(() => {
+        YellowBox.ignoreWarnings([
+            'Warning: componentWillMount is deprecated',
+            'Warning: componentWillReceiveProps is deprecated',
+            'Module RCTImageLoader requires',
+        ]);
+    },[]);
 
     return (
         <Modal
@@ -158,17 +173,6 @@ export const PreviewImageView = (props) => {
                 <View style={{justifySelf: 'center', alignSelf: 'center', }}>
                     {
                         PreviewImage !== null &&
-                        // <Image
-                        //     source={{uri: PreviewImage.pImagePath}}
-                        //     style={[
-                        //         {
-                        //             height: (sheight * PreviewImage.pImageHeight) / 1000,
-                        //             width: swidth,
-                        //             overlayColor: 'black',
-                        //         }
-                        //     ]}
-                        //     resizeMode={'contain'}
-                        // />
                         <ImageZoom
                             cropWidth={swidth}
                             cropHeight={sheight}
@@ -229,7 +233,6 @@ let Styles = StyleSheet.create({
     pImaheView:{
         flex:1,
         backgroundColor: 'rgb(0,0,0)',
-        // alignItems: 'center',
         justifyContent: 'center',
         overlayColor: 'black',
     },
@@ -237,9 +240,16 @@ let Styles = StyleSheet.create({
         ...RHW(0.07),
         backgroundColor: 'rgba(0,0,0,0.65)',
         ...centertext,
-        // backgroundColor: 'black'
     },
-
+    dynamicTopBar:{
+        height: swidth * 0.15,
+        width: swidth,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderBottomWidth: 1.2,
+        borderColor: 'lightgray',
+        alignItems: 'center',
+    },
 });
 
 
@@ -250,6 +260,9 @@ module.exports = {
     AsyncRemove,
     IS_IOS,
     parseDate,
+    UNIQUE,
+    DMYFormat,
+    DATES,
     DismissKeyboardView,
     DynamicBottomBar,
     OfficialSymbol,

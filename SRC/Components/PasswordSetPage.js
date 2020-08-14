@@ -247,6 +247,5 @@ const mapDispatchToProps = {
     GetField
 };
 
-// export default CodeVerification;
 export default connect(null, mapDispatchToProps)(PasswordSetPage);
 

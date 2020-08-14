@@ -5,19 +5,14 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
     TouchableOpacity,
     Platform
 } from 'react-native';
-import {swidth,sheight,centertext} from '../Global/ScreenSetting';
+import {swidth, centertext} from '../Global/ScreenSetting';
 import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate'
 import {SystemButton} from '../Global/TwitterButton'
 import {safearea,mainview} from '../Global/ScreenSetting';
-import {MaterialIndicator} from 'react-native-indicators';
-import {DefaultIndicator} from '../Global/Indicators';
-import HELPER from '../Global/Helper';
-import {NavigationActions, StackActions} from 'react-navigation';
 
 class HelloScreen extends Component{
 
@@ -46,7 +41,6 @@ class HelloScreen extends Component{
                 fontSize: swidth * 0.06,
                 fontFamily: 'Roboto-Bold',
                 color:'white',
-                // fontWeight:"500"
             }
         };
 
@@ -64,14 +58,6 @@ class HelloScreen extends Component{
                                 {"See what’s happening in the world right now."}
                             </Text>
                         </View>
-
-                        {/*<View style={[Styles.createbtnview]}>*/}
-                        {/*    <TouchableOpacity style={[Styles.createbtn]} onPress={() => navigation.navigate('SignUp')}>*/}
-                        {/*        <Text style={[Styles.craetebtntext]}>*/}
-                        {/*            {"Create account"}*/}
-                        {/*        </Text>*/}
-                        {/*    </TouchableOpacity>*/}
-                        {/*</View>*/}
 
                         <SystemButton
                             aOpacity={0.8}
@@ -134,13 +120,11 @@ let Styles = StyleSheet.create({
     hellotext:{
         fontSize: swidth * 0.07,
         fontFamily: 'Roboto-Bold',
-        // flexWrap:'wrap-reverse'
     },
     craetebtntext:{
         fontSize: swidth * 0.065,
         fontFamily: 'Roboto-Bold',
         color:'white',
-        // fontWeight:"500"
     },
     questiontext:{
         fontSize: swidth * 0.04,

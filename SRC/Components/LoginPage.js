@@ -7,17 +7,14 @@ import {
     Text,
     ScrollView,
 } from 'react-native';
-import {swidth, sheight, centertext, safearea, mainview, SH, SW} from '../Global/ScreenSetting';
-import {AntDesign, MCI} from '../Global/VectorIcons';
+import {swidth, safearea, SW} from '../Global/ScreenSetting';
+import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate';
-import TwitterTopPanel from '../Global/TwitterTopPanel';
-import {BlackBigText, BlueText, GrayText} from '../Global/TwitterText';
+import {BlackBigText, GrayText} from '../Global/TwitterText';
 import TwitterTextInput from '../Global/TwitterTextInput';
 import TwitterBottomPanel from '../Global/TwitterBottomPanel';
 import {connect} from 'react-redux';
 import {DefaultIndicator} from '../Global/Indicators';
-import CheckBox from 'react-native-check-box';
-import GLOBAL from '../Global/Initialization';
 import Icon from 'react-native-dynamic-vector-icons';
 import {SelectAll} from '../Actions/FireBaseDBAction';
 import {GetUserInfo, SetLoginUserData} from '../Actions/UserAction';
@@ -30,7 +27,7 @@ import {
 } from 'react-native-popup-menu';
 import {NavigationActions, StackActions} from 'react-navigation';
 import HELPER from '../Global/Helper';
-import Toast, {DURATION} from 'react-native-easy-toast'
+import Toast from 'react-native-easy-toast'
 
 class LoginPage extends Component {
 
@@ -72,7 +69,6 @@ class LoginPage extends Component {
                 let flag = false;
                 let User = {};
                 for (let item of response.data) {
-                    // console.log(item);
                     if ((item.email === username || item.phone === username || item.username.substr(1) === username) && item.password === password) {
                         flag = true;
                         User = item;
@@ -81,6 +77,8 @@ class LoginPage extends Component {
                 }
 
                 if (flag) {
+
+                    this.props.SetLoginUserData(User);
 
                     HELPER.AsyncStore('AsyncLogedInUserData', User);
 
@@ -102,9 +100,7 @@ class LoginPage extends Component {
             })
             .catch(error => {
                 this.setLoader(false,"catch");
-                // if(error.status === 400)
                 alert(error.message);
-                // alert("Fail");
                 console.log(error);
             });
     };
@@ -116,12 +112,6 @@ class LoginPage extends Component {
                 <ScrollView>
                     <MenuProvider>
                         <View style={{flex: 1, width: swidth, padding: 10}}>
-
-                            {/*<TwitterTopPanel*/}
-                            {/*    onBackPress={() => this.props.navigation.goBack()}*/}
-                            {/*    backenable={true}*/}
-                            {/*/>*/}
-
                             <View style={[Styles.twittericonview]}>
                                 <View style={{flex: 1, justifyContent: 'flex-end'}}>
 
@@ -133,7 +123,6 @@ class LoginPage extends Component {
                                               style={{color: SystemBlue, fontSize: swidth * 0.035, fontWeight: 'bold'}}>
                                             {'Sign up  '}
                                         </Text>
-                                        {/*<Icon type={'Entypo'} size={swidth * 0.06} color={SystemBlue} name={'dots-three-vertical'}/>*/}
                                         <Menu open={true}>
                                             <MenuTrigger>
                                                 <Icon type={'Entypo'} size={swidth * 0.045} color={SystemBlue}
@@ -165,14 +154,12 @@ class LoginPage extends Component {
                             <GrayText textstyle={{fontSize: SW(0.04)}} text={'Phone number or email address'}/>
 
                             <TwitterTextInput
-                                // text={this.state.txtemail}
                                 autoCorrect={false}
                                 viewstyle={{
                                     marginTop: swidth * 0.02,
                                     width: swidth * 0.95,
                                     borderColor: this.state.current === 1 ? SystemBlue : 'lightgray',
                                 }}
-                                // ref={this.a}
                                 returnKeyType={'next'}
                                 onChangeText={text => this.setState({txtemail: text.trim().toLowerCase()}, () => this.LoginBtnEnable())}
                                 onFocus={() => this.setState({current: 1})}
@@ -181,10 +168,8 @@ class LoginPage extends Component {
                             <GrayText textstyle={{fontSize: SW(0.04)}} text={'Password'} viewstyle={{marginTop: swidth * 0.07}}/>
 
                             <TwitterTextInput
-                                // ref={this.b}
                                 textStyle={{fontSize: SW(0.02)}}
                                 returnKeyType={'next'}
-                                // onSubmitEditing={() => this.a.current.focus()}
                                 viewstyle={{
                                     marginTop: swidth * 0.02,
                                     width: swidth * 0.95,
@@ -194,7 +179,6 @@ class LoginPage extends Component {
                                     {
                                         IconEnable: true,
                                         IconType: 'Ionicons',
-                                        // IconName: this.state.eye ? 'ios-eye' : 'ios-eye-off',
                                         IconName: 'ios-eye',
                                         IconColor: !this.state.eye ? 'gray' : SystemBlue,
                                         IconSize: swidth * 0.07,
@@ -248,8 +232,6 @@ let Styles = StyleSheet.create({
     twittericonview: {
         flexDirection: 'row',
         marginTop: swidth * 0.02,
-        // backgroundColor: 'red',
-        // justifyContent: 'center',
     },
 
 

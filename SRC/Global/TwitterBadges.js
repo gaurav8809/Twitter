@@ -1,19 +1,14 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View, Animated} from 'react-native';
-import React, {useState,useEffect,} from 'react';
-import {centertext, swidth, SHW, sheight} from './ScreenSetting';
-import {SystemBlue, LikeRed} from './ColorPalate';
+import {Animated, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState,} from 'react';
+import {centertext, swidth, SH, SW} from './ScreenSetting';
+import {LikeRed, SystemBlue} from './ColorPalate';
 import {BlueWhiteButton} from './TwitterButton';
 import {UIActivityIndicator} from 'react-native-indicators';
-import {ImageLoaderIndicator} from '../Global/Indicators';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
-import {OfficialSymbol} from '../Global/Helper';
-import {connect, useSelector} from "react-redux";
+import {OfficialSymbol, DMYFormat} from '../Global/Helper';
+import {useSelector} from "react-redux";
 import firebase from "react-native-firebase";
-import HELPER from "./Helper";
-import {GetLoginUserData} from "../Actions/UserAction";
-import {NavigationActions, StackActions} from "react-navigation";
-
-const Months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+import {SlateGray} from './ColorPalate';
 
 export const ProfileInfoBadge = (props) => {
 
@@ -327,13 +322,153 @@ export const TweetBadge = (props) => {
     )
 };
 
-// export connect(null,null)(TweetBadge);
+export const ChatUserListBadge = (props) => {
 
+    let chatArray = props.data.chatInfo;
+    let {
+        id,
+        profileImage,
+        profilename,
+        username,
+        official,
+        bioDetails,
+    } = props.data.userInfo;
+    let messageObj = chatArray[chatArray.length - 1];
+    let {
+        messageText,
+        receiverID,
+        senderID,
+        timestamp,
+    } = messageObj;
 
-// module.exports = {
-//     ProfileInfoBadge,
-//     TweetBadge
-// };
+    const [imageLoader,setimageLoader] = useState(false);
+
+    return(
+        <TouchableOpacity
+            style={ChatStyle.OuterView}
+            activeOpacity={1}
+            onPress={props.onPress}
+        >
+            <View style={ChatStyle.pimageview}>
+                <TouchableOpacity
+                    style={{justifyContent: 'center'}}
+                    // onPress={() => props.imagePress(imageurl)}
+                >
+                    {
+                        imageLoader &&
+                        <UIActivityIndicator
+                            color={'white'}
+                            size={swidth * 0.04}
+                            style={{position: 'absolute',height: swidth * 0.135,
+                                width : swidth * 0.135, backgroundColor:'lightgray', borderRadius: 100}}
+                        />
+                    }
+                    <Image
+                        source={ profileImage ? {uri: profileImage} : require('../Assets/Images/usergray.png')}
+                        style={ChatStyle.profileimage}
+                        onLoadStart={() => setimageLoader(true)}
+                        onLoadEnd={() => setimageLoader(false)}
+                    />
+                </TouchableOpacity>
+            </View>
+            <View style={ChatStyle.detailsview}>
+                <View style={ChatStyle.deatilsupperview}>
+                    <View style={{flexDirection: 'row'}}>
+                        <Text style={ChatStyle.profilenametext}>
+                            {`${profilename} `}
+                            {
+                                official &&
+                                <OfficialSymbol/>
+                            }
+                        </Text>
+                        <Text style={ChatStyle.usernametext}>
+                            {` ${username}`}
+                        </Text>
+                    </View>
+                    <View>
+                        <Text style={ChatStyle.timestamp}>
+                            {` ${DMYFormat(timestamp)}`}
+                        </Text>
+                    </View>
+                </View>
+                <View style={ChatStyle.messageTextView}>
+                    <Text style={ChatStyle.messageText}>
+                        {
+                            messageText ?
+                                (
+                                    messageText.length > 35
+                                    ? messageText.substr(0,35) + "..."
+                                    : messageText
+                                )
+                                :
+                                (
+                                    senderID === id
+                                        ? `Sent you a photo`
+                                        : 'You sent a photo'
+                                )
+                        }
+                    </Text>
+                </View>
+            </View>
+        </TouchableOpacity>
+    )
+};
+
+export const SimpleUserBadge = (props) => {
+
+    let {
+        id,
+        profileImage,
+        profilename,
+        username,
+        official,
+    } = props.data;
+
+    const [imageLoader,setimageLoader] = useState(false);
+
+    return(
+        <TouchableOpacity
+            style={ChatStyle.OuterView}
+            activeOpacity={1}
+            onPress={props.onPress}
+        >
+            <View style={ChatStyle.pimageview}>
+                <TouchableOpacity
+                    style={{justifyContent: 'center'}}
+                    // onPress={() => props.imagePress(imageurl)}
+                >
+                    {
+                        imageLoader &&
+                        <UIActivityIndicator
+                            color={'white'}
+                            size={swidth * 0.04}
+                            style={{position: 'absolute',height: swidth * 0.135,
+                                width : swidth * 0.135, backgroundColor:'lightgray', borderRadius: 100}}
+                        />
+                    }
+                    <Image
+                        source={ profileImage ? {uri: profileImage} : require('../Assets/Images/usergray.png')}
+                        style={[ChatStyle.profileimage]}
+                        onLoadStart={() => setimageLoader(true)}
+                        onLoadEnd={() => setimageLoader(false)}
+                    />
+                </TouchableOpacity>
+            </View>
+            <View style={ChatStyle.detailsview}>
+                <Text style={ChatStyle.profilenametext}>
+                    {`${profilename} `}
+                    {
+                        official &&
+                        <OfficialSymbol/>
+                    }
+                </Text>
+                <Text style={[ChatStyle.usernametext, {paddingVertical: SH(0.005)}]}>
+                    {username}
+                </Text>
+            </View>
+        </TouchableOpacity>
+    )
+};
 
 let Styles = StyleSheet.create({
 
@@ -452,4 +587,51 @@ let TweetStyle = StyleSheet.create({
         borderColor: 'lightgray'
     }
 
+});
+
+let ChatStyle = StyleSheet.create({
+
+    OuterView:{
+        flexDirection:'row',
+        alignItems:'center',
+        backgroundColor:'white',
+        padding: 15,
+        borderBottomWidth: 0.8,
+        borderColor: 'lightgray',
+    },
+    pimageview:{
+        flex:1,
+        alignSelf:'flex-start'
+    },
+    detailsview:{
+        flex:4.5,
+    },
+    profileimage:{
+        height: swidth * 0.135,
+        width : swidth * 0.135,
+        borderRadius: 100,
+        // backgroundColor: 'lightgray',
+    },
+    deatilsupperview:{
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    profilenametext:{
+        fontSize: swidth * 0.04,
+        fontWeight: "bold"
+    },
+    usernametext:{
+        fontSize: swidth * 0.035,
+        color:'gray'
+    },
+    timestamp:{
+        marginRight: 0,
+    },
+    messageTextView:{
+        marginTop: swidth * 0.005
+    },
+    messageText:{
+        color: SlateGray,
+        fontSize: swidth * 0.035,
+    },
 });

@@ -7,16 +7,11 @@ import HELPER from '../Global/Helper';
 
 export const SendEmail = (dataobj) => {
 
-
     console.log("Here");
     return (dispatch,getState) => {
         return MakeRequest(API.FIREBASE_SENDEMAIL,'post',dataobj)
             .then(response => {
                 if (response.status === 200) {
-                    // dispatch({
-                    //     type: VERIFYREGISTER,
-                    //     payload: response.data,
-                    // });
                     return Promise.resolve({
                         data: response.data,
                         status: response.status,
@@ -35,11 +30,9 @@ export const SendEmail = (dataobj) => {
 
     }
 
-
 };
 
 export const FireBaseSendEmail = (dataobj) => {
-
 
     return (dispatch,getState) => {
         return MakeRequest(API.FIREBASE_SENDEMAIL,'post',dataobj)
@@ -77,7 +70,6 @@ export const FireBaseStoreData = (folderPath,dataobj) => {
         return firebase
             .storage()
             .ref(`${folderPath}/${timestamp.toString()}`)
-            // .child('myfile')
             .put(Platform === 'ios' ? dataobj.uri.replace('file://','') : dataobj.uri)
             .then(res => {
                 return Promise.resolve({
@@ -139,7 +131,6 @@ export const CreateUser = (collection,dataObj) => {
             })
     };
 
-
 };
 
 export const Update = (collection,dataObj) => {
@@ -180,8 +171,6 @@ export const UpdateWhere = (collection,doc,dataObj) => {
         return DBRef.update(dataObj)
             .then(response => {
 
-
-                debugger
                 console.log(response);
                 return Promise.resolve({
                     status: 200,
@@ -204,11 +193,9 @@ export const UpdateWhere = (collection,doc,dataObj) => {
 
 export const SelectAll = (collection) => {
 
-    // console.log("Doc name = ",doc);
     const DBRef = firebase.firestore().collection(collection);
 
     return (dispatch,getState) => {
-
         return DBRef.get()
             .then(response => {
                 // console.log("Response==========================");
@@ -246,7 +233,6 @@ export const SelectAll = (collection) => {
 
 export const SelectUserById = (collection,id) => {
 
-    // console.log("Doc name = ",doc);
     const DBRef = firebase.firestore().collection(collection).doc(id);
 
     return (dispatch,getState) => {
@@ -282,7 +268,6 @@ export const SelectUserById = (collection,id) => {
 
 export const GetField = (collection,dataObj) => {
 
-    // console.log("Doc name = ",doc);
     const DBRef = firebase.firestore().collection(collection)
         .where(dataObj[0],dataObj[1],dataObj[2]);
 
@@ -316,7 +301,3 @@ export const GetField = (collection,dataObj) => {
             })
     };
 };
-
-
-
-

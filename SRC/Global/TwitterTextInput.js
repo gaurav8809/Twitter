@@ -1,9 +1,7 @@
-import {KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import React, {useState,useEffect} from 'react';
-import {centertext, swidth} from './ScreenSetting';
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import React from 'react';
+import {swidth} from './ScreenSetting';
 import {SystemBlue} from './ColorPalate';
-import {SystemButton} from './TwitterButton';
-import {AntDesign} from './VectorIcons';
 import Icon from 'react-native-dynamic-vector-icons';
 
 
@@ -37,7 +35,6 @@ export default TwitterTextInput = (props) => {
                 ]}>
                 <TextInput
                     autoCorrect={autoCorrect && autoCorrect}
-                    // onFocus={() => this.setState({currenttextinput:0})}
                     keyboardType={keyboardType && keyboardType}
                     style={[textStyle,Styles.textinput]}
                     value={text}
@@ -46,10 +43,6 @@ export default TwitterTextInput = (props) => {
                     placeholderTextColor={"gray"}
                     selectionColor={SystemBlue}
                     secureTextEntry={secureTextEntry && secureTextEntry}
-                    // autoFocus={true}
-                    // ref={this.a}
-                    // returnKeyType={'next'}
-                    // onSubmitEditing={() => this.b.current.focus()}
                     onFocus={props.onFocus && props.onFocus}
                 />
                 {
@@ -96,10 +89,8 @@ let Styles = StyleSheet.create({
        height: swidth * 0.095
    },
     textinput:{
-        // height: swidth * 0.05,
         width: swidth * 0.87,
         fontSize: swidth * 0.04,
-        // backgroundColor: 'pink',
         padding: 0
     },
     iconview:{

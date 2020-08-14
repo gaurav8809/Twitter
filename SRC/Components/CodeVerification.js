@@ -3,16 +3,11 @@ import {
     SafeAreaView,
     StyleSheet,
     View,
-    Platform, Modal,
+    Modal,
     TouchableOpacity
-
 } from 'react-native';
 import GLOBAL from '../Global/Initialization';
-import {swidth, sheight, centertext, safearea, mainview} from '../Global/ScreenSetting';
-import {AntDesign} from '../Global/VectorIcons';
-import {SystemBlue} from '../Global/ColorPalate';
-import {SystemButton} from '../Global/TwitterButton';
-import {emailValidation} from '../Global/validationHelper';
+import {swidth, safearea, mainview} from '../Global/ScreenSetting';
 import TwitterTopPanel from '../Global/TwitterTopPanel';
 import {BlackBigText, BlueText, GrayText} from '../Global/TwitterText';
 import TwitterTextInput from '../Global/TwitterTextInput';
@@ -21,8 +16,6 @@ import {connect} from 'react-redux';
 import {SendEmail,FireBaseSendEmail} from '../Actions/SystemAction';
 import firebase from 'react-native-firebase';
 import {DefaultIndicator} from '../Global/Indicators';
-
-// let signupdata;
 
 class CodeVerification extends Component {
 
@@ -39,9 +32,6 @@ class CodeVerification extends Component {
             buttonenable: false,
             loader: false,
         };
-        // signupdata = this.props.navigation.state.params;
-
-
     }
 
     componentDidMount(){
@@ -50,8 +40,6 @@ class CodeVerification extends Component {
             this.props.navigation.navigate('PasswordSetPage',this.state.signupdata);
         else
             this.SendCodeToClient();
-
-        // alert(rancode);
 
     }
 
@@ -65,7 +53,6 @@ class CodeVerification extends Component {
         } = this.state;
 
         var rancode = Math.floor(Math.random() * 999999) + 1;
-        // alert("Code = " + rancode);
         this.setState({
             rancode,
         },() => {
@@ -81,12 +68,11 @@ class CodeVerification extends Component {
                             this.setState({
                                 loader: false,
                                 confirmResult: confirmResult,
-                            });
+                            }, () => alert("Verification code successfully sent to your phone"));
 
                         }) // save confirm result to use with the manual verification code)
                         .catch(error => {
-                            this.setLoader(false,alert("Problem occur"));
-
+                            this.setLoader(false,alert("Something went wrong"));
                             console.log('Send SMS data error =' + error);
                         });
 
@@ -105,7 +91,7 @@ class CodeVerification extends Component {
                             this.setLoader(false);
                             if(res.status === 200)
                             {
-                                alert("Verification code has been successfully sent to your mail");
+                                alert("Verification code successfully sent to your mail");
                             }
                         })
                         .catch(err => {
@@ -120,10 +106,6 @@ class CodeVerification extends Component {
                 alert(`Code is ${this.state.rancode.toString()} `);
             }
         });
-
-
-
-
     };
 
     checkCode = () =>
@@ -131,26 +113,24 @@ class CodeVerification extends Component {
         if(GLOBAL.CodeSendMode)
         {
             if (this.state.signupdata.type === 'Phone') {
-                this.state.confirmResult !== null && this.state.code.toString().length === 6 &&
-                this.state.confirmResult.confirm(this.state.code.toString())
-                    .then(confirmResult => {
-                        this.setState({
-                            buttonenable: true,
+                if(this.state.confirmResult !== null && this.state.code.toString().length === 6)
+                {
+                    debugger
+                    this.state.confirmResult.confirm(this.state.code.toString())
+                        .then(confirmResult => {
+                            this.props.navigation.navigate('PasswordSetPage',this.state.signupdata);
+                            return true;
+                        }) // save confirm result to use with the manual verification code)
+                        .catch(error => {
+                            return false;
                         });
-                        return true;
-                        // console.log("Result data =" + JSON.stringify(confirmResult));
-                    }) // save confirm result to use with the manual verification code)
-                    .catch(error => {
-                        return false;
-                        // console.log("Result Error =" + error);
-                    });
+                }
             }
             else
             {
                 this.setState({
                     buttonenable: this.state.code === this.state.rancode.toString() ? true : false,
                 },() => {
-                    // this.props.navigation.navigate("");
                     if(this.state.code === this.state.rancode.toString())
                         this.props.navigation.navigate('PasswordSetPage',this.state.signupdata);
                 });
@@ -166,10 +146,6 @@ class CodeVerification extends Component {
 
 
     render() {
-
-
-        // let
-
         return (
             <SafeAreaView style={{...safearea}}>
                 <View style={{...mainview}}>
@@ -204,7 +180,7 @@ class CodeVerification extends Component {
                         <TouchableOpacity onPress={() => this.SendCodeToClient()}>
                             <BlueText
                                 textstyle={{fontSize: swidth * 0.04}}
-                                text={this.state.type === 'Email' ? 'Didn\'t receive email?' : 'Didn\'t receive SMS?'}
+                                text={this.state.signupdata.type === 'Email' ? 'Didn\'t receive email?' : 'Didn\'t receive SMS?'}
                             />
                         </TouchableOpacity>
                     </View>
@@ -239,7 +215,6 @@ let Styles = StyleSheet.create({
     linkview: {
         marginTop: swidth * 0.02,
         width: swidth * 0.9,
-        // backgroundColor:'pink',
         alignItems: 'flex-start',
     },
 
@@ -259,6 +234,5 @@ const mapDispatchToProps = {
     FireBaseSendEmail
 };
 
-// export default CodeVerification;
 export default connect(null, mapDispatchToProps)(CodeVerification);
 

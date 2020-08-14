@@ -5,19 +5,14 @@ import {
     ScrollView,
     View,
     Text,
-    StatusBar,
-    TouchableOpacity,
     Platform,
     TextInput,
-    KeyboardAvoidingView,
     Linking,
 } from 'react-native';
-import {swidth,sheight,centertext} from '../Global/ScreenSetting';
-import {AntDesign} from '../Global/VectorIcons';
+import {swidth, centertext} from '../Global/ScreenSetting';
 import {SystemBlue} from '../Global/ColorPalate';
 import {SystemButton} from '../Global/TwitterButton';
 import {safearea,mainview} from '../Global/ScreenSetting';
-import {emailValidation} from '../Global/validationHelper';
 import TwitterTopPanel from '../Global/TwitterTopPanel';
 
 class SignUPFinalPage extends Component{
@@ -29,8 +24,6 @@ class SignUPFinalPage extends Component{
             name:'',
             phoneoremail:'',
         };
-
-
     }
 
 
@@ -38,19 +31,12 @@ class SignUPFinalPage extends Component{
 
         let {
             inputtextview,
-            nametextview,
-            poetextview,
-            totalnumberview,
-            totalnumbertext,
-            namemsg
         } = Styles;
 
         const btnstyles = {
             view:{
                 marginTop: swidth * 0.04,
                 alignItems: 'center',
-                // position: 'relative'
-                // justifySelf: this.state.currenttextinput == 1 && 'flex-end'
             },
             button:{
                 backgroundColor: SystemBlue,
@@ -63,7 +49,6 @@ class SignUPFinalPage extends Component{
                 fontSize: swidth * 0.05,
                 fontFamily: 'Roboto-Bold',
                 color:'white',
-                // fontWeight:"500"
             }
         };
 
@@ -91,7 +76,6 @@ class SignUPFinalPage extends Component{
                                 <TextInput
                                     style={[Styles.nametext]}
                                     value={signupdata.name}
-                                    // onPress={() => this.props.navigation.navigate('SignUp')}
                                     onFocus={() => this.props.navigation.navigate('SignUp')}
                                 />
                             </View>
@@ -101,7 +85,6 @@ class SignUPFinalPage extends Component{
                                 <TextInput
                                     style={[Styles.nametext]}
                                     value={signupdata.poe}
-                                    // onPress={() => this.props.navigation.navigate('SignUp')}
                                     onFocus={() => this.props.navigation.navigate('SignUp')}
                                 />
                             </View>
@@ -162,7 +145,6 @@ let Styles = StyleSheet.create({
         marginTop: swidth * 0.3,
     },
     nametextview:{
-        // backgroundColor:'pink',
         width: swidth * 0.85,
         borderBottomWidth: 2,
         borderColor: 'lightgray',
@@ -189,7 +171,6 @@ let Styles = StyleSheet.create({
     },
     questionview:{
         marginTop: swidth * (Platform.OS === 'ios' ? 0.13 : 0.13),
-        // flexDirection:'row'
     },
 
     //             Text              //
@@ -206,10 +187,8 @@ let Styles = StyleSheet.create({
         color:'gray',
     },
     nametext:{
-        // height: swidth * 0.05,
         width: swidth * 0.77,
         fontSize: swidth * 0.04,
-        // backgroundColor: 'pink',
         padding: 0,
     },
     namemsg:{

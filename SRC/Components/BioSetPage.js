@@ -84,7 +84,6 @@ class BioSetPage extends Component {
             this.props.UpdateWhere(`users`,this.state.signupdata.id,{'bioDetails':this.state.bio})
                 .then(response => {
                     this.setLoader(false);
-                    // alert("Success");
                     const resetAction = StackActions.reset({
                         index: 0,
                         actions: [
@@ -93,7 +92,6 @@ class BioSetPage extends Component {
                     });
 
                     this.props.navigation.dispatch(resetAction);
-                    // this.props.navigation.navigate('LanguageSetPage',this.state.signupdata);
                 })
                 .catch(error => {
                     this.setLoader(false);
@@ -131,7 +129,6 @@ class BioSetPage extends Component {
                         placeholder={'Your bio'}
                         text={this.state.bio}
                         onFocus={() => this.setState()}
-                        // keyboardType={''}
                         onChangeText={text => this.setState({bio: text},() => this.onBioTextChange())}
                         LabelMessage={this.state.label}
                         CounterDetails={
@@ -186,6 +183,5 @@ const mapDispatchToProps = {
     UpdateWhere
 };
 
-// export default CodeVerification;
 export default connect(null, mapDispatchToProps)(BioSetPage);
 

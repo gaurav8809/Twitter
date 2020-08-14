@@ -202,9 +202,7 @@ class DrawerView extends Component{
                 ],
             });
 
-            debugger
             this.props.navigation.dispatch(resetAction);
-            debugger
         }
         else
         {
@@ -458,6 +456,5 @@ const mapDispatchToProps = {
     GetLoginUserData,
 };
 
-// export default CodeVerification;
 export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(DrawerView));
 

@@ -1,7 +1,8 @@
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import SearchScreen from '../Components/TabsPages/SearchScreen';
 import NotificationScreen from '../Components/TabsPages/NotificationScreen';
-import MessageScreen from '../Components/TabsPages/MessageScreen';
+import MessageScreen from '../Components/TabsPages/Message/MessageScreen';
+import NewMessageScreen from '../Components/TabsPages/Message/NewMessageScreen';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {swidth} from '../Global/ScreenSetting';
@@ -9,36 +10,32 @@ import {SystemBlue} from '../Global/ColorPalate';
 import {createStackNavigator} from 'react-navigation-stack';
 import {AppHeader} from '../Global/AppHeader';
 import HomeScreen from '../Components/TabsPages/HomeScreen';
-import React,{Component} from 'react';
-import {GetLoginUserData, GetUserInfo} from '../Actions/UserAction';
-import {connect} from 'react-redux';
-import DrawerView from '../Components/DrawerView'
+import PersonalChatScreen from '../Components/TabsPages/Message/PersonalChatScreen';
+import React from 'react';
 import CreateTweetPage from "../Components/CreateTweetPage";
 import ProfilePage from '../Components/CommonPages/ProfilePage';
 import FollowingListPage from '../Components/CommonPages/FollowingListPage';
 import FollowersListPage from '../Components/CommonPages/FollowersListPage';
 import EditProfilePage from '../Components/CommonPages/EditProfilePage';
 
-
 const HomeSwitch = createStackNavigator({
-        HomeScreen:{
-            screen:HomeScreen,
-        }
-    },
-    {
-        // defaultNavigationOptions: {
-        //     header:<View style={{backgroundColor: "red",height: 100, width: 100}}/>,
-        //     // headerStyle: {
-        //     //     backgroundColor: '#f4511e',
-        //     // },
-        //     // headerTintColor: '#fff',
-        //     // headerTitleStyle: {
-        //     //     fontWeight: 'bold',
-        //     // },
-        // },
-        headerMode:'none'
-    });
-
+    HomeScreen:{
+        screen:HomeScreen,
+    }
+},
+{
+    // defaultNavigationOptions: {
+    //     header:<View style={{backgroundColor: "red",height: 100, width: 100}}/>,
+    //     // headerStyle: {
+    //     //     backgroundColor: '#f4511e',
+    //     // },
+    //     // headerTintColor: '#fff',
+    //     // headerTitleStyle: {
+    //     //     fontWeight: 'bold',
+    //     // },
+    // },
+    headerMode:'none'
+});
 
 const coreTabNavigator = createBottomTabNavigator({
     HomeScreen:{
@@ -63,6 +60,7 @@ const coreTabNavigator = createBottomTabNavigator({
         },
     },
 },{
+    initialRouteName:"HomeScreen",
     defaultNavigationOptions: ({navigation}) => ({
         tabBarIcon: ({ focused}) => {
 
@@ -75,9 +73,9 @@ const coreTabNavigator = createBottomTabNavigator({
                 type = 'Octicons';
                 size = swidth * 0.06;
             } else if (routeName === 'SearchScreen') {
-                name = 'search';
-                type = 'Feather';
-                size = swidth * 0.08;
+                name = 'search1';
+                type = 'AntDesign';
+                size = swidth * 0.06;
             } else if (routeName === 'NotificationScreen') {
                 name = 'bell';
                 type = 'Entypo';
@@ -90,39 +88,9 @@ const coreTabNavigator = createBottomTabNavigator({
 
 
             if(!focused)
-            {
-
-
-                // if (routeName === 'HomeScreen') {
-                //     return <Image source={require('../Assets/Images/HomeBlack.png')} style={IconStyle}/>
-                // } else if (routeName === 'SearchScreen') {
-                //     return <Icon name={'search'} type={'FontAwesome'} color={'slategray'} size={swidth * 0.07} />
-                // } else if (routeName === 'NotificationScreen') {
-                //     return <Image source={require('../Assets/Images/BellBlack.png')} style={IconStyle} />
-                // } else if (routeName === 'MessageScreen') {
-                //     return <Image source={require('../Assets/Images/MessageBlack.png')} style={IconStyle} />
-                // }
-
                 color = 'slategray';
-                // return <Icon name={name} type={type} color={'slategray'} size={swidth * 0.07} />
-
-            }
             else
-            {
-
-                // if (routeName === 'HomeScreen') {
-                //     return <Image source={require('../Assets/Images/HomeEnable.png')} style={IconStyle}/>
-                // } else if (routeName === 'SearchScreen') {
-                //     return <Icon name={'search'} type={'FontAwesome'} color={SystemBlue} size={swidth * 0.07}/>
-                // } else if (routeName === 'NotificationScreen') {
-                //     return <Image source={require('../Assets/Images/BellEnable.png')} style={IconStyle} />
-                // } else if (routeName === 'MessageScreen') {
-                //     return <Image source={require('../Assets/Images/MessageEnable.png')} style={IconStyle}/>
-                // }
                 color = SystemBlue;
-                // return <Icon name={name} type={type} color={SystemBlue} size={swidth * 0.07} />
-
-            }
 
             return <Icon name={name} type={type} color={color} size={size} />
         },
@@ -140,7 +108,9 @@ const StackNav = createStackNavigator({
         ProfilePage,
         FollowingListPage,
         FollowersListPage,
-        EditProfilePage
+        EditProfilePage,
+        PersonalChatScreen,
+        NewMessageScreen
     },
     {
         defaultNavigationOptions:({navigation}) => ({
@@ -167,13 +137,10 @@ const Styles = StyleSheet.create({
         height: swidth * 0.12,
         width:swidth,
         justifyContent: 'center',
-        // backgroundColor:'rgb(242,242,242)',
         backgroundColor:'white',
     },
     bottomcontainer:{
         flexDirection:'row',
-        // alignItems: 'center',
-        // backgroundColor: 'pink'
     },
 
 });
