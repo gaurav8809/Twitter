@@ -46,47 +46,23 @@ export const BlueWhiteButton = (props) => {
         btnStyle
     } = props;
 
-
-    const [textcolor,settextcolor] = useState(btnStatus ? 'white' : useColor);
-    const [backcolor,setbackcolor] = useState(btnStatus ? useColor : 'white');
-    const [borderColor,setbordercolor] = useState(btnStatus ? 'white' : useColor);
-    const [flag,setFlag] = useState(btnStatus);
-    const [textstate,setText] = useState(text);
-
     return(
         <TouchableOpacity
-            // onShowUnderlay={() =>
-            //     [
-            //         settextcolor(textcolor === 'white' ? SystemBlue : 'white'),
-            //         setbackcolor(backcolor ===SystemBlue ? 'white' : SystemBlue),
-            //         setText(textstate === text ? activeText : text)
-            //     ]
-            // }
             activeOpacity={1}
             underlayColor={useColor}
             style={[
                 Styles.button,
                 {
-                    backgroundColor: backcolor ,
-                    padding: flag ? 5.5 : 4.5,
-                    borderWidth: flag ? 0 : 1.5,
-                    borderColor: useColor,
+                    backgroundColor: btnStatus ? useColor : 'white' ,
+                    padding: btnStatus ? 5.5 : 4.5,
                 },
-                btnStatus && {borderColor: borderColor},
+                btnStatus && {borderColor: useColor, borderWidth: 1.5},
                 btnStyle
             ]}
-            onPress={() => {
-                    setFlag(!flag);
-                    onPress(flag);
-                    settextcolor(textcolor === 'white' ? useColor : 'white');
-                    setbackcolor(backcolor === useColor ? 'white' : useColor);
-                    setbordercolor(borderColor === useColor ? 'white' : useColor);
-                    setText(textstate === text ? activeText : text);
-                }
-            }
+            onPress={onPress}
         >
-            <Text style={[Styles.btntext,{color: textcolor}]}>
-                {`${textstate}`}
+            <Text style={[Styles.btntext,{color: btnStatus ? 'white' : useColor}]}>
+                {btnStatus ? activeText : text}
             </Text>
         </TouchableOpacity>
     )

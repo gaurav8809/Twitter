@@ -53,10 +53,6 @@ class FollowersListPage extends Component{
 
     renderFollowersList = (item,index) => {
 
-        let {LogedInUser} = this.state;
-
-        let FST = LogedInUser.following.includes(item.id);
-
         return (
             <View key={index}>
                 <ProfileInfoBadge
@@ -71,15 +67,15 @@ class FollowersListPage extends Component{
                             official: item.official && item.official,
                         }
                     }
-                    btnFlag={this.state.NavUser.id === this.props.LogedInUserData.id}
-                    btnStatus={FST}
-                    btnText={FST ? "Following" : "Follow"}
-                    btnActiveText={FST ? "Follow" : "Following"}
-                    BtnPress={(flag) => flag
-                        ? this.unfollowButtonPress(item)
-                        : this.followButtonPress(item)
+                    btnFlag={item.id !== this.props.LogedInUserData.id}
+                    btnStatus={item.followers.includes(this.props.LogedInUserData.id)}
+                    btnText={"Follow"}
+                    btnActiveText={"Following"}
+                    BtnPress={() => item.followers.includes(this.props.LogedInUserData.id)
+                        ? this.unfollowButtonPress(item, index)
+                        : this.followButtonPress(item, index)
                     }
-                    imagePress={() => this.props.navigation.navigate('ProfilePage',{
+                    imagePress={() => this.props.navigation.push('ProfilePage',{
                         NavUser: item
                     })}
                 />
@@ -87,36 +83,47 @@ class FollowersListPage extends Component{
         );
     };
 
-    followButtonPress = (item) => {
+    followButtonPress = (item, index) => {
 
-        let STD = this.state;
+        let loggedInUser = this.props.LogedInUserData;
 
         let Obj = {
-            UserId: STD.NavUser.id,
-            Username: STD.NavUser.username,
+            UserId: loggedInUser.id,
+            Username: loggedInUser.username,
             OpUserId: item.id,
             OpUsername: item.username,
         };
 
-        this.props.FollowUser('users', Obj, STD.NavUser)
+        this.props.FollowUser('users', Obj, loggedInUser)
+            .then(res => {
+                let allFollowers = this.state.allFollowers;
+                allFollowers[index]['followers'].push(loggedInUser.id);
+                this.setState({allFollowers});
+            })
             .catch(error => {
                 console.log(error)
             });
 
     };
 
-    unfollowButtonPress = (item) => {
+    unfollowButtonPress = (item, index) => {
 
-        let STD = this.state;
+        let loggedInUser = this.props.LogedInUserData;
 
         let Obj = {
-            UserId: STD.NavUser.id,
-            Username: STD.NavUser.username,
+            UserId: loggedInUser.id,
+            Username: loggedInUser.username,
             OpUserId: item.id,
             OpUsername: item.username,
         };
 
-        this.props.UnFollowUser('users', Obj, STD.NavUser)
+        this.props.UnFollowUser('users', Obj, loggedInUser)
+            .then(res => {
+                let allFollowers = this.state.allFollowers;
+                let uIndex = allFollowers[index].following.indexOf(loggedInUser.id);
+                allFollowers[index]['followers'].splice(uIndex, 1);
+                this.setState({allFollowers});
+            })
             .catch(error => {
                 console.log(error)
             });
@@ -124,9 +131,6 @@ class FollowersListPage extends Component{
     };
 
     render(){
-
-        let {
-        } = Styles;
 
         let {
             allFollowers

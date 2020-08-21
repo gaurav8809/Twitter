@@ -26,7 +26,7 @@ class ProfilePage extends Component {
     constructor(props) {
         super(props);
 
-        let NavData = props.navigation.state.params.NavUser[0] === undefined ? props.navigation.state.params.NavUser : props.navigation.state.params.NavUser[0];
+        let NavData = props.navigation.state.params.NavUser;
         let FinalNavData = NavData.id === props.LogedInUserData.id ? props.LogedInUserData : NavData;
 
         this.state = {
@@ -137,7 +137,7 @@ class ProfilePage extends Component {
     };
 
     LikePress = (flag, item) => {
-        this.props.LikeUnlikeTweet(flag, item, this.state.currentUser)
+        this.props.LikeUnlikeTweet(flag, item, this.props.LogedInUserData)
             .catch(error => {
                 console.log(error)
             });
@@ -148,10 +148,10 @@ class ProfilePage extends Component {
         return (
             <View key={index} style={{marginTop: swidth * 0.02}}>
                 <TweetBadge
-                    JSONData={item}
+                    data={item}
                     imagePress={(url) => this.openImage(url)}
                     profilePress={(url) => item.profileImage && this.openImage(url)}
-                    LikePress={(flag) => this.LikePress(flag,item)}
+                    LikePress={(flag) => this.LikePress(flag, item)}
                 />
             </View>
         );
@@ -373,7 +373,7 @@ class ProfilePage extends Component {
                                 </Text>
                                 <View style={STY.followView}>
                                     <TouchableOpacity onPress={() =>
-                                        this.props.navigation.navigate('FollowingListPage',{
+                                        this.props.navigation.push('FollowingListPage',{
                                         NavUser: NavUser
                                     })}
                                     >
@@ -385,7 +385,7 @@ class ProfilePage extends Component {
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() =>
-                                        this.props.navigation.navigate('FollowersListPage',{
+                                        this.props.navigation.push('FollowersListPage',{
                                             NavUser: NavUser
                                         })}
                                     >

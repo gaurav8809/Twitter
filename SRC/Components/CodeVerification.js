@@ -115,7 +115,6 @@ class CodeVerification extends Component {
             if (this.state.signupdata.type === 'Phone') {
                 if(this.state.confirmResult !== null && this.state.code.toString().length === 6)
                 {
-                    debugger
                     this.state.confirmResult.confirm(this.state.code.toString())
                         .then(confirmResult => {
                             this.props.navigation.navigate('PasswordSetPage',this.state.signupdata);

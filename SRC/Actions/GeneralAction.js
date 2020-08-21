@@ -35,12 +35,12 @@ export const GetTweets = (collection, currentUser) => {
                         let udata = UResponse._docs;
 
                         let finalArray = finalTweet.map(fitem =>
-
-                                Object.assign(
-                                    // ...udata.map(i => fitem.userID === i.id && i._data).filter(item => item !== false)
-                                    udata.filter(i => fitem.userID === i.id && i._data).map(it => Object.assign({id:it.id}, it._data))
+                            Object.assign(
+                            {userData:
+                                    udata.filter(i => fitem.userID === i.id && i._data)
+                                        .map(it => Object.assign({id:it.id}, it._data))[0]}
                                     , fitem
-                                )
+                            )
                         );
 
                         return Promise.resolve({
@@ -94,10 +94,10 @@ export const GetUserTweets = (collection, currentUser) => {
                         let udata = UResponse._docs;
 
                         let finalArray = finalTweet.map(fitem =>
-
                             Object.assign(
-                                // ...udata.map(i => fitem.userID === i.id && i._data).filter(item => item !== false)
-                                udata.filter(i => fitem.userID === i.id && i._data).map(it => it._data)
+                                {userData:
+                                        udata.filter(i => fitem.userID === i.id && i._data)
+                                            .map(it => Object.assign({id:it.id}, it._data))[0]}
                                 , fitem
                             )
                         );

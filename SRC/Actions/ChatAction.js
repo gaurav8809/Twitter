@@ -61,7 +61,6 @@ export const getChatIDList = () => {
 
             })
             .catch(error => {
-                debugger
                     console.log(error);
                     return Promise.reject({
                         status: 400,

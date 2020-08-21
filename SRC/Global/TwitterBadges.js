@@ -2,7 +2,7 @@ import {Animated, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-n
 import React, {useEffect, useState,} from 'react';
 import {centertext, swidth, SH, SW} from './ScreenSetting';
 import {LikeRed, SystemBlue} from './ColorPalate';
-import {BlueWhiteButton} from './TwitterButton';
+import {BlueWhiteButton, LinerButton} from './TwitterButton';
 import {UIActivityIndicator} from 'react-native-indicators';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import {OfficialSymbol, DMYFormat} from '../Global/Helper';
@@ -108,7 +108,7 @@ export const TweetBadge = (props) => {
         profilename,
         username,
         official,
-    } = props.JSONData[0];
+    } = props.data.userData;
 
     let {
         OuterView,
@@ -124,7 +124,7 @@ export const TweetBadge = (props) => {
     } = TweetStyle;
 
     const [LogedInUserData, setLogedInUserData] = useState(useSelector(state => state.UserReducer.LogedInUserData));
-    const [tweetProp, setTweetProp] = useState(props.JSONData);
+    const [tweetProp, setTweetProp] = useState(props.data);
     const [imageLoader,setimageLoader] = useState(false);
     const [imageHeight,setimageHeight] = useState(0);
     const [imageWidth,setimageWidth] = useState(0);
