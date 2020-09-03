@@ -79,13 +79,7 @@ export const AppHeader = (props) => {
                         navigation.openDrawer();
                     }} >
                         <View style={{justifyContent: 'center'}}>
-                            {
-                                imageLoader &&
-                                <ImageLoaderIndicator
-                                    style={{height: swidth * 0.09,
-                                        width : swidth * 0.09,}}
-                                />
-                            }
+                            {imageLoader && <ImageLoaderIndicator style={{height: swidth * 0.09, width : swidth * 0.09}}/>}
                             {
                                 LogedInUser && LogedInUser.profileImage &&
                                 <Image
@@ -102,13 +96,14 @@ export const AppHeader = (props) => {
                 <View style={{alignItems: 'center', flex:1}}>
                     <AntDesign name={'twitter'} color={SystemBlue} size={swidth * 0.07}/>
                 </View>
-                <View style={{flex:1, marginRight:swidth * 0.03}}>
-                   <Icon name={'react'}
-                         type={'MaterialCommunityIcons'}
-                         color={SystemBlue}
-                         size={swidth * 0.06}
-                         style={{alignSelf:'flex-end'}}
-                         onPress={() => alert("Work in progress")}
+                <View style={{flex:1, marginRight: swidth * 0.03}}>
+                   <Icon
+                       name={'react'}
+                       type={'MaterialCommunityIcons'}
+                       color={SystemBlue}
+                       size={swidth * 0.06}
+                       style={{alignSelf:'flex-end'}}
+                       onPress={() => alert("Work in progress")}
                    />
                 </View>
             </View>

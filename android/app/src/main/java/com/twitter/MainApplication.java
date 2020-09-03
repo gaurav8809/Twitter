@@ -22,6 +22,9 @@ import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.FacebookSdk;
 
+//Agora
+import io.agora.rtc.react.RCTAgoraRtcPackage;
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =

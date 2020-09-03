@@ -46,6 +46,8 @@ target 'Twitter' do
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
 
 
+  pod 'react-native-agora', :path => '../node_modules/react-native-agora'
+
   target 'TwitterTests' do
     inherit! :search_paths
     # Pods for testing

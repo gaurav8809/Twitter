@@ -4,95 +4,21 @@ import {
     StyleSheet,
     View,
     FlatList,
-    Text, Modal
+    Text,
 } from 'react-native';
-import {safearea, swidth, SW, SH, centertext} from '../../../Global/ScreenSetting'
+import {safearea, swidth, SW, SH} from '../../../Global/ScreenSetting'
 import {connect} from 'react-redux';
 import {getChatList, saveCurrentChat} from '../../../Actions/ChatAction';
-import COLOR, {SlateGray, SystemBlue} from "../../../Global/ColorPalate";
+import COLOR from "../../../Global/ColorPalate";
 import {ChatUserListBadge} from "../../../Global/TwitterBadges";
-import {BlueWhiteButton, BubbleButton, LinerButton, SystemButton} from "../../../Global/TwitterButton";
+import {BubbleButton, SystemButton} from "../../../Global/TwitterButton";
 import firebase from "react-native-firebase";
 import {DefaultIndicator} from "../../../Global/Indicators";
-import {MaterialIndicator} from "react-native-indicators";
-
-const CHAT_LIST = [
-    {
-        chatInfo: [
-            {
-                messageText: "message1",
-                receiverID: "",
-                senderID: "",
-                timestamp: {seconds: 1591598520, nanoseconds: 0},
-            },
-            {
-                messageText: "message2",
-                receiverID: "",
-                senderID: "",
-                timestamp: {seconds: 1591591200, nanoseconds: 0},
-            }
-        ],
-        userInfo: {
-            bioDetails: "Your daily dose of Bollywood gossip and fashion. Instagram : https://Instagram.com/pinkvilla YouTube: https://youtube.com/pinkvilla",
-            birthDate: {seconds: 1578494757, nanoseconds: 0},
-            coverImage: "https://firebasestorage.googleapis.com/v0/b/twitter-13dd2.appspot.com/o/CoverPhotos%2F1586013019915?alt=media&token=417b796a-0c9e-49a8-ba40-276a579206ed",
-            email: "",
-            followers: (3) ["4XcrSA7nPcmhz4Ib9mbk", "hJ6W9CgIyow0z6mUoJrL", "zDlrdNXjdHvhx2E3gUx5"],
-            following: (2) ["4XcrSA7nPcmhz4Ib9mbk", "bXJCmYwZcvHDZ0e9STfW"],
-            id: "DTRvSbAn1HvmGqFaNWIi",
-            languages: (5) ["English", "Gujarati", "Hindi", "Marathi", "Nepali"],
-            location: "Mumbai",
-            official: true,
-            password: "pinkvilla",
-            phone: "1234567890",
-            profileImage: "https://firebasestorage.googleapis.com/v0/b/twitter-13dd2.appspot.com/o/UserProfiles%2FPinkvilla.png?alt=media&token=c4f4c8dc-8d29-4e96-b676-c1582cc0e4c0",
-            profilename: "Pinkvilla",
-            timestamp: {seconds: 1583969540, nanoseconds: 0},
-            username: "@pinkv68611",
-        }
-    },
-    {
-        chatInfo: [
-            {
-                messageText: "message1",
-                receiverID: "",
-                senderID: "",
-                timestamp: {seconds: 1591598520, nanoseconds: 0},
-            },
-            {
-                messageText: "message2",
-                receiverID: "",
-                senderID: "",
-                timestamp: {seconds: 1591591200, nanoseconds: 0},
-            }
-        ],
-        userInfo: {
-            bioDetails: "Your daily dose of Bollywood gossip and fashion. Instagram : https://Instagram.com/pinkvilla YouTube: https://youtube.com/pinkvilla",
-            birthDate: {seconds: 1578494757, nanoseconds: 0},
-            coverImage: "https://firebasestorage.googleapis.com/v0/b/twitter-13dd2.appspot.com/o/CoverPhotos%2F1586013019915?alt=media&token=417b796a-0c9e-49a8-ba40-276a579206ed",
-            email: "",
-            followers: (3) ["4XcrSA7nPcmhz4Ib9mbk", "hJ6W9CgIyow0z6mUoJrL", "zDlrdNXjdHvhx2E3gUx5"],
-            following: (2) ["4XcrSA7nPcmhz4Ib9mbk", "bXJCmYwZcvHDZ0e9STfW"],
-            id: "DTRvSbAn1HvmGqFaNWIi",
-            languages: (5) ["English", "Gujarati", "Hindi", "Marathi", "Nepali"],
-            location: "Mumbai",
-            official: true,
-            password: "pinkvilla",
-            phone: "1234567890",
-            profileImage: "https://firebasestorage.googleapis.com/v0/b/twitter-13dd2.appspot.com/o/UserProfiles%2FPinkvilla.png?alt=media&token=c4f4c8dc-8d29-4e96-b676-c1582cc0e4c0",
-            profilename: "Pinkvilla",
-            timestamp: {seconds: 1583969540, nanoseconds: 0},
-            username: "@pinkv68611",
-        }
-    },
-];
 
 class MessageScreen extends Component{
 
     constructor(props) {
         super(props);
-
-
         this.state = {
             chatLoader: true,
         };

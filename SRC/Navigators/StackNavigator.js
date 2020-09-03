@@ -3,6 +3,7 @@ import SearchScreen from '../Components/TabsPages/SearchScreen';
 import NotificationScreen from '../Components/TabsPages/NotificationScreen';
 import MessageScreen from '../Components/TabsPages/Message/MessageScreen';
 import NewMessageScreen from '../Components/TabsPages/Message/NewMessageScreen';
+import VideoCallTab from '../Components/TabsPages/VideoCall';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {swidth} from '../Global/ScreenSetting';
@@ -45,18 +46,23 @@ const coreTabNavigator = createBottomTabNavigator({
         },
     },
     SearchScreen:{
-        screen:SearchScreen,
-        navigationOptions:{
+        screen: SearchScreen,
+        navigationOptions: {
         },
     },
     NotificationScreen:{
-        screen:NotificationScreen,
-        navigationOptions:{
+        screen: NotificationScreen,
+        navigationOptions: {
         },
     },
     MessageScreen:{
-        screen:MessageScreen,
-        navigationOptions:{
+        screen: MessageScreen,
+        navigationOptions: {
+        },
+    },
+    VideoScreen:{
+        screen: VideoCallTab,
+        navigationOptions: {
         },
     },
 },{
@@ -82,6 +88,10 @@ const coreTabNavigator = createBottomTabNavigator({
                 size = swidth * 0.06;
             } else if (routeName === 'MessageScreen') {
                 name = 'envelope-o';
+                type = 'FontAwesome';
+                size = swidth * 0.06;
+            } else if (routeName === 'VideoScreen') {
+                name = 'video-camera';
                 type = 'FontAwesome';
                 size = swidth * 0.06;
             }

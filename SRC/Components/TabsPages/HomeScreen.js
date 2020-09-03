@@ -45,10 +45,8 @@ class HomeScreen extends Component{
     }
 
     componentDidMount(){
-
         this._isMounted = true;
         this._isMounted && this.getCurrentLogedInData();
-
     }
 
     componentWillUnmount(){
