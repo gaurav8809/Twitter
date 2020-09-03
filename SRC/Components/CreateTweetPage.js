@@ -283,8 +283,6 @@ class CreateTweetPage extends Component{
             imagePath: STD.selectdGif !== null && STD.selectdGif.gif.url
         };
 
-        debugger
-
         this.setLoader(true);
         this.props.PostTweet('tweets', dataObj)
             .then(tweetResponse => {
@@ -317,7 +315,6 @@ class CreateTweetPage extends Component{
 
             })
             .catch(error => {
-                debugger
                 this.setLoader(false);
                 console.log("Tweet Error = ",error)
             });

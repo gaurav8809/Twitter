@@ -276,17 +276,9 @@ export const GetField = (collection,dataObj) => {
         return DBRef.get()
             .then(response => {
 
-                if (response.empty) {
-                    return Promise.resolve({
-                        status: 400,
-                        message: 'No data found',
-                        data: response._data
-                    });
-                }
-
                 return Promise.resolve({
-                    status: 200,
-                    message: 'Successfully Get data',
+                    status: response.empty ? 400 : 200,
+                    message: response.empty ? 'No data found' : 'Successfully Get data',
                     data: response._data
                 });
 

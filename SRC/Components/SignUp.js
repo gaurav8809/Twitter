@@ -1,19 +1,14 @@
 import React, {Component} from 'react';
-import {
-    SafeAreaView,
-    StyleSheet,
-    ScrollView,
-    View,
-    Text,
-    TextInput,
-} from 'react-native';
-import {swidth, centertext} from '../Global/ScreenSetting';
+import {SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View,} from 'react-native';
+import {mainview, safearea, swidth} from '../Global/ScreenSetting';
 import {AntDesign} from '../Global/VectorIcons';
 import {SystemBlue} from '../Global/ColorPalate';
-import {safearea,mainview} from '../Global/ScreenSetting';
 import {emailValidation} from '../Global/validationHelper';
 import TwitterBottomPanel from '../Global/TwitterBottomPanel'
 import TwitterTopPanel from '../Global/TwitterTopPanel';
+import {GetField} from '../Actions/FireBaseDBAction';
+import {connect} from "react-redux";
+import {MaterialIndicator} from "react-native-indicators";
 
 class SignUp extends Component{
 
@@ -31,7 +26,8 @@ class SignUp extends Component{
             dynamiclabel:'Use email instead',
             currentplace:true,
             nextopacity:0.5,
-            pemsg:''
+            pemsg:'',
+            existLoader: false,
         };
 
         this.a = React.createRef();
@@ -77,55 +73,61 @@ class SignUp extends Component{
         }
     };
 
-    successmark = () => {
+    checkUserExist = async (type) => {
 
-        this.setState({
-            pemsg:'',
-            nextopacity: 1
-        });
-        if(this.state.phoneoremail !== '')
-        {
-            this.setState({
-                poecorrectsign:true
-            });
-        }
-
+        let dataObj = [
+            type,
+            '==',
+            this.state.phoneoremail
+        ];
+        this.setState({existLoader: true});
+        return await this.props.GetField('users', dataObj)
+            .then(response => {
+                this.setState({existLoader: false});
+                return response.status === 200;
+            })
+            .catch(error => {
+                this.setState({existLoader: false});
+                return true;
+            })
     };
 
     setpelabel = (text) => {
-        this.setState({phoneoremail:text},() => {
+        this.setState({phoneoremail: text.toLowerCase()},async () => {
 
-            if(this.state.currentplace)
+            let isPhone = this.state.currentplace;
+            if(this.state.phoneoremail !== '')
             {
-                if((this.state.phoneoremail !== '' && this.state.phoneoremail.length !== 10 || isNaN(this.state.phoneoremail)) || this.state.phoneoremail.includes('.') === true)
-                {
-                    this.setState({
-                        pemsg:'Please enter a valid phone number.',
-                        nextopacity: 0.5,
-                        poecorrectsign:false
-                    });
-                }
-                else
-                {
-                    this.successmark();
-                }
+                let errMsg = isPhone
+                ? ((this.state.phoneoremail.length !== 10 || isNaN(this.state.phoneoremail)) || this.state.phoneoremail.includes('.') === true)
+                    ? 'Please enter a valid phone number.' : ''
+                : (this.state.phoneoremail !== '' && !emailValidation(this.state.phoneoremail))
+                    ? 'Please enter a valid email.' : '';
+
+                this.setState({
+                    pemsg: errMsg,
+                    poecorrectsign: false
+                }, () => {
+                    if(errMsg === '')
+                    {
+                        setTimeout(async () => {
+                            let exist = await this.checkUserExist(isPhone ? 'phone' : 'email');
+                            this.setState({
+                                pemsg: exist ? (isPhone ? 'This phone number is already in use.' : 'This email is already in use.')
+                                    : '',
+                                nextopacity: exist ? 0.5 : 1,
+                                poecorrectsign: !exist
+                            });
+                        }, 1000);
+                    }
+                });
             }
             else
-            {
-                if(this.state.phoneoremail !== '' && !emailValidation(this.state.phoneoremail))
-                {
-                    this.setState({
-                        pemsg:'Please enter a valid email.',
-                        nextopacity: 0.5,
-                        poecorrectsign:false
-                    });
-                }
-                else
-                {
-                    this.successmark();
-                }
-            }
-
+                this.setState({
+                    pemsg: '',
+                    nextopacity: 0.5,
+                    poecorrectsign: false,
+                });
         }) ;
 
     };
@@ -219,7 +221,7 @@ class SignUp extends Component{
                                     autoCorrect={false}
                                     style={[Styles.inputText,{borderColor: this.state.currenttextinput === 1 ? SystemBlue : 'lightgray'}]}
                                     value={this.state.phoneoremail}
-                                    onChangeText={text => this.setpelabel(text)}
+                                    onChangeText={text => !this.state.existLoader ? this.setpelabel(text) : null}
                                     placeholder={this.state.placeholder}
                                     placeholderTextColor={"gray"}
                                     keyboardType={
@@ -237,12 +239,22 @@ class SignUp extends Component{
                                     })}
                                 />
 
-                                {
-                                    this.state.poecorrectsign &&
                                     <View style={[Styles.correctsigncircle]}>
-                                        <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.05}/>
+                                        {
+                                            this.state.existLoader
+                                                ? <MaterialIndicator color={SystemBlue} size={swidth * 0.04} trackWidth={1.5}/>
+                                                :
+                                                this.state.poecorrectsign &&
+                                                <AntDesign name={'checkcircleo'} color={'green'} size={swidth * 0.05}/>
+
+                                        }
                                     </View>
-                                }
+
+                                {/*{*/}
+                                {/*    this.state.existLoader &&*/}
+                                {/*    <View style={[Styles.correctsigncircle]}>*/}
+                                {/*    </View>*/}
+                                {/*}*/}
 
                                 <View style={[Styles.poemsgview]}>
 
@@ -265,6 +277,7 @@ class SignUp extends Component{
                             currentplace:!this.state.currentplace,
                             placeholder: this.state.currentplace ? 'Email' : 'Phone',
                             phoneoremail: '',
+                            pemsg: '',
                         })}
                     text={this.state.currentplace ? 'Use email instead' : 'Use phone instead'}
                     buttonopacity={this.state.nextopacity}
@@ -388,5 +401,9 @@ let Styles = StyleSheet.create({
 
 });
 
-export default SignUp;
+const mapDispatchToProps = {
+    GetField
+};
+
+export default connect(null, mapDispatchToProps)(SignUp);
 

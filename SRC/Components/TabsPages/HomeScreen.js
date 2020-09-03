@@ -127,7 +127,7 @@ class HomeScreen extends Component{
             });
     };
 
-    followButtonPress = (item) => {
+    followButtonPress = (item, index) => {
         let Obj = {
             UserId: this.state.currentUser.id,
             Username: this.state.currentUser.username,
@@ -136,12 +136,17 @@ class HomeScreen extends Component{
         };
 
         this.props.FollowUser('users', Obj, this.state.currentUser)
+            .then(res => {
+                let wtfList = this.state.wtfList;
+                wtfList[index]['followers'].push(this.state.currentUser.id);
+                this.setState({wtfList});
+            })
             .catch(error => {
                 console.log(error)
             });
     };
 
-    unfollowButtonPress = (item) => {
+    unfollowButtonPress = (item, index) => {
         let Obj = {
             UserId: this.state.currentUser.id,
             Username: this.state.currentUser.username,
@@ -150,13 +155,17 @@ class HomeScreen extends Component{
         };
 
         this.props.UnFollowUser('users', Obj, this.state.currentUser)
+            .then(res => {
+                let wtfList = this.state.wtfList;
+                wtfList[index]['followers'].splice(index, 1);
+                this.setState({wtfList});
+            })
             .catch(error => {
                 console.log(error)
             });
     };
 
     renderWhoToFollowList = (item,index) => {
-
         return (
             <View key={index}>
                 <ProfileInfoBadge
@@ -172,12 +181,12 @@ class HomeScreen extends Component{
                         }
                     }
                     btnFlag={true}
-                    btnStatus={false}
+                    btnStatus={item.followers.includes(this.props.LogedInUserData.id)}
                     btnText={"Follow"}
                     btnActiveText={"Following"}
-                    BtnPress={(flag) => flag
-                        ? this.unfollowButtonPress(item)
-                        : this.followButtonPress(item)
+                    BtnPress={() => item.followers.includes(this.props.LogedInUserData.id)
+                        ? this.unfollowButtonPress(item, index)
+                        : this.followButtonPress(item, index)
                     }
                     imagePress={() => this.props.navigation.navigate('ProfilePage',{
                         NavUser: item
@@ -211,10 +220,10 @@ class HomeScreen extends Component{
         return (
             <View key={index} style={{marginTop: swidth * 0.02}}>
                 <TweetBadge
-                    JSONData={item}
-                    profilePress={() => this.props.navigation.navigate('ProfilePage',{NavUser: item})}
+                    data={item}
+                    profilePress={() => this.props.navigation.navigate('ProfilePage',{NavUser: item.userData})}
                     imagePress={(url) => this.openImage(url)}
-                    LikePress={(flag) => this.LikePress(flag,item,)}
+                    LikePress={(flag) => this.LikePress(flag,item)}
                 />
             </View>
         );

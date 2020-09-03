@@ -78,7 +78,7 @@ export const SideLoader = (props) => {
     return (
         <View style={[{flex:1, backgroundColor:'rgb(0,0,0,0)'}, props.viewStyle]} >
             <UIActivityIndicator
-                color={SystemBlue}
+                color={props.color ? props.color : SystemBlue}
                 size={swidth * 0.05}
             />
         </View>

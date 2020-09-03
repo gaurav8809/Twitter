@@ -113,7 +113,6 @@ const PersonalChatScreen = (props) => {
                 .collection('chats')
                 .doc(CurrentChat.channelID)
                 .onSnapshot(documentSnapshot => {
-                    debugger
                     setOpTyping(documentSnapshot._data.typing.includes(id))
                 });
             return () => subscriber();
@@ -288,8 +287,6 @@ const PersonalChatScreen = (props) => {
                 let members = [ME.id, id];
                 props.sendMessage(channelID, dataObj, members)
                     .then(response => {
-                        debugger
-
                         // let dataObj = {
                         //     userInfo: item,
                         //     chatInfo: [],

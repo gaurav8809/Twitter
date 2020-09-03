@@ -24,7 +24,6 @@ export const MakeRequest = (url, type = 'get' , data = {}, header = {}) =>{
         // console.log(BaseUrl+url);
         return axios.post(url,data)
             .then((response) => {
-                debugger
                 console.log("Response - " + url + " TYPE- " + type);
                 return Promise.resolve(response)
             })
