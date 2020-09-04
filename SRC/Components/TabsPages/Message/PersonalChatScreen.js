@@ -22,6 +22,7 @@ import TakePhotoPopUp from "../../../Global/TakePhotoPopUp";
 import {UIActivityIndicator} from "react-native-indicators";
 import {GifCategoryView} from "../../CommonPages/GifPage";
 import {FireBaseStoreData} from "../../../Actions/SystemAction";
+import {SideLoader} from "../../../Global/Indicators";
 
 const PersonalChatScreen = (props) => {
 
@@ -38,26 +39,15 @@ const PersonalChatScreen = (props) => {
     const [opTyping, setOpTyping] = useState(false);
     const [popUp, setPopUp] = useState(false);
     const [gifPopUp, setGifPopUp] = useState(false);
-    // const [selectedPhoto, setSelectedPhoto] = useState({
-    //     fileName: "75586126_2424022534481303_3919068421064491008_o.jpg",
-    //     fileSize: 63117,
-    //     height: 960,
-    //     isVertical: true,
-    //     originalRotation: 0,
-    //     path: "/storage/0DF6-2607/Pictures/75586126_2424022534481303_3919068421064491008_o.jpg",
-    //     type: "image/jpeg",
-    //     uri: "content://com.google.android.apps.photos.contentprovider/-1/1/content%3A%2F%2Fmedia%2Fexternal%2Fimages%2Fmedia%2F34/ORIGINAL/NONE/1688944780",
-    //     width: 539
-    // });
     const [selectedPhoto, setSelectedPhoto] = useState(null);
     const [selectedGif, setSelectedGif] = useState(null);
     const [imageLoader, setImageLoader] = useState(null);
+    const [call, setCall] = useState(false);
     const [previewImage, setPreviewImage] = useState({
         preview: false,
         PreviewImage: {}
     });
     const SELECTED = (selectedPhoto !== null || selectedGif !== null);
-    // let chatDataParam = props.navigation.state.params.data;
     let chatDataParam = CurrentChat;
     let {
         id,
@@ -470,6 +460,17 @@ const PersonalChatScreen = (props) => {
                 nav={navigation}
                 userName={opTyping ? "typing..." : username}
                 userText={{color: opTyping ? SystemBlue : SlateGray}}
+                rightView={
+                    <Icon
+                        name={"ios-videocam"}
+                        type={"Ionicons"}
+                        size={swidth * 0.07}
+                        color={SystemBlue}
+                        onPress={() => props.navigation.navigate('Video',{
+                            channelName: [ME.id, id].join(','),
+                        })}
+                    />
+                }
             />
 
             {/*<DismissKeyboardView >*/}

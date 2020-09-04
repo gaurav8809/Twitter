@@ -1,76 +1,36 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text,  NativeModules, Platform , Dimensions, TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-// const { Agora } = NativeModules; //Define Agora object as a native module
-// const {
-//     FPS30,
-//     AudioProfileDefault,
-//     AudioScenarioDefault,
-//     Adaptative,
-// } = Agora; //Set defaults for Stream
+import { View, StyleSheet, Text, Dimensions, TouchableOpacity, ScrollView} from 'react-native';
 
 import RtcEngine, {RtcLocalView, RtcRemoteView, VideoRenderMode} from 'react-native-agora'
+import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
+import {swidth, SW, SH, centertext} from "../Global/ScreenSetting";
+import {SlateGray, SystemBlue} from "../Global/ColorPalate";
 
 class Video extends Component {
+
+    static navigationOptions = {
+        header: null,
+    };
+
     _engine: RtcEngine;
     constructor(props) {
         super(props);
+
+        const channelName = props.navigation.state.params.channelName;
+        console.log("Channel name: ",channelName);
         this.state = {
             peerIds: [], //Array for storing connected peers
             uid: Math.floor(Math.random() * 100), //Generate a UID for local user
-            appID: this.props.appID, //Enter the App ID generated from the Agora Website
-            channelName: this.props.channelname, //Channel Name for the current session
-            vidMute: false, //State variable for Video Mute
-            audMute: false, //State variable for Audio Mute
+            appID: 'f9c84db8385946fa9e6a27a1099279ac', //Enter the App ID generated from the Agora Website
+            channelName: 'Test', //Channel Name for the current session
+            vidMute: true, //State variable for Video Mute
+            audMute: true, //State variable for Audio Mute
+            switchCamera: true, //State variable for camera
             joinSucceed: false, //State variable for storing success
         };
-
-        // this._engine = RtcEngine
-
-        // if (Platform.OS === 'android') {
-        //     const config = { //Setting config of the app
-        //         appID: this.state.appID, //App ID
-        //         channelProfile: 0, //Set channel profile as 0 for RTC
-        //         videoEncoderConfig: { //Set Video feed encoder settings
-        //             width: 720,
-        //             height: 1080,
-        //             bitrate: 1,
-        //             // frameRate: FPS30,
-        //             // orientationMode: Adaptative,
-        //         },
-        //         // audioProfile: AudioProfileDefault,
-        //         // audioScenario: AudioScenarioDefault,
-        //     };
-        //     RtcEngine.init(config); //Initialize the RTC engine
-        // }
     };
 
-    async componentDidMount() {
-        // RtcEngine.on('userJoined', (data) => {
-        //     const {peerIds} = this.state; //Get currrent peer IDs
-        //     if (peerIds.indexOf(data.uid) === -1) { //If new user has joined
-        //         this.setState({
-        //             peerIds: [...peerIds, data.uid], //add peer ID to state array
-        //         });
-        //     }
-        // });
-        // RtcEngine.on('userOffline', (data) => { //If user leaves
-        //     this.setState({
-        //         peerIds: this.state.peerIds.filter(uid => uid !== data.uid), //remove peer ID from state array
-        //     });
-        // });
-        // RtcEngine.on('joinChannelSuccess', (data) => { //If Local user joins RTC channel
-        //     RtcEngine.startPreview(); //Start RTC preview
-        //     this.setState({
-        //         joinSucceed: true, //Set state variable to true
-        //     });
-        // });
-        // RtcEngine.joinChannel(this.state.channelName, this.state.uid); //Join Channel
-        // RtcEngine.enableAudio(); //Enable the audio
-
-
-        await this._engine?.joinChannel(null, this.state.channelName, null, 0)
-
+    componentDidMount() {
         this.init();
     };
 
@@ -90,7 +50,7 @@ class Video extends Component {
                     peerIds: [...peerIds, uid]
                 })
             }
-        })
+        });
 
         this._engine.addListener('UserOffline', (uid, reason) => {
             console.log('UserOffline', uid, reason)
@@ -99,7 +59,7 @@ class Video extends Component {
                 // Remove peer ID from state array
                 peerIds: peerIds.filter(id => id !== uid)
             })
-        })
+        });
 
         // If Local user joins RTC channel
         this._engine.addListener('JoinChannelSuccess', (channel, uid, elapsed) => {
@@ -108,37 +68,45 @@ class Video extends Component {
             this.setState({
                 joinSucceed: true
             })
-        })
-    }
+        });
 
-    // toggleAudio = () => {
-    //     let mute = this.state.audMute;
-    //     console.log('Audio toggle', mute);
-    //     RtcEngine.muteLocalAudioStream(!mute);
-    //     this.setState({
-    //         audMute: !mute,
-    //     });
-    // };
-    //
-    // toggleVideo = () => {
-    //     let mute = this.state.vidMute;
-    //     console.log('Video toggle', mute);
-    //     this.setState({
-    //         vidMute: !mute,
-    //     });
-    //     RtcEngine.muteLocalVideoStream(!this.state.vidMute);
-    // };
+        await this._engine?.joinChannel(null, this.state.channelName, null, 0)
+    };
 
-    async endCall() {
+    endCall = async () => {
         // RtcEngine.destroy();
-        this.props.setCall(false);
+        await this._engine?.leaveChannel();
+        this.setState({peerIds: [], joinSucceed: false}, () => this.props.navigation.goBack())
+        // this.setState({peerIds: [], joinSucceed: false}, () => this.props.setCall(false))
+    };
 
-        await this._engine?.leaveChannel()
-        this.setState({peerIds: [], joinSucceed: false})
+    toggleCamera = () => {
+        this.setState({
+            switchCamera: !this.state.switchCamera,
+        }, () => {
+            this._engine?.switchCamera();
+        });
+    };
+
+
+    toggleAudio = () => {
+        this.setState({
+            audMute: !this.state.audMute,
+        }, () => {
+            this.state.audMute ? this._engine?.enableAudio() : this._engine?.disableAudio();
+        });
+    };
+
+    toggleVideo = () => {
+        this.setState({
+            vidMute: !this.state.vidMute,
+        }, () => {
+            this.state.vidMute ? this._engine?.enableVideo() : this._engine?.disableVideo();
+        });
     };
 
     _renderVideos = () => {
-        const {joinSucceed} = this.state
+        const {joinSucceed} = this.state;
         return joinSucceed ? (
             <View style={styles.fullView}>
                 <RtcLocalView.SurfaceView
@@ -146,6 +114,24 @@ class Video extends Component {
                     channelId={this.state.channelName}
                     renderMode={VideoRenderMode.Hidden}/>
                 {this._renderRemoteVideos()}
+                <View style={[styles.optionMainView, styles.fullView]}>
+                    <View style={styles.upperOptionContainer}>
+                        <TouchableOpacity style={styles.optionCircle} onPress={this.toggleCamera}>
+                            <Icon name={"camera-party-mode"} type={"MaterialCommunityIcons"} size={swidth * 0.06} color={'white'}/>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.lowerOptionContainer}>
+                        <TouchableOpacity style={styles.optionCircle} onPress={this.toggleAudio}>
+                            <Icon name={this.state.audMute ? "microphone" : "microphone-slash"} type={"FontAwesome"} size={swidth * 0.06} color={'white'}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.optionCircle, {backgroundColor: 'red'}]} onPress={this.endCall}>
+                            <Icon name={"call"} type={"MaterialIcons"} size={swidth * 0.07} color={'white'}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.optionCircle} onPress={this.toggleVideo}>
+                            <Icon name={this.state.vidMute ? "videocam" : "videocam-off"} type={"MaterialIcons"} size={swidth * 0.07} color={'white'}/>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
         ) : null
     }
@@ -169,38 +155,29 @@ class Video extends Component {
                 })}
             </ScrollView>
         )
-    }
+    };
 
     render() {
         return (
             <View style={styles.max}>
                 <View style={styles.max}>
-                    <View style={styles.buttonHolder}>
-                        <TouchableOpacity
-                            onPress={this.startCall}
-                            style={styles.button}>
-                            <Text style={styles.buttonText}> Start Call </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={this.endCall}
-                            style={styles.button}>
-                            <Text style={styles.buttonText}> End Call </Text>
-                        </TouchableOpacity>
-                    </View>
                     {this._renderVideos()}
                 </View>
             </View>
         );
-        // return this.videoView();
     }
 }
+
+Video.navigationOptions = {
+    headerShown: false,
+};
 
 export default Video;
 
 const dimensions = {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-}
+};
 
 const styles = StyleSheet.create({
     buttonBar: {
@@ -252,7 +229,14 @@ const styles = StyleSheet.create({
     },
     fullView: {
         width: dimensions.width,
-        height: dimensions.height - 100,
+        height: dimensions.height,
+    },
+    optionMainView: {
+        position: 'absolute',
+        flex: 1, zIndex: 1000,
+        // backgroundColor: 'rgba(0,0,0,0.3)',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     remoteContainer: {
         width: '100%',
@@ -269,6 +253,26 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 5,
         color: '#0093E9',
+    },
+    upperOptionContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        padding: SW(0.05),
+        width: SW(1)
+    },
+    lowerOptionContainer: {
+        bottom: SH(0.03),
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: SW(0.1),
+        width: SW(1)
+    },
+    optionCircle: {
+        height: SW(0.13),
+        width: SW(0.13),
+        backgroundColor: SystemBlue,
+        borderRadius: 100,
+        ...centertext,
     },
 });
 

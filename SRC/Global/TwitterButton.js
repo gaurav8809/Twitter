@@ -3,7 +3,6 @@ import React, {useState,useEffect} from 'react';
 import {centertext, swidth,sheight} from './ScreenSetting';
 import {SystemBlue} from './ColorPalate';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
-import Image from 'react-native-image-progress';
 import {shallow} from 'react-native/jest/renderer';
 
 

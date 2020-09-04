@@ -1,9 +1,8 @@
-import {FlatList, Modal, StyleSheet, View, Text, TouchableOpacity, TextInput} from "react-native";
+import {FlatList, Modal, StyleSheet, View, Text, TouchableOpacity, TextInput, Image} from "react-native";
 import {swidth, RHW, SHW} from "../../Global/ScreenSetting";
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
 import React, {useEffect,useState} from "react";
 import {SystemBlue} from "../../Global/ColorPalate";
-import Image from "react-native-image-progress";
 import {SafeAreaView} from "react-native-safe-area-context";
 import axios from "axios";
 import {IS_IOS} from "../../Global/Helper";

@@ -18,6 +18,7 @@ import ProfilePage from '../Components/CommonPages/ProfilePage';
 import FollowingListPage from '../Components/CommonPages/FollowingListPage';
 import FollowersListPage from '../Components/CommonPages/FollowersListPage';
 import EditProfilePage from '../Components/CommonPages/EditProfilePage';
+import Video from '../Agora-Setup/Video';
 
 const HomeSwitch = createStackNavigator({
     HomeScreen:{
@@ -60,13 +61,8 @@ const coreTabNavigator = createBottomTabNavigator({
         navigationOptions: {
         },
     },
-    VideoScreen:{
-        screen: VideoCallTab,
-        navigationOptions: {
-        },
-    },
 },{
-    initialRouteName:"HomeScreen",
+    initialRouteName:"MessageScreen",
     defaultNavigationOptions: ({navigation}) => ({
         tabBarIcon: ({ focused}) => {
 
@@ -120,7 +116,8 @@ const StackNav = createStackNavigator({
         FollowersListPage,
         EditProfilePage,
         PersonalChatScreen,
-        NewMessageScreen
+        NewMessageScreen,
+        Video,
     },
     {
         defaultNavigationOptions:({navigation}) => ({

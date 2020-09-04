@@ -12,7 +12,6 @@ import React, {useState,useEffect} from 'react';
 import {centertext, swidth,sheight, SW} from './ScreenSetting';
 import {SystemBlue, TransColor} from './ColorPalate';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
-import Image from 'react-native-image-progress';
 import {shallow} from 'react-native/jest/renderer';
 import {SafeAreaView} from "react-native-safe-area-context";
 import ImagePicker from "react-native-image-picker";
