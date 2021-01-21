@@ -17,6 +17,7 @@ import java.util.List;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 
 //Facebook Login
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
@@ -42,6 +43,7 @@ public class MainApplication extends Application implements ReactApplication {
             packages.add(new RNFirebaseAuthPackage());
             packages.add(new RNFirebaseFirestorePackage());
             packages.add(new RNFirebaseStoragePackage());
+            packages.add(new RNFirebaseMessagingPackage());
 
             //Facebook login packages
 //            packages.add(new FBSDKPackage());

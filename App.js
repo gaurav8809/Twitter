@@ -9,7 +9,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import AppReducer from './SRC/Reducers';
 import storage from '@react-native-community/async-storage';
 // import messaging from '@react-native-firebase/messaging';
-import firebase from "react-native-firebase";
+import firebase, { messaging } from "react-native-firebase";
 import HELPER from "./SRC/Global/Helper";
 
 // console.disableYellowBox = true;
@@ -50,56 +50,55 @@ let store = createStore(persistedReducer, applyMiddleware(thunk));
 let persistor = persistStore(store);
 // const store = createStore(applyMiddleware(thunk));
 
-async function bootstrap() {
-    await inAppMessaging().setMessagesDisplaySuppressed(true);
-}
-
-async function onSetup(user) {
-    await setupUser(user);
-    // Allow user to receive messages now setup is complete
-    inAppMessaging().setMessagesDisplaySuppressed(false);
-}
-
 
 class App extends Component {
 
     constructor(props) {
         super(props);
-        // checkApplicationPermission();
-        // requestUserPermission();
-        // messaging().onNotificationOpenedApp(remoteMessage => {
-        //     console.log(
-        //         'Notification caused app to open from background state:',
-        //         remoteMessage.notification,
-        //     );
-        //     this.props.navigation.navigate(remoteMessage.data.type);
-        // });
     }
 
-    componentDidMount(){
-        // this.getDeviceTocken();
-        // this.checkMessage();
+    async componentDidMount(){
+        this.checkPermission();
+        let FCM_TOKEN = await HELPER.AsyncFetch('FCM_TOKEN');
+        if(!FCM_TOKEN)
+            this.getDeviceToken();
+        this.checkMessage();
         // this.checkNotification();
     }
+    
+    checkPermission = async () => {
+        const enabled = await firebase.messaging().hasPermission();
+        if (enabled) {
+            // user has permissions
+        } else {
+            try {
+                await firebase.messaging().requestPermission();
+                // User has authorised
+            } catch (error) {
+                // User has rejected permissions
+            }
+        }
+    };
 
-    getDeviceTocken = async () => {
+    getDeviceToken = async () => {
         messaging()
             .getToken()
             .then(token => {
-                HELPER.AsyncFetch('AsyncLogedInUserData')
-                    .then(response => {
-                        const DBRef = firebase.firestore().collection('users').doc(response.id);
-                        DBRef.update({tokens: token})
-                        // DBRef.update({tokens: firebase.firestore.FieldValue.arrayUnion(token)})
-                            .then(response => {
-                            })
-                            .catch(error => {
-                                console.log(error);
-                            })
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
+                HELPER.AsyncStore('FCM_TOKEN', token);
+                // HELPER.AsyncFetch('AsyncLogedInUserData')
+                //     .then(response => {
+                //         const DBRef = firebase.firestore().collection('users').doc(response.id);
+                //         DBRef.update({tokens: token})
+                //         // DBRef.update({tokens: firebase.firestore.FieldValue.arrayUnion(token)})
+                //             .then(response => {
+                //             })
+                //             .catch(error => {
+                //                 console.log(error);
+                //             })
+                //     })
+                //     .catch(error => {
+                //         console.log(error)
+                //     });
             })
             .catch(error => {
                 console.log(error);
@@ -117,6 +116,7 @@ class App extends Component {
         });
 
         const doOnMessage = (remoteMessage) => {
+            console.log("NEW MESSAGE", remoteMessage);
             let data = remoteMessage.data;
             Alert.alert(
                 'Twitter',

@@ -14,6 +14,7 @@ import {DefaultIndicator} from '../Global/Indicators';
 import GLOBAL from '../Global/Initialization';
 import {NavigationActions, StackActions} from 'react-navigation';
 import firebase from 'react-native-firebase';
+import HELPER from '../Global/Helper';
 
 class PasswordSetPage extends Component {
 
@@ -106,7 +107,7 @@ class PasswordSetPage extends Component {
 
         this.setLoader(true);
         this.createUserName()
-            .then(username => {
+            .then(async username => {
 
                 let dataObj = {
                     email:  this.state.signupdata.type === 'Email' ? this.state.signupdata.poe.toLowerCase() : '',
@@ -116,7 +117,8 @@ class PasswordSetPage extends Component {
                     profilename: this.state.signupdata.name,
                     followers: [],
                     following: [],
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    fcm_token: [await HELPER.AsyncFetch('FCM_TOKEN')],
                 };
 
                 if(GLOBAL.CUlivemode)

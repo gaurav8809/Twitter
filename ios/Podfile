@@ -41,10 +41,10 @@ target 'Twitter' do
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
+  pod 'Firebase/Messaging'
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
   pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
-
 
   target 'TwitterTests' do
     inherit! :search_paths
