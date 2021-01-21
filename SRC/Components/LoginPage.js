@@ -87,14 +87,17 @@ class LoginPage extends Component {
                           DBRef.update({fcm_token: firebase.firestore.FieldValue.arrayUnion(token)})
                             // DBRef.update({tokens: firebase.firestore.FieldValue.arrayUnion(token)})
                             .then(response => {
-                                if(User.fcm_token)
+                                if(token)
                                 {
-                                    if(Array.isArray(User.fcm_token) && !User.fcm_token.includes(token))
+                                    if(User.fcm_token)
                                     {
-                                        User.fcm_token = [ ...User.fcm_token, token ];
+                                        if(Array.isArray(User.fcm_token) && !User.fcm_token.includes(token))
+                                        {
+                                            User.fcm_token = [ ...User.fcm_token, token ];
+                                        }
+                                    } else {
+                                        User['fcm_token'] = [token];
                                     }
-                                } else {
-                                    User['fcm_token'] = [token];
                                 }
                                 this.props.SetLoginUserData(User);
                                 this.setLoader(false);

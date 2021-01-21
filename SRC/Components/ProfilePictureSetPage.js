@@ -21,7 +21,6 @@ import TwitterBottomPanel from '../Global/TwitterBottomPanel';
 import {connect} from 'react-redux';
 import {FireBaseStoreData} from '../Actions/SystemAction';
 import {UpdateWhere} from '../Actions/FireBaseDBAction';
-import firebase from 'react-native-firebase';
 import {DefaultIndicator} from '../Global/Indicators';
 import ImagePicker from 'react-native-image-picker'
 import {NavigationActions, StackActions} from 'react-navigation';
