@@ -3,28 +3,18 @@ import {
     SafeAreaView,
     StyleSheet,
     View,
-    Platform,
     Modal,
-    Text,
-    TouchableOpacity,
-    Image
 } from 'react-native';
-import {swidth, sheight, centertext, safearea, mainview} from '../Global/ScreenSetting';
-import {AntDesign,MCI} from '../Global/VectorIcons';
-import {SystemBlue} from '../Global/ColorPalate';
+import {swidth, safearea, mainview} from '../Global/ScreenSetting';
 import TwitterTopPanel from '../Global/TwitterTopPanel';
-import {BlackBigText, BlueText, GrayText} from '../Global/TwitterText';
+import {BlackBigText, GrayText} from '../Global/TwitterText';
 import TwitterTextInput from '../Global/TwitterTextInput';
 import TwitterBottomPanel from '../Global/TwitterBottomPanel';
 import {connect} from 'react-redux';
-import {SendEmail,FireBaseSendEmail} from '../Actions/SystemAction';
-import firebase from 'react-native-firebase';
 import {DefaultIndicator} from '../Global/Indicators';
 import GLOBAL from '../Global/Initialization';
 import {UpdateWhere} from '../Actions/FireBaseDBAction';
 import {StackActions,NavigationActions} from "react-navigation";
-
-
 
 class BioSetPage extends Component {
 

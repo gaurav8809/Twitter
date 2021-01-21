@@ -3,22 +3,16 @@ import {
     SafeAreaView,
     StyleSheet,
     View,
-    Platform,
     Modal,
     FlatList,
-    Text,
-    ScrollView
 } from 'react-native';
-import {swidth, sheight, centertext, safearea, mainview} from '../Global/ScreenSetting';
-import {AntDesign,MCI} from '../Global/VectorIcons';
+import {swidth, safearea, mainview} from '../Global/ScreenSetting';
 import {SystemBlue} from '../Global/ColorPalate';
 import TwitterTopPanel from '../Global/TwitterTopPanel';
-import {BlackBigText, BlueText, GrayText} from '../Global/TwitterText';
-import TwitterTextInput from '../Global/TwitterTextInput';
+import {BlackBigText, GrayText} from '../Global/TwitterText';
 import TwitterBottomPanel from '../Global/TwitterBottomPanel';
 import {connect} from 'react-redux';
 import {SelectAll} from '../Actions/FireBaseDBAction';
-import firebase from 'react-native-firebase';
 import {DefaultIndicator} from '../Global/Indicators';
 import CheckBox from 'react-native-check-box'
 import GLOBAL from '../Global/Initialization';

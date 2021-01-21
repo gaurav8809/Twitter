@@ -1,15 +1,12 @@
-import firebase from "react-native-firebase";
 import TYPE from '../Reducers/TypeConstants';
-import {UNIQUE} from '../Global/Helper';
-import {GetLoginUserData} from "./UserAction";
-
-const FireRef = firebase.firestore();
+import firestore from '@react-native-firebase/firestore';
+const FireRef = firestore();
 
 export const chatListener = (collection) => {
 
     return (dispatch,getState) => {
 
-        const DBRef = firebase.firestore().collection('chats')
+        const DBRef = firestore().collection('chats')
             .doc('nNWjAF1SQRc220TxYfMb').collection('messages');
 
         let observer = DBRef.onSnapshot(docSnapshot => {
@@ -26,7 +23,7 @@ export const chatListener = (collection) => {
 export const getChatIDList = () => {
 
     // console.log("Doc name = ",doc);
-    // const DBRef = firebase.firestore().collection(collection);
+    // const DBRef = firestore().collection(collection);
 
     return (dispatch,getState) => {
         const {
@@ -77,7 +74,7 @@ export const getChatIDList = () => {
 export const getChatUserList = () => {
 
     // console.log("Doc name = ",doc);
-    // const DBRef = firebase.firestore().collection(collection);
+    // const DBRef = firestore().collection(collection);
 
     return (dispatch,getState) => {
         const {
@@ -222,7 +219,7 @@ export const sendMessage = (channelID, dataObj, members) => {
         if(channelID !== null)
         {
             return FireRef.collection('chats').doc(channelID).update({
-                messages: firebase.firestore.FieldValue.arrayUnion(dataObj)
+                messages: firestore.FieldValue.arrayUnion(dataObj)
             })
         }
         else
@@ -273,9 +270,9 @@ export const changeStatus = (doc, dataObj, status) => {
 
         return FireRef.collection('chats').doc(doc).update({
             typing: status ?
-                firebase.firestore.FieldValue.arrayUnion(dataObj)
+                firestore.FieldValue.arrayUnion(dataObj)
                 :
-                firebase.firestore.FieldValue.arrayRemove(dataObj)
+                firestore.FieldValue.arrayRemove(dataObj)
 
         });
 

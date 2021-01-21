@@ -8,8 +8,7 @@ import RootNavigator from './SRC/Navigators/RootNavigator';
 import {PersistGate} from 'redux-persist/integration/react';
 import AppReducer from './SRC/Reducers';
 import storage from '@react-native-community/async-storage';
-// import messaging from '@react-native-firebase/messaging';
-import firebase, { messaging } from "react-native-firebase";
+import messaging from '@react-native-firebase/messaging';
 import HELPER from "./SRC/Global/Helper";
 
 // console.disableYellowBox = true;
@@ -67,12 +66,12 @@ class App extends Component {
     }
     
     checkPermission = async () => {
-        const enabled = await firebase.messaging().hasPermission();
+        const enabled = await messaging().hasPermission();
         if (enabled) {
             // user has permissions
         } else {
             try {
-                await firebase.messaging().requestPermission();
+                await messaging().requestPermission();
                 // User has authorised
             } catch (error) {
                 // User has rejected permissions

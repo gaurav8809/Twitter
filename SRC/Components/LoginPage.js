@@ -28,7 +28,7 @@ import {
 import {NavigationActions, StackActions} from 'react-navigation';
 import HELPER from '../Global/Helper';
 import Toast from 'react-native-easy-toast'
-import firebase from "react-native-firebase";
+import firestore from '@react-native-firebase/firestore';
 
 class LoginPage extends Component {
 
@@ -83,9 +83,9 @@ class LoginPage extends Component {
                     HELPER.AsyncStore('AsyncLogedInUserData', User);
                     HELPER.AsyncFetch('FCM_TOKEN')
                       .then(token => {
-                          const DBRef = firebase.firestore().collection('users').doc(User.id);
-                          DBRef.update({fcm_token: firebase.firestore.FieldValue.arrayUnion(token)})
-                            // DBRef.update({tokens: firebase.firestore.FieldValue.arrayUnion(token)})
+                          const DBRef = firestore().collection('users').doc(User.id);
+                          DBRef.update({fcm_token: firestore.FieldValue.arrayUnion(token)})
+                            // DBRef.update({tokens: firestore.FieldValue.arrayUnion(token)})
                             .then(response => {
                                 if(token)
                                 {

@@ -1,8 +1,8 @@
-import firebase from "react-native-firebase";
+import firestore from '@react-native-firebase/firestore';
 import TYPE from '../Reducers/TypeConstants';
 import axios from "axios";
 
-const FireRef = firebase.firestore();
+const FireRef = firestore();
 const TENOR_API_KEY = 'MOAF0HON3GCO';
 
 export const LogOutSystem = () => {
