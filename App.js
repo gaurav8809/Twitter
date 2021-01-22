@@ -19,26 +19,6 @@ YellowBox.ignoreWarnings([
     'Module RCTImageLoader requires',
 ]);
 
-// async function requestUserPermission() {
-//     const settings = await messaging().requestPermission();
-//
-//     if (settings) {
-//         console.log('Permission settings:', settings);
-//     }
-// }
-//
-// async function checkApplicationPermission() {
-//     const authorizationStatus = await messaging().requestPermission();
-//
-//     if (authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED) {
-//         console.log('User has notification permissions enabled.');
-//     } else if (authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL) {
-//         console.log('User has provisional notification permissions.');
-//     } else {
-//         console.log('User has notification permissions disabled');
-//     }
-// }
-//
 const persistConfig = {
   key: 'root',
   storage,
@@ -66,16 +46,13 @@ class App extends Component {
     }
     
     checkPermission = async () => {
-        const enabled = await messaging().hasPermission();
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    
         if (enabled) {
-            // user has permissions
-        } else {
-            try {
-                await messaging().requestPermission();
-                // User has authorised
-            } catch (error) {
-                // User has rejected permissions
-            }
+            console.log('Authorization status:', authStatus);
         }
     };
 
@@ -110,25 +87,20 @@ class App extends Component {
     };
 
     checkMessage = () => {
-        messaging().onMessage(async remoteMessage => {
-            doOnMessage(remoteMessage)
-        });
-
-        const doOnMessage = (remoteMessage) => {
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
             console.log("NEW MESSAGE", remoteMessage);
             let data = remoteMessage.data;
             Alert.alert(
-                'Twitter',
-                data.message,
-                [
-                    {text: 'Thank you', onPress: () => console.log('User clicked')},
-                ],
-                {cancelable: false},
+              'Twitter',
+              data.message,
+              [
+                  {text: 'Thank you', onPress: () => console.log('User clicked')},
+              ],
+              {cancelable: false},
             );
+        });
 
-            console.log(remoteMessage);
-        };
-        // return unsubscribe;
+        return unsubscribe;
     };
 
     checkNotification = async () => {
