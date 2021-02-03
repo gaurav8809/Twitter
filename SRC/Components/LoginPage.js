@@ -28,6 +28,7 @@ import {
 import {NavigationActions, StackActions} from 'react-navigation';
 import HELPER from '../Global/Helper';
 import Toast from 'react-native-easy-toast'
+import firestore from '@react-native-firebase/firestore';
 
 class LoginPage extends Component {
 
@@ -79,18 +80,37 @@ class LoginPage extends Component {
                 if (flag) {
 
                     this.props.SetLoginUserData(User);
-
                     HELPER.AsyncStore('AsyncLogedInUserData', User);
-
-                    this.setLoader(false);
-                    const resetAction = StackActions.reset({
-                        index: 0,
-                        actions: [
-                            NavigationActions.navigate({routeName: 'coreDrawerNavigator'}),
-                        ],
-                    });
-
-                    this.props.navigation && this.props.navigation.dispatch(resetAction);
+                    HELPER.AsyncFetch('FCM_TOKEN')
+                      .then(token => {
+                          const DBRef = firestore().collection('users').doc(User.id);
+                          DBRef.update({fcm_token: firestore.FieldValue.arrayUnion(token)})
+                            // DBRef.update({tokens: firestore.FieldValue.arrayUnion(token)})
+                            .then(response => {
+                                if(token)
+                                {
+                                    if(User.fcm_token)
+                                    {
+                                        if(Array.isArray(User.fcm_token) && !User.fcm_token.includes(token))
+                                        {
+                                            User.fcm_token = [ ...User.fcm_token, token ];
+                                        }
+                                    } else {
+                                        User['fcm_token'] = [token];
+                                    }
+                                }
+                                this.props.SetLoginUserData(User);
+                                this.setLoader(false);
+                                const resetAction = StackActions.reset({
+                                    index: 0,
+                                    actions: [
+                                        NavigationActions.navigate({routeName: 'coreDrawerNavigator'}),
+                                    ],
+                                });
+    
+                                this.props.navigation && this.props.navigation.dispatch(resetAction);
+                            })
+                      })
 
                 } else {
                     this.setLoader(false);

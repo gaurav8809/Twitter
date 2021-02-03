@@ -1,9 +1,9 @@
-import firebase from "react-native-firebase";
+import firestore from '@react-native-firebase/firestore';
 import TYPE from '../Reducers/TypeConstants';
 
 export const GetUserInfo = (collection, id) => {
 
-    const DBRef = firebase.firestore().collection(collection).doc(id);
+    const DBRef = firestore().collection(collection).doc(id);
 
     return (dispatch, getState) => {
 
@@ -43,7 +43,7 @@ export const SetLoginUserData = (data) => {
 
 export const GetLoginUserData = (collection, id) => {
 
-    const DBRef = firebase.firestore().collection(collection).doc(id);
+    const DBRef = firestore().collection(collection).doc(id);
 
     return (dispatch, getState) => {
 
@@ -79,13 +79,13 @@ export const GetLoginUserData = (collection, id) => {
 
 export const FollowUser = (collection, dataObj, currentUser) => {
 
-    let batch = firebase.firestore().batch();
+    let batch = firestore().batch();
 
-    let followingRef = firebase.firestore().collection(collection).doc(dataObj.UserId);
-    batch.update(followingRef,{following: firebase.firestore.FieldValue.arrayUnion(dataObj.OpUserId)});
+    let followingRef = firestore().collection(collection).doc(dataObj.UserId);
+    batch.update(followingRef,{following: firestore.FieldValue.arrayUnion(dataObj.OpUserId)});
 
-    let followersRef = firebase.firestore().collection(collection).doc(dataObj.OpUserId);
-    batch.update(followersRef, {followers: firebase.firestore.FieldValue.arrayUnion(dataObj.UserId)});
+    let followersRef = firestore().collection(collection).doc(dataObj.OpUserId);
+    batch.update(followersRef, {followers: firestore.FieldValue.arrayUnion(dataObj.UserId)});
 
     return (dispatch, getState) => {
 
@@ -114,13 +114,13 @@ export const FollowUser = (collection, dataObj, currentUser) => {
 
 export const UnFollowUser = (collection, dataObj, currentUser) => {
 
-    let batch = firebase.firestore().batch();
+    let batch = firestore().batch();
 
-    let followingRef = firebase.firestore().collection(collection).doc(dataObj.UserId);
-    batch.update(followingRef,{following: firebase.firestore.FieldValue.arrayRemove(dataObj.OpUserId)});
+    let followingRef = firestore().collection(collection).doc(dataObj.UserId);
+    batch.update(followingRef,{following: firestore.FieldValue.arrayRemove(dataObj.OpUserId)});
 
-    let followersRef = firebase.firestore().collection(collection).doc(dataObj.OpUserId);
-    batch.update(followersRef, {followers: firebase.firestore.FieldValue.arrayRemove(dataObj.UserId)});
+    let followersRef = firestore().collection(collection).doc(dataObj.OpUserId);
+    batch.update(followersRef, {followers: firestore.FieldValue.arrayRemove(dataObj.UserId)});
 
     return (dispatch, getState) => {
 
@@ -149,7 +149,7 @@ export const UnFollowUser = (collection, dataObj, currentUser) => {
 
 export const PostTweet = (collection,dataObj) => {
 
-    const DBRef = firebase.firestore().collection(collection);
+    const DBRef = firestore().collection(collection);
 
     return (dispatch,getState) => {
         return DBRef.add(dataObj)
@@ -177,7 +177,7 @@ export const PostTweet = (collection,dataObj) => {
 
 export const UpdateProfileInfo = (collection,userID,dataObj) => {
 
-    const DBRef = firebase.firestore().collection(collection).doc(userID);
+    const DBRef = firestore().collection(collection).doc(userID);
 
     return (dispatch,getState) => {
 
@@ -208,21 +208,21 @@ export const UpdateProfileInfo = (collection,userID,dataObj) => {
 
 export const LikeUnlikeTweet = (status, dataObj, currentUser) => {
 
-    let batch = firebase.firestore().batch();
+    let batch = firestore().batch();
 
     if (status) {
-        let tweetRef = firebase.firestore().collection('tweets').doc(dataObj.tweetID);
-        batch.update(tweetRef, {likes: firebase.firestore.FieldValue.arrayUnion(currentUser.id)});
+        let tweetRef = firestore().collection('tweets').doc(dataObj.tweetID);
+        batch.update(tweetRef, {likes: firestore.FieldValue.arrayUnion(currentUser.id)});
 
-        let userRef = firebase.firestore().collection('users').doc(currentUser.id);
-        batch.update(userRef, {likes: firebase.firestore.FieldValue.arrayUnion(dataObj.tweetID)});
+        let userRef = firestore().collection('users').doc(currentUser.id);
+        batch.update(userRef, {likes: firestore.FieldValue.arrayUnion(dataObj.tweetID)});
     }
     else{
-        let tweetRef = firebase.firestore().collection('tweets').doc(dataObj.tweetID);
-        batch.update(tweetRef,{likes: firebase.firestore.FieldValue.arrayRemove(currentUser.id)});
+        let tweetRef = firestore().collection('tweets').doc(dataObj.tweetID);
+        batch.update(tweetRef,{likes: firestore.FieldValue.arrayRemove(currentUser.id)});
 
-        let userRef = firebase.firestore().collection('users').doc(currentUser.id);
-        batch.update(userRef, {likes: firebase.firestore.FieldValue.arrayRemove(dataObj.tweetID)});
+        let userRef = firestore().collection('users').doc(currentUser.id);
+        batch.update(userRef, {likes: firestore.FieldValue.arrayRemove(dataObj.tweetID)});
     }
 
     return (dispatch, getState) => {

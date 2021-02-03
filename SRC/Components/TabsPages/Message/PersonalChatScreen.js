@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, createRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
     Image,
     Text,
@@ -15,9 +15,9 @@ import {SlateGray, SystemBlue, MyChatColor, OpChatColor, DarkGray} from '../../.
 import {useSelector, useDispatch, connect} from 'react-redux';
 import {safearea, swidth, IS_IOS, SHW, SW, SH} from "../../../Global/ScreenSetting";
 import {TopHeader} from "../../CommonPages/TopHeader";
-import {DismissKeyboardView, DynamicBottomBar, DATES, PreviewImageView} from "../../../Global/Helper";
+import { DynamicBottomBar, DATES, PreviewImageView} from "../../../Global/Helper";
 import {sendMessage, saveCurrentChat, changeStatus} from '../../../Actions/ChatAction';
-import firebase from "react-native-firebase";
+import firestore from '@react-native-firebase/firestore';
 import TakePhotoPopUp from "../../../Global/TakePhotoPopUp";
 import {UIActivityIndicator} from "react-native-indicators";
 import {GifCategoryView} from "../../CommonPages/GifPage";
@@ -77,7 +77,7 @@ const PersonalChatScreen = (props) => {
         // chatListRef.scrollTo({x:0, y:this.props.defaultValues.scrollY, animated: true});
         if(channelID !== null)
         {
-            const subscriber = firebase.firestore()
+            const subscriber = firestore()
                 .collection('chats')
                 .doc(CurrentChat.channelID)
                 .onSnapshot(documentSnapshot => {
@@ -109,7 +109,7 @@ const PersonalChatScreen = (props) => {
 
     useEffect(() => {
         if(channelID !== null) {
-            const subscriber = firebase.firestore()
+            const subscriber = firestore()
                 .collection('chats')
                 .doc(CurrentChat.channelID)
                 .onSnapshot(documentSnapshot => {

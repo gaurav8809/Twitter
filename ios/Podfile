@@ -1,4 +1,4 @@
-platform :ios, '9.0'
+platform :ios, '10.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'Twitter' do
@@ -36,15 +36,8 @@ target 'Twitter' do
 
 
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
-  pod 'Firebase/Analytics'
-  pod 'Firebase/Core'
-  pod 'Firebase/Auth'
-  pod 'Firebase/Firestore'
-  pod 'Firebase/Storage'
-  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
   pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
-
 
   target 'TwitterTests' do
     inherit! :search_paths

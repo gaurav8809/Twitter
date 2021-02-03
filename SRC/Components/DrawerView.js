@@ -1,33 +1,23 @@
-import React, {Component,useEffect} from 'react';
+import React, {Component} from 'react';
 import {
     SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
     Image,
     Text,
-    StatusBar,
     TouchableOpacity,
     Platform,
-    TextInput,
-    KeyboardAvoidingView
 } from 'react-native';
-import GLOBAL from '../Global/Initialization';
-import {safearea,mainview} from '../Global/ScreenSetting'
 import {connect} from 'react-redux';
-import AppHeader from '../Global/AppHeader';
 import {swidth} from '../Global/ScreenSetting';
 import Icon from 'react-native-dynamic-vector-icons/lib/components/Icon';
 import {SystemBlue, SlateGray} from '../Global/ColorPalate';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import styles from 'react-native-webview/lib/WebView.styles';
-import {SystemButton} from '../Global/TwitterButton';
 import HELPER, {OfficialSymbol} from '../Global/Helper';
 import {NavigationActions, StackActions,withNavigation} from 'react-navigation';
 import {GetUserInfo,GetLoginUserData} from '../Actions/UserAction';
 import {UIActivityIndicator} from 'react-native-indicators';
 import { EventRegister } from 'react-native-event-listeners'
-
+import firestore from '@react-native-firebase/firestore';
 
 const MENULIST = [
     {
@@ -191,8 +181,8 @@ class DrawerView extends Component{
         );
     };
 
-    LogOut = () => {
-
+    LogOut = async () => {
+        
         if(HELPER.AsyncRemove('AsyncLogedInUserData'))
         {
             const resetAction = StackActions.reset({
@@ -203,6 +193,10 @@ class DrawerView extends Component{
             });
 
             this.props.navigation.dispatch(resetAction);
+            
+            let token = await HELPER.AsyncFetch('FCM_TOKEN');
+            const DBRef = firestore().collection('users').doc(this.state.LogedInUserData.id);
+            DBRef.update({fcm_token: firestore.FieldValue.arrayRemove(token)})
         }
         else
         {

@@ -1,13 +1,13 @@
 import {Animated, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState,} from 'react';
-import {centertext, swidth, SH, SW} from './ScreenSetting';
+import {centertext, swidth, SH} from './ScreenSetting';
 import {LikeRed, SystemBlue} from './ColorPalate';
-import {BlueWhiteButton, LinerButton} from './TwitterButton';
+import {BlueWhiteButton} from './TwitterButton';
 import {UIActivityIndicator} from 'react-native-indicators';
 import Icon from "react-native-dynamic-vector-icons/lib/components/Icon";
-import {OfficialSymbol, DMYFormat} from '../Global/Helper';
+import {OfficialSymbol, DMYFormat} from './Helper';
 import {useSelector} from "react-redux";
-import firebase from "react-native-firebase";
+import firestore from '@react-native-firebase/firestore';
 import {SlateGray} from './ColorPalate';
 
 export const ProfileInfoBadge = (props) => {
@@ -136,7 +136,7 @@ export const TweetBadge = (props) => {
     const [tOpacity,setTOpacity] = useState(new Animated.Value(0));
 
     useEffect(() => {
-        const subscriber = firebase.firestore()
+        const subscriber = firestore()
             .collection('tweets')
             .doc(tweetProp.tweetID)
             .onSnapshot(documentSnapshot => {

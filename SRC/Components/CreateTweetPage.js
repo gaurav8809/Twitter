@@ -31,7 +31,7 @@ import CameraRoll from "@react-native-community/cameraroll";
 import ProgressCircle from 'react-native-progress-circle'
 import ImagePicker from "react-native-image-picker";
 import {PostTweet} from '../Actions/UserAction';
-import firebase from "react-native-firebase";
+import firestore from '@react-native-firebase/firestore';
 import {FireBaseStoreData} from "../Actions/SystemAction";
 import {UpdateWhere} from '../Actions/FireBaseDBAction';
 import {GifCategoryView} from "./CommonPages/GifPage";
@@ -277,7 +277,7 @@ class CreateTweetPage extends Component{
         let dataObj = {
             userID: STD.LogedInUser.id,
             tweetValue: STD.tweet,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            timestamp: firestore.FieldValue.serverTimestamp(),
             comments: [],
             likes: [],
             imagePath: STD.selectdGif !== null && STD.selectdGif.gif.url

@@ -4,17 +4,16 @@ import {
     StyleSheet,
     View,
     FlatList,
-    Text, Modal
+    Text,
 } from 'react-native';
-import {safearea, swidth, SW, SH, centertext} from '../../../Global/ScreenSetting'
+import {safearea, swidth, SW, SH} from '../../../Global/ScreenSetting'
 import {connect} from 'react-redux';
 import {getChatList, saveCurrentChat} from '../../../Actions/ChatAction';
-import COLOR, {SlateGray, SystemBlue} from "../../../Global/ColorPalate";
+import COLOR from "../../../Global/ColorPalate";
 import {ChatUserListBadge} from "../../../Global/TwitterBadges";
-import {BlueWhiteButton, BubbleButton, LinerButton, SystemButton} from "../../../Global/TwitterButton";
-import firebase from "react-native-firebase";
+import { BubbleButton, SystemButton} from "../../../Global/TwitterButton";
 import {DefaultIndicator} from "../../../Global/Indicators";
-import {MaterialIndicator} from "react-native-indicators";
+import firestore from '@react-native-firebase/firestore';
 
 const CHAT_LIST = [
     {
@@ -103,7 +102,7 @@ class MessageScreen extends Component{
     }
 
     getLatest = () => {
-        const subscriber = firebase.firestore()
+        const subscriber = firestore()
             .collection('chats')
             .onSnapshot(documentSnapshot => {
                 this.props.getChatList()

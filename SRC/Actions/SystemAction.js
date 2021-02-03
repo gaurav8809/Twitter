@@ -1,6 +1,6 @@
 import {MakeRequest} from '../EndPoints/ApiCall';
 import API from '../EndPoints/ApiConstants';
-import firebase from 'react-native-firebase';
+import storage from '@react-native-firebase/storage';
 import {Platform} from 'react-native';
 
 export const SendEmail = (dataobj) => {
@@ -65,15 +65,17 @@ export const FireBaseStoreData = (folderPath,dataobj) => {
     var timestamp = Number(new Date());
 
     return (dispatch,getState) => {
-        return firebase
-            .storage()
+        return storage()
             .ref(`${folderPath}/${timestamp.toString()}`)
-            .put(Platform === 'ios' ? dataobj.uri.replace('file://','') : dataobj.uri)
-            .then(res => {
+            .putFile(Platform === 'ios' ? dataobj.uri.replace('file://','') : dataobj.uri)
+            .then(async () => {
+                const profileURL = await storage()
+                  .ref(`${folderPath}/${timestamp.toString()}`)
+                  .getDownloadURL();
                 return Promise.resolve({
                     status: 200,
                     message: 'Successfully Stored',
-                    data: res.downloadURL
+                    data: profileURL
                 });
             })
             .catch(error => {
