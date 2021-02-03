@@ -17,7 +17,7 @@ import {NavigationActions, StackActions,withNavigation} from 'react-navigation';
 import {GetUserInfo,GetLoginUserData} from '../Actions/UserAction';
 import {UIActivityIndicator} from 'react-native-indicators';
 import { EventRegister } from 'react-native-event-listeners'
-import firebase from "react-native-firebase";
+import firestore from '@react-native-firebase/firestore';
 
 const MENULIST = [
     {
@@ -195,8 +195,8 @@ class DrawerView extends Component{
             this.props.navigation.dispatch(resetAction);
             
             let token = await HELPER.AsyncFetch('FCM_TOKEN');
-            const DBRef = firebase.firestore().collection('users').doc(this.state.LogedInUserData.id);
-            DBRef.update({fcm_token: firebase.firestore.FieldValue.arrayRemove(token)})
+            const DBRef = firestore().collection('users').doc(this.state.LogedInUserData.id);
+            DBRef.update({fcm_token: firestore.FieldValue.arrayRemove(token)})
         }
         else
         {

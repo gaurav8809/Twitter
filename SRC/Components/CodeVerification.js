@@ -14,7 +14,7 @@ import TwitterTextInput from '../Global/TwitterTextInput';
 import TwitterBottomPanel from '../Global/TwitterBottomPanel';
 import {connect} from 'react-redux';
 import {SendEmail,FireBaseSendEmail} from '../Actions/SystemAction';
-import firebase from 'react-native-firebase';
+import auth from '@react-native-firebase/auth';
 import {DefaultIndicator} from '../Global/Indicators';
 
 class CodeVerification extends Component {
@@ -61,7 +61,7 @@ class CodeVerification extends Component {
                 if (signupdata.type === 'Phone')
                 {
                     this.setLoader(true);
-                    firebase.auth().signInWithPhoneNumber(`+91 ${signupdata.poe.toString()}`)
+                    auth().signInWithPhoneNumber(`+91 ${signupdata.poe.toString()}`)
                         .then(confirmResult => {
 
                             console.log('Send SMS data =' + JSON.stringify(confirmResult));

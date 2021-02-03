@@ -13,7 +13,7 @@ import {CreateUser, GetField} from '../Actions/FireBaseDBAction';
 import {DefaultIndicator} from '../Global/Indicators';
 import GLOBAL from '../Global/Initialization';
 import {NavigationActions, StackActions} from 'react-navigation';
-import firebase from 'react-native-firebase';
+import firestore from '@react-native-firebase/firestore';
 import HELPER from '../Global/Helper';
 
 class PasswordSetPage extends Component {
@@ -117,7 +117,7 @@ class PasswordSetPage extends Component {
                     profilename: this.state.signupdata.name,
                     followers: [],
                     following: [],
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    timestamp: firestore.FieldValue.serverTimestamp(),
                     fcm_token: [await HELPER.AsyncFetch('FCM_TOKEN')],
                 };
 

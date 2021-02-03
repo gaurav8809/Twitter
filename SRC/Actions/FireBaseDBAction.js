@@ -1,6 +1,7 @@
 import {MakeRequest} from '../EndPoints/ApiCall';
 import API from '../EndPoints/ApiConstants';
-import firebase from 'react-native-firebase';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 import {Platform} from 'react-native';
 import {LOGEDIN_USER} from '../Reducers/TypeConstants';
 import HELPER from '../Global/Helper';
@@ -67,8 +68,7 @@ export const FireBaseStoreData = (folderPath,dataobj) => {
     var timestamp = Number(new Date());
 
     return (dispatch,getState) => {
-        return firebase
-            .storage()
+        return storage()
             .ref(`${folderPath}/${timestamp.toString()}`)
             .put(Platform === 'ios' ? dataobj.uri.replace('file://','') : dataobj.uri)
             .then(res => {
@@ -91,7 +91,7 @@ export const FireBaseStoreData = (folderPath,dataobj) => {
 
 export const CreateUser = (collection,dataObj) => {
 
-    const DBRef = firebase.firestore().collection(collection);
+    const DBRef = firestore().collection(collection);
 
     return (dispatch,getState) => {
         return DBRef.add(dataObj)
@@ -135,7 +135,7 @@ export const CreateUser = (collection,dataObj) => {
 
 export const Update = (collection,dataObj) => {
 
-    const DBRef = firebase.firestore().collection(collection);
+    const DBRef = firestore().collection(collection);
 
     return (dispatch,getState) => {
 
@@ -164,7 +164,7 @@ export const Update = (collection,dataObj) => {
 export const UpdateWhere = (collection,doc,dataObj) => {
 
     // console.log("Doc name = ",doc);
-    const DBRef = firebase.firestore().collection(collection).doc(doc);
+    const DBRef = firestore().collection(collection).doc(doc);
 
     return (dispatch,getState) => {
 
@@ -193,7 +193,7 @@ export const UpdateWhere = (collection,doc,dataObj) => {
 
 export const SelectAll = (collection) => {
 
-    const DBRef = firebase.firestore().collection(collection);
+    const DBRef = firestore().collection(collection);
 
     return (dispatch,getState) => {
         return DBRef.get()
@@ -233,7 +233,7 @@ export const SelectAll = (collection) => {
 
 export const SelectUserById = (collection,id) => {
 
-    const DBRef = firebase.firestore().collection(collection).doc(id);
+    const DBRef = firestore().collection(collection).doc(id);
 
     return (dispatch,getState) => {
 
@@ -268,7 +268,7 @@ export const SelectUserById = (collection,id) => {
 
 export const GetField = (collection,dataObj) => {
 
-    const DBRef = firebase.firestore().collection(collection)
+    const DBRef = firestore().collection(collection)
         .where(dataObj[0],dataObj[1],dataObj[2]);
 
     return (dispatch,getState) => {
