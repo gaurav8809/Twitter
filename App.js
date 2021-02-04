@@ -82,7 +82,7 @@ class App extends Component {
 
         // Listen to whether the token changes
         return messaging().onTokenRefresh(token => {
-            // saveTokenToDatabase(token);
+            HELPER.AsyncStore('FCM_TOKEN', token);
         });
     };
 
