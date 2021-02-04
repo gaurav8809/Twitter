@@ -10,7 +10,7 @@ import {NavigationActions, StackActions} from 'react-navigation';
 import {ImageLoaderIndicator} from './Indicators';
 import { EventRegister } from 'react-native-event-listeners'
 import HELPER from "./Helper";
-
+import functions from '@react-native-firebase/functions';
 
 export const AppHeader = (props) => {
 
@@ -59,6 +59,18 @@ export const AppHeader = (props) => {
           }
       }, [props.LogedInUserData.profileImage]);
   */
+    
+    const onPressStar = async () => {
+        await functions()
+          .httpsCallable('sendNotification')({"data":{}})
+          .then(response => {
+              console.log("Result:", response);
+          })
+          .catch(error => {
+              console.log('error', error);
+          });
+    };
+    
     return (
         <SafeAreaView style={{backgroundColor: 'white'}}>
             <View style={{
@@ -108,7 +120,7 @@ export const AppHeader = (props) => {
                          color={SystemBlue}
                          size={swidth * 0.06}
                          style={{alignSelf:'flex-end'}}
-                         onPress={() => alert("Work in progress")}
+                         onPress={onPressStar}
                    />
                 </View>
             </View>
