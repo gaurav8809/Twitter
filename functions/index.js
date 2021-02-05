@@ -1,11 +1,12 @@
 const functions = require("firebase-functions");
-var admin = require("firebase-admin");
 
+var admin = require("firebase-admin");
 var serviceAccount = require("./twitter-13dd2-firebase-adminsdk-c8olt-46d4095778.json");
+let databaseURL = 'https://twitter-13dd2.firebaseio.com';
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://twitter-13dd2.firebaseio.com"
+  databaseURL
 });
 
 const db = admin.firestore();
@@ -48,18 +49,23 @@ exports.onNewMessage = functions.firestore
       let message = messages[messages.length - 1]
       let { senderID, receiverID } = message;
       
-      let receiver = await db.collection('users').doc(receiverID).get();
+      let recRes  = await db.collection('users').doc(receiverID).get();
+      let receiver  = recRes.data();
+      let senRes = await db.collection('users').doc(senderID).get();
+      let sender = senRes.data();
+      
       if(receiver?.fcm_token.length > 0)
       {
         let result = await admin.messaging().sendToDevice(
-          tokens,
+          receiver.fcm_token,
           {
             data: {
-              title,
-              message
+              title: `New message from ${sender.profilename}`,
+              message: message.messageText
             },
           },
         );
+        return result;
       }
     }
     
