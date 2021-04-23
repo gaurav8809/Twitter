@@ -10,6 +10,7 @@ import {safearea} from '../Global/ScreenSetting';
 import {TwitterCircleIndicator} from '../Global/Indicators';
 import HELPER from '../Global/Helper';
 import {NavigationActions, StackActions} from 'react-navigation';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 class StartUpLoader extends Component{
 
@@ -17,6 +18,7 @@ class StartUpLoader extends Component{
         super(props);
 
         this.LoginCheck();
+        // crashlytics().crash();
     }
 
     LoginCheck = () => {

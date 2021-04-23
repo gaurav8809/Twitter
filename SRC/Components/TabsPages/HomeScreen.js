@@ -263,12 +263,12 @@ class HomeScreen extends Component{
       );
     };
 
-    closePreviewImage = () => {
-        this.setState({
-            preview: false,
-            PreviewImage: null,
-        })
-    };
+    // closePreviewImage = () => {
+    //     this.setState({
+    //         preview: false,
+    //         PreviewImage: null,
+    //     })
+    // };
 
     render(){
         let {

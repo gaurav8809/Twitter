@@ -38,7 +38,8 @@ target 'Twitter' do
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
   pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
-
+  pod 'Firebase/Crashlytics'
+  
   target 'TwitterTests' do
     inherit! :search_paths
     # Pods for testing

@@ -247,6 +247,9 @@ PODS:
     - FirebaseAuth (~> 7.4.0)
   - Firebase/CoreOnly (7.4.0):
     - FirebaseCore (= 7.4.0)
+  - Firebase/Crashlytics (7.4.0):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 7.4.0)
   - Firebase/Firestore (7.4.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 7.4.0)
@@ -273,6 +276,12 @@ PODS:
     - GoogleUtilities/Environment (~> 7.0)
     - GoogleUtilities/Logger (~> 7.0)
     - nanopb (~> 2.30907.0)
+  - FirebaseCrashlytics (7.4.0):
+    - FirebaseCore (~> 7.0)
+    - FirebaseInstallations (~> 7.0)
+    - GoogleDataTransport (~> 8.0)
+    - nanopb (~> 2.30907.0)
+    - PromisesObjC (~> 1.2)
   - FirebaseFirestore (7.4.0):
     - abseil/algorithm (= 0.20200225.0)
     - abseil/base (= 0.20200225.0)
@@ -605,6 +614,10 @@ PODS:
     - Firebase/Auth (~> 7.4.0)
     - React-Core
     - RNFBApp
+  - RNFBCrashlytics (11.2.0):
+    - Firebase/Crashlytics (~> 7.4.0)
+    - React-Core
+    - RNFBApp
   - RNFBFirestore (10.5.1):
     - Firebase/Firestore (~> 7.4.0)
     - React-Core
@@ -635,6 +648,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
+  - Firebase/Crashlytics
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -670,6 +684,7 @@ DEPENDENCIES:
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
+  - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBFunctions (from `../node_modules/@react-native-firebase/functions`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
@@ -692,6 +707,7 @@ SPEC REPOS:
     - FirebaseAuth
     - FirebaseCore
     - FirebaseCoreDiagnostics
+    - FirebaseCrashlytics
     - FirebaseFirestore
     - FirebaseFunctions
     - FirebaseInstallations
@@ -778,6 +794,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
     :path: "../node_modules/@react-native-firebase/auth"
+  RNFBCrashlytics:
+    :path: "../node_modules/@react-native-firebase/crashlytics"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNFBFunctions:
@@ -811,6 +829,7 @@ SPEC CHECKSUMS:
   FirebaseAuth: d8dba8db90a1705ee2493857047282ca4f6e7598
   FirebaseCore: 99c06e5a1e8d6952e75cb1f0a6d0b23c0f5ccdcf
   FirebaseCoreDiagnostics: 3770093ac4f2be4590fa03cfa1d3a6e5602d4557
+  FirebaseCrashlytics: ef6b0947ab6819b5cb335f8c0a7677cd57d544c5
   FirebaseFirestore: ab4e4d98aea35b4af696a96554769903123f83cc
   FirebaseFunctions: ab9df1b7091b14af71798d70b87147aeeaff78ba
   FirebaseInstallations: 30646fc9a61c6f4ee3cd7a8b7231721842b40c95
@@ -857,6 +876,7 @@ SPEC CHECKSUMS:
   RNDateTimePicker: f654c60568209005a3d9a5a6c4bff0c7094ec527
   RNFBApp: 43a062dc6a1a88edd934d2229d1ba64f25381598
   RNFBAuth: b5b1ba3df98f23b1f41829b762477ccb60b0e747
+  RNFBCrashlytics: 8da09e353ad02d90bf5661a90092da028bcf6f28
   RNFBFirestore: b596de5f7cb73ec799cf0eb24db5be69540be25f
   RNFBFunctions: 3acf73eb42cb1cd434e3a0515944ea1663620a14
   RNFBMessaging: 7ca5248796434376c186b65029b1cec7d3e0990b
@@ -867,6 +887,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 3a39b5c9aa4fb977cb0434d3e5587bc8aa1c3de8
+PODFILE CHECKSUM: 6c2f3eeb81570821ee9d146b27ee69dffbce9214
 
 COCOAPODS: 1.9.3
